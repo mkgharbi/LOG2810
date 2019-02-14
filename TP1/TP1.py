@@ -1,16 +1,38 @@
 
 ########################
+
+
+#Classe : 
+class Personne :
+    
+    def _init_(self, nom, couleurDeCheveux, couleurDesYeux, genie) :
+        self.nom = nom
+        self.couleurDeCheveux = couleurDeCheveux
+        self.couleurDesYeux = couleurDesYeux
+        self.genie = genie
+
+tableauRelations =  [] 
+
 #TODO : 
+
 #  fontion : creerReseauSocial( , ) : 
 #   Lire les fichiers texte contenant les informations 
 #   et genere le reseau social correspondant. 
-def creerReseauSocial() : 
+def creerReseauSocial(fichier1 , fichier2) : 
+    individus = open(fichier1,"r")
+    relations = open(fichier2 , "r")
+    for i in relations : 
+        relations[i].split(" ")
+        if relations[1] > 0 and relations[1] <=100 :
+            tableaRelations.append(" ( " + relations[0] + "  " + relations[2] + "  ( " + relations[1] + "%") 
+            
 
 #
 #  fonction : afficherReseauSocial() 
 #   Affiche le réseau social selon le format présenté en annexe. 
 def afficherReseauSocial() :
-
+    for x in array : 
+        print()
 # 
 #  fonction : identifierIndividus()
 #   l'agent trouve les noms des deux individues mystères.
@@ -39,3 +61,8 @@ def afficherResultat() :
 #   e/ Quitter. 
 #
 ########################
+
+
+# main 
+def main() : 
+    
