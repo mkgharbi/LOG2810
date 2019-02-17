@@ -172,7 +172,25 @@ def afficherResultat() :
 #
 ########################
 
-
+selections = {
+    0:"afficherMenu",
+    1:"a",
+    2:"b",
+    3:"c",
+    4:"d",
+    5:"e",
+}
 # main 
-def main() : 
+def main() :
+    current = selections[0];
+    #Menu
+    while True:
+        if current == "afficherMenu":
+            print("a/ Créer le résea social.")
+            print("b/ Afficher le réseau social.")
+            print("c/ Jouer à Qui est-ce ?")
+            print("d/ Afficher le résultat.")
+            print("e/ Quitter")
+            #Lire input utilisateur
+
     #1. adversaire 
