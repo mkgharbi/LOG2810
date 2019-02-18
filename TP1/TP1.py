@@ -143,6 +143,7 @@ def questions () :
         questionsGenie(reponseGenie, caracteristiquesGenie[indexQuestionsGenie])
         indexQuestionsGenie++
     
+    
 
 #  fonction : identifierIndividus()
 #   l'agent trouve les noms des deux individues mystères.
