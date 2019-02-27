@@ -182,7 +182,7 @@ selections = {
 }
 # main 
 def main() :
-    current = selections[0];
+    current = selections[0]
     #Menu
     while True:
         if current == "afficherMenu":
@@ -191,6 +191,14 @@ def main() :
             print("c/ Jouer à Qui est-ce ?")
             print("d/ Afficher le résultat.")
             print("e/ Quitter")
-            #Lire input utilisateur
-
-    #1. adversaire 
+            current = lireInput()
+        elif current == "a":
+            #---
+        elif current == "b":
+            #---
+        elif current == "c":
+            #---
+        elif current == "d":
+            #---
+        elif current == "e":
+            break
