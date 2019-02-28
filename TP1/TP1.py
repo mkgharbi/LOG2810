@@ -75,7 +75,7 @@ tableauIndividusEvolutif = {}
 # Decoupage de la fonction identifierIndividus() : 
 # Questions a poser (compteur locale)
 #Questions pour cheveux :
-passerQuestionSuivanteCheveux = false
+passerQuestionSuivanteCheveux = False
 
 def questionsCheveux(reponse, valeur ):
     if reponse == "o" or reponse == "u":
@@ -89,7 +89,7 @@ def questionsCheveux(reponse, valeur ):
     compteurQuestionsPosees[0] = compteurQuestionsPosees[0]+1
 
 #Questions pour yeux : 
-passerQuestionSuivanteYeux = false
+passerQuestionSuivanteYeux = False
 
 def questionsYeux(reponse, valeur):
     if reponse == "o" or reponse == "u":
@@ -103,7 +103,7 @@ def questionsYeux(reponse, valeur):
     compteurQuestionsPosees[1] = compteurQuestionsPosees[1]+1
 
 #Questions pour genie :
-passerQuestionSuivanteGenie = false
+passerQuestionSuivanteGenie = False
 
 def questionsGenie(reponse, valeur):
     if reponse == "o" or reponse == "u":
@@ -125,7 +125,7 @@ def questions () :
         while ( reponseCheveux.upper() != "O" and reponseCheveux.upper() != "N"  and reponseCheveux.upper() != "U") :
             reponseCheveux = input(questionsCheveux[indexQuestionsCheveux])
         questionsCheveux(reponseCheveux , caracteristiquesCheveux[indexQuestionsCheveux])
-        indexQuestionsCheveux++
+        indexQuestionsCheveux += 1
     
     indexQuestionsYeux = 0 
     while compteurU[1] < 2 or passerQuestionSuivanteYeux : 
@@ -133,7 +133,7 @@ def questions () :
         while ( reponseYeux.upper() != "O" and reponseYeux.upper() != "N" and reponseYeux.upper() != "U") :
             reponseYeux = input(questionsYeux[indexQuestionsYeux])
         questionsYeux(reponseYeux ,caracteristiquesYeux[indexQuestionsYeux])
-        indexQuestionsYeux++
+        indexQuestionsYeux += 1
     
     indexQuestionsGenie = 0 
     while compteurU[2] < 2 or passerQuestionSuivanteGenie : 
@@ -141,28 +141,28 @@ def questions () :
         while ( reponseGenie.upper() != "O" and reponseGenie.upper() != "N" and reponseGenie.upper() != "U") :
             reponseGenie = input(questionsGenie[indexQuestionsGenie])
         questionsGenie(reponseGenie, caracteristiquesGenie[indexQuestionsGenie])
-        indexQuestionsGenie++
+        indexQuestionsGenie += 1
     
 
 #  fonction : identifierIndividus()
 #   l'agent trouve les noms des deux individues mystères.
 def identifierIndividus() : 
-
+    return
 #
 #  fonction : enleverArcsIndesirables( 3 caracteristiques indesirables )
 #   Génère le sous-graphe des caractéristiques désirables.
-def enleverArcsIndesirables() : 
-
+def enleverArcsIndesirables() :
+    return
 #  fonction : trouverChaineContacts( 2 noms d'individus )
 #   L'agent trouve la meilleure chaine de contacts entre 2 individus à partir 
 #   du sous-graphe des caracteristiques désirables.
 
 def trouverChaineContacts() :  
-
+    return
 #  fontion : afficherResultat() 
 #   L'agent présente le résultatde ses accomplissements selon le bon format.
 def afficherResultat() :
-
+    return
 # Interface console qui affiche le menu : 
 #   a/ Créer le résea social.
 #   b/ Afficher le réseau social.
@@ -180,6 +180,13 @@ selections = {
     4:"d",
     5:"e",
 }
+
+def lireInput() :
+    valeur = None
+    while valeur not in ["a","b","c","d","e"]:
+        valeur = input()
+    return valeur
+
 # main 
 def main() :
     current = selections[0]
@@ -193,12 +200,19 @@ def main() :
             print("e/ Quitter")
             current = lireInput()
         elif current == "a":
-            #---
+            creerReseauSocial("Individus.txt", "Relations.txt")
+            current = selections[0]
         elif current == "b":
-            #---
+            afficherReseauSocial()
+            current = selections[0]
         elif current == "c":
-            #---
+            #questions()
+            current = selections[0]
         elif current == "d":
-            #---
+            afficherResultat()
+            current = selections[0]
         elif current == "e":
             break
+
+if __name__== "__main__":
+  main()
