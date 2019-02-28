@@ -5,11 +5,12 @@
 #Classe : 
 class Personne :
     
-    def _init_(self, nom, couleurDeCheveux, couleurDesYeux, genie) :
+    def _init_(self, nom, couleurDeCheveux, couleurDesYeux, genie, nombreLiens) :
         self.nom = nom
         self.couleurDeCheveux = couleurDeCheveux
         self.couleurDesYeux = couleurDesYeux
         self.genie = genie
+        self.nombreLiens = 0
 
 tableauRelations =  {} 
 tableauIndividus = {}
@@ -122,7 +123,7 @@ def questions () :
     indexQuestionsCheveux = 0 
     while compteurU[0] < 2 or passerQuestionSuivanteCheveux:
         reponseCheveux = input(questionsCheveux[indexQuestionsCheveux])
-        while ( reponseCheveux.upper() != "O" and reponseCheveux.upper() != "N"  and reponseCheveux.upper() != "U") :
+        while ( reponseCheveux.upper() != "O" and reponseCheveux.upper() != "N"  and reponseCheveux.upper() != "U") :#peut etre un probleme avec
             reponseCheveux = input(questionsCheveux[indexQuestionsCheveux])
         questionsCheveux(reponseCheveux , caracteristiquesCheveux[indexQuestionsCheveux])
         indexQuestionsCheveux += 1
