@@ -5,12 +5,12 @@
 #Classe : 
 class Personne :
     
-    def _init_(self, nom, couleurDeCheveux, couleurDesYeux, genie) :
+    def _init_(self, nom, couleurDeCheveux, couleurDesYeux, genie, nombreLiens) :
         self.nom = nom
         self.couleurDeCheveux = couleurDeCheveux
         self.couleurDesYeux = couleurDesYeux
         self.genie = genie
-        self.nombreLiens = 0  
+        self.nombreLiens = 0
 
 
 #TODO :
@@ -122,32 +122,30 @@ def questions () :
     passerQuestionSuivanteCheveux = False
 
     while compteurU[0] < 2 or passerQuestionSuivanteCheveux:
-        reponseCheveux = input(tableauQuestionsCheveux[indexQuestionsCheveux])
-        while ( reponseCheveux.upper() != "O" and reponseCheveux.upper() != "N"  and reponseCheveux.upper() != "U") :
-            reponseCheveux = input(tableauQuestionsCheveux[indexQuestionsCheveux])
-        questionsCheveux(
-            reponseCheveux, tableauCaracteristiquesCheveux[indexQuestionsCheveux], passerQuestionSuivanteCheveux)
+        reponseCheveux = input(questionsCheveux[indexQuestionsCheveux])
+        while reponseCheveux.upper() not in ["O","N","U"] :#peut etre un probleme avec
+            reponseCheveux = input(questionsCheveux[indexQuestionsCheveux])
+        questionsCheveux(reponseCheveux , caracteristiquesCheveux[indexQuestionsCheveux])
         indexQuestionsCheveux += 1
     
     passerQuestionSuivanteYeux = False
 
     indexQuestionsYeux = 0 
     while compteurU[1] < 2 or passerQuestionSuivanteYeux : 
-        reponseYeux = input(tableauQuestionsYeux[indexQuestionsYeux])
-        while ( reponseYeux.upper() != "O" and reponseYeux.upper() != "N" and reponseYeux.upper() != "U") :
-            reponseYeux = input(tableauQuestionsYeux[indexQuestionsYeux])
-        questionsYeux(reponseYeux, tableauCaracteristiquesYeux[indexQuestionsYeux], passerQuestionSuivanteYeux)
+        reponseYeux = input(questionsYeux[indexQuestionsYeux])
+        while reponseYeux.upper() not in ["O","N","U"] :
+            reponseYeux = input(questionsYeux[indexQuestionsYeux])
+        questionsYeux(reponseYeux ,caracteristiquesYeux[indexQuestionsYeux])
         indexQuestionsYeux += 1
     
 
     passerQuestionSuivanteGenie = False
     indexQuestionsGenie = 0 
     while compteurU[2] < 2 or passerQuestionSuivanteGenie : 
-        reponseGenie = input(tableauQuestionsGenie[indexQuestionsGenie])
-        while ( reponseGenie.upper() != "O" and reponseGenie.upper() != "N" and reponseGenie.upper() != "U") :
-            reponseGenie = input(tableauQuestionsGenie[indexQuestionsGenie])
-        questionsGenie(
-            reponseGenie, tableauCaracteristiquesGenie[indexQuestionsGenie], passerQuestionSuivanteGenie)
+        reponseGenie = input(questionsGenie[indexQuestionsGenie])
+        while reponseGenie.upper() not in ["O","N","U"] :
+            reponseGenie = input(questionsGenie[indexQuestionsGenie])
+        questionsGenie(reponseGenie, caracteristiquesGenie[indexQuestionsGenie])
         indexQuestionsGenie += 1
     
     
