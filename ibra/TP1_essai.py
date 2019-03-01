@@ -70,8 +70,8 @@ lesQuestionsGenies = [ " Les individus sont-ils en génie informatique-GI ?"
 
 compteurQuestionsPosees = [0 , 0 , 0 ]
 compteurU = [0 , 0 , 0 ]
-conteneurReponse = {}#!! pour se rappeller des reponses des questions le max est 6 pas sur de la declaration 
-tableauIndividusEvolutif = {}
+conteneurReponse = [""]  # !! pour se rappeller des reponses des questions le max est 6 pas sur de la declaration 
+tableauIndividusEvolutif = set()
 
 # Decoupage de la fonction identifierIndividus() : 
 # Questions a poser (compteur locale)
@@ -82,19 +82,92 @@ tableauIndividusEvolutif = {}
 # on doit posé la question une par une puis agir en cosequence de la reponse 
 #parce que la on a les reponses sans qu'on pose les questions 
 #j'ai pensé qu'il nous faut deux valeures car on peut avoir deux solution en cas d'une reponse avec u 
+# je pense qu'on peut mettre ce bool comme une condition pour la question des yeux
+def questionsCheveux() :
+    passerQuestionCheveux = False
+    indexQuestionsCheveux = 0 
+    while compteurU[0] < 2 or passerQuestionCheveux:
+        reponseCheveux = input(lesQuestionsCheveux[indexQuestionsCheveux])
+        while reponseCheveux.upper() not in ["O", "N", "U"]:
+            reponseCheveux = input(lesQuestionsCheveux[indexQuestionsCheveux])
+        if (reponseCheveux.upper() == "O") : 
+            passerQuestionCheveux = True 
+            conteneurReponse[0] = caracteristiquesCheveux[indexQuestionsCheveux]
+            conteneurReponse[1] = "vide"
+        if (reponseCheveux.upper() == "U"):
+            compteurU[0] =+ 1 
+            conteneurReponse[compteurU[0] -1] = caracteristiquesCheveux[indexQuestionsCheveux]
+        if (reponseCheveux.upper() == "O") or (reponseCheveux.upper() == "U") :
+            for personne in tableauIndividus: 
+                if personne.cheveux == caracteristiquesCheveux[indexQuestionsCheveux]:
+                    tableauIndividusEvolutif.add(personne)
+        indexQuestionsCheveux += 1
+    compteurQuestionsPosees[0] = indexQuestionsCheveux+1 
+    return 
+
+
+
+def questionsYeux () : 
+    passerQuestionYeux = False 
+    indexQuestionsYeux = 0 
+    while compteurU[1] < 2 or passerQuestionYeux :
+        reponseYeux = input(lesQuestionsYeux[indexQuestionsYeux])
+        while reponseYeux.upper() not in ["O","U","N"]:
+            reponseYeux = input(lesQuestionsYeux[indexQuestionsYeux])
+        if (reponseYeux.upper() == "O") : 
+            passerQuestionYeux = True 
+            conteneurReponse[2] = caracteristiquesYeux[indexQuestionsYeux]
+            conteneurReponse[3] = "vide"
+        if reponseYeux.upper() == "U" : 
+            compteurU[1] =+ 1 
+            conteneurReponse[compteurU[1] + 1] = caracteristiquesYeux[indexQuestionsYeux]
+        if reponseYeux.upper() == "N" :
+            for personne in tableauIndividusEvolutif : 
+                if personne.yeux == caracteristiquesYeux[indexQuestionsYeux] : 
+                    del(personne)
+        indexQuestionsYeux =+ 1 
+    compteurQuestionsPosees[1] = indexQuestionsYeux + 1
+    return 
+
+def questionsGenie() : 
+    passerQuestionGenie = False
+    indexQuestionsGenie = 0
+    while compteurU[1] < 2 or passerQuestionGenie:
+        reponseGenie = input(lesQuestionsGenies[indexQuestionsGenie])
+        while reponseGenie.upper() not in ["O", "U", "N"]:
+            reponseGenie = input(lesQuestionsGenies[indexQuestionsGenie])
+        if (reponseGenie.upper() == "O"):
+            passerQuestionGenie = True
+            conteneurReponse[4] = caracteristiquesYeux[indexQuestionsGenie]
+            conteneurReponse[5] = "vide"
+        if reponseGenie.upper() == "U":
+            compteurU[2] = + 1
+            conteneurReponse[compteurU[1] + 3] = caracteristiquesGenie[indexQuestionsGenie]
+        if reponseGenie.upper() == "N":
+            for personne in tableauIndividusEvolutif:
+                if personne.genie == caracteristiquesGenie[indexQuestionsGenie]:
+                    del(personne)
+        indexQuestionsGenie = + 1
+    compteurQuestionsPosees[2] = indexQuestionsGenie + 1
+    return
+
+
+
+
+
 passerQuestionSuivanteCheveux = False ## je pense qu'on peut mettre ce bool comme une condition pour la question des yeux
 def questionsCheveux(reponse, valeur1, valeur2):
     if reponse == "o" or reponse == "u" :
         conteneurReponse[0] = valeur1
         conteneurReponse[1] = valeur2
         for personnes in tableauIndividus :
-            if personnes.couleurDeCheveux == valeur1 or personnes couleurDeCheveux == valeur2 :
+            if personnes.couleurDeCheveux == valeur1 or personnes.couleurDeCheveux == valeur2 :
                 tableauIndividusEvolutif.add(personnes)
         if reponse == "u" :
             compteurU[0] = compteurU[0] + 1
          #   if compteurU[0] = 2 :
           #      passerQuestionSuivanteCheveux = True 
-        else 
+        else :
             passerQuestionSuivanteCheveux = True
     compteurQuestionsPosees[0] = compteurQuestionsPosees[0]+1
 ########################################################
@@ -118,8 +191,7 @@ def questionsYeux(reponse, valeur1, valeur2):
         conteneurReponse[3]= valeur2
         for personnes in tableauIndividus:
             #je me demande si je met un autre if pour la couleur des yeux qui sera dans le if de couleur des cheveux 
-            if (personnes.couleurDeCheveux == conteneurReponse[0] or personnes.couleurDeCheveux == conteneurReponse[1])
-            and (personnes.couleurDesYeux== valeur1 or personnes.couleurDesYeux == valeur2):
+            if (personnes.couleurDeCheveux == conteneurReponse[0] or personnes.couleurDeCheveux == conteneurReponse[1]) and (personnes.couleurDesYeux == valeur1 or personnes.couleurDesYeux == valeur2):
                 tableauIndividusEvolutif.add(personnes)    
                 #faire une relecture sur le tableau evolutif pour supprimer ceux qui non pas la meme couleur de yeux 
                 for i in tableauIndividusEvolutif:
@@ -165,25 +237,25 @@ def questionsGenie(reponse, valeur):
 def questions () : 
     indexQuestionsCheveux = 0 
     while compteurU[0] < 2 or passerQuestionSuivanteCheveux:
-        reponseCheveux = input(questionsCheveux[indexQuestionsCheveux])
-        while ( reponseCheveux.upper() != "O" and reponseCheveux.upper() != "N"  and reponseCheveux.upper() != "U") :#peut etre un probleme avec
-            reponseCheveux = input(questionsCheveux[indexQuestionsCheveux])
+        reponseCheveux = input(lesQuestionsCheveux[indexQuestionsCheveux])
+        while reponseCheveux.upper() not in ["O", "N", "U"]:
+            reponseCheveux = input(lesQuestionsCheveux[indexQuestionsCheveux])
         questionsCheveux(reponseCheveux , caracteristiquesCheveux[indexQuestionsCheveux])
         indexQuestionsCheveux += 1
     
     indexQuestionsYeux = 0 
     while compteurU[1] < 2 or passerQuestionSuivanteYeux : 
-        reponseYeux = input(questionsYeux[indexQuestionsYeux])
-        while ( reponseYeux.upper() != "O" and reponseYeux.upper() != "N" and reponseYeux.upper() != "U") :
-            reponseYeux = input(questionsYeux[indexQuestionsYeux])
+        reponseYeux = input(lesQuestionsYeux[indexQuestionsYeux])
+        while reponseYeux.upper() not in ["O", "N", "U"]:
+            reponseYeux = input(lesQuestionsYeux[indexQuestionsYeux])
         questionsYeux(reponseYeux ,caracteristiquesYeux[indexQuestionsYeux])
         indexQuestionsYeux += 1
     
     indexQuestionsGenie = 0 
     while compteurU[2] < 2 or passerQuestionSuivanteGenie : 
-        reponseGenie = input(questionsGenie[indexQuestionsGenie])
+        reponseGenie = input(lesQuestionsGenie[indexQuestionsGenie])
         while ( reponseGenie.upper() != "O" and reponseGenie.upper() != "N" and reponseGenie.upper() != "U") :
-            reponseGenie = input(questionsGenie[indexQuestionsGenie])
+            reponseGenie = input(lesQuestionsGenie[indexQuestionsGenie])
         questionsGenie(reponseGenie, caracteristiquesGenie[indexQuestionsGenie])
         indexQuestionsGenie += 1
     
