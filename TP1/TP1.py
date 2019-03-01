@@ -12,12 +12,10 @@ class Personne :
         self.genie = genie
         self.nombreLiens = 0
 
-tableauRelations =  {} 
-tableauIndividus = {}
 
-
-#TODO : 
-
+#TODO :
+    tableauRelations = {}
+    tableauIndividus = {}
 #  fontion : creerReseauSocial( , ) : 
 #   Lire les fichiers texte contenant les informations 
 #   et genere le reseau social correspondant. 
@@ -26,8 +24,8 @@ def creerReseauSocial(fichier1 , fichier2) :
     relations = open(fichier2 , "r")
     for ind in individus : 
         personne = ind.split(" ")
-        tableauIndividus.add(Personne(personne[0], personne[1], personne[2] ,personne[3] ))
-    for lignes in relations :  # A verifier 
+        tableauIndividus.add(Personne(personne[0], personne[1], personne[2] ,personne[3]))
+    for lignes in relations :   
         chaines = lignes.split(" ")
         if chaines[1] > 0 and chaines[1] <=100 :
             tableauRelations.add(" ( " + chaines[0] + "  " + chaines[2] + "  ( " + chaines[1] + "%") 
@@ -42,24 +40,24 @@ def afficherReseauSocial() :
 # 
 
 
-caracteristiquesCheveux = ["N", "R", "B", "M"]
+tableauCaracteristiquesCheveux = ["N", "R", "B", "M"]
 
-questionsCheveux = ["Les individues mysteres ont-ils les cheveux noirs-N ? ",
+tableauquestionsCheveux = ["Les individues mysteres ont-ils les cheveux noirs-N ? ",
                     "Les individues mysteres ont-ils les cheveux roux-R ? " , 
                     "Les individues mysteres ont-ils les cheveux blonds-B ? " , 
                     "Les individues mysteres ont-ils les cheveux marrons-M ? " ]
 
-caracteristiquesYeux = [ "B" , "V" , "N" , "G" , "M" ]
+tableauCaracteristiquesYeux = [ "B" , "V" , "N" , "G" , "M" ]
 
-questionsYeux = [   "Les individues mysteres ont-ils les yeux bleus-B ? " , 
+tableauQuestionsYeux = [   "Les individues mysteres ont-ils les yeux bleus-B ? " , 
                     "Les individues mysteres ont-ils les yeux verts-V ? " , 
                     "Les individues mysteres ont-ils les yeux noirs-N ? " ,
                     "Les individues mysteres ont-ils les yeux gris-G ? " , 
                     "Les individues mysteres ont-ils les yeux marrons-M ? ",  ]
 
-caracteristiquesGenie = ["GI" , "GP" , "GE" , "GC" , "GA" , "GM" , "GB" , "GInd" , "ER"]
+tableauCaracteristiquesGenie = ["GI" , "GP" , "GE" , "GC" , "GA" , "GM" , "GB" , "GInd" , "ER"]
 
-questionsGenies = [ " Les individus sont-ils en génie informatique-GI ?"
+tableauQuestionsGenies = [ " Les individus sont-ils en génie informatique-GI ?"
                     " Les individus sont-ils en génie physique-GP ?"
                     " Les individus sont-ils en génie electrique-GE ?"
                     " Les individus sont-ils en génie chimique-GC ?"
@@ -76,9 +74,9 @@ tableauIndividusEvolutif = {}
 # Decoupage de la fonction identifierIndividus() : 
 # Questions a poser (compteur locale)
 #Questions pour cheveux :
-passerQuestionSuivanteCheveux = False
 
-def questionsCheveux(reponse, valeur ):
+
+def questionsCheveux(reponse, valeur, passerQuestionSuivanteCheveux):
     if reponse == "o" or reponse == "u":
         for personnes in tableauIndividus : 
             if personnes.couleurDesCheveux == valeur :
@@ -90,9 +88,9 @@ def questionsCheveux(reponse, valeur ):
     compteurQuestionsPosees[0] = compteurQuestionsPosees[0]+1
 
 #Questions pour yeux : 
-passerQuestionSuivanteYeux = False
 
-def questionsYeux(reponse, valeur):
+
+def questionsYeux(reponse, valeur, passerQuestionSuivanteYeux):
     if reponse == "o" or reponse == "u":
         for personnes in tableauIndividus:
             if personnes.couleurDesYeux == valeur:
@@ -104,9 +102,9 @@ def questionsYeux(reponse, valeur):
     compteurQuestionsPosees[1] = compteurQuestionsPosees[1]+1
 
 #Questions pour genie :
-passerQuestionSuivanteGenie = False
 
-def questionsGenie(reponse, valeur):
+
+def questionsGenie(reponse, valeur, passerQuestionSuivanteGenie):
     if reponse == "o" or reponse == "u":
         for personnes in tableauIndividus:
             if personnes.genie == valeur:
@@ -121,28 +119,35 @@ def questionsGenie(reponse, valeur):
 
 def questions () : 
     indexQuestionsCheveux = 0 
+    passerQuestionSuivanteCheveux = False
+
     while compteurU[0] < 2 or passerQuestionSuivanteCheveux:
         reponseCheveux = input(questionsCheveux[indexQuestionsCheveux])
-        while ( reponseCheveux.upper() != "O" and reponseCheveux.upper() != "N"  and reponseCheveux.upper() != "U") :#peut etre un probleme avec
+        while reponseCheveux.upper() not in ["O","N","U"] :#peut etre un probleme avec
             reponseCheveux = input(questionsCheveux[indexQuestionsCheveux])
         questionsCheveux(reponseCheveux , caracteristiquesCheveux[indexQuestionsCheveux])
         indexQuestionsCheveux += 1
     
+    passerQuestionSuivanteYeux = False
+
     indexQuestionsYeux = 0 
     while compteurU[1] < 2 or passerQuestionSuivanteYeux : 
         reponseYeux = input(questionsYeux[indexQuestionsYeux])
-        while ( reponseYeux.upper() != "O" and reponseYeux.upper() != "N" and reponseYeux.upper() != "U") :
+        while reponseYeux.upper() not in ["O","N","U"] :
             reponseYeux = input(questionsYeux[indexQuestionsYeux])
         questionsYeux(reponseYeux ,caracteristiquesYeux[indexQuestionsYeux])
         indexQuestionsYeux += 1
     
+
+    passerQuestionSuivanteGenie = False
     indexQuestionsGenie = 0 
     while compteurU[2] < 2 or passerQuestionSuivanteGenie : 
         reponseGenie = input(questionsGenie[indexQuestionsGenie])
-        while ( reponseGenie.upper() != "O" and reponseGenie.upper() != "N" and reponseGenie.upper() != "U") :
+        while reponseGenie.upper() not in ["O","N","U"] :
             reponseGenie = input(questionsGenie[indexQuestionsGenie])
         questionsGenie(reponseGenie, caracteristiquesGenie[indexQuestionsGenie])
         indexQuestionsGenie += 1
+    
     
 
 #  fonction : identifierIndividus()
@@ -155,6 +160,9 @@ def identifierIndividus() :
 def enleverArcsIndesirables() :
     return
 #  fonction : trouverChaineContacts( 2 noms d'individus )
+
+#TODO with Dijksta algorithm !!
+
 #   L'agent trouve la meilleure chaine de contacts entre 2 individus à partir 
 #   du sous-graphe des caracteristiques désirables.
 
@@ -216,4 +224,4 @@ def main() :
             break
 
 if __name__== "__main__":
-  main()
+    main()
