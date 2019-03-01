@@ -123,7 +123,7 @@ def questions () :
     indexQuestionsCheveux = 0 
     while compteurU[0] < 2 or passerQuestionSuivanteCheveux:
         reponseCheveux = input(questionsCheveux[indexQuestionsCheveux])
-        while ( reponseCheveux.upper() != "O" and reponseCheveux.upper() != "N"  and reponseCheveux.upper() != "U") :#peut etre un probleme avec
+        while reponseCheveux.upper() not in ["O","N","U"] :#peut etre un probleme avec
             reponseCheveux = input(questionsCheveux[indexQuestionsCheveux])
         questionsCheveux(reponseCheveux , caracteristiquesCheveux[indexQuestionsCheveux])
         indexQuestionsCheveux += 1
@@ -131,7 +131,7 @@ def questions () :
     indexQuestionsYeux = 0 
     while compteurU[1] < 2 or passerQuestionSuivanteYeux : 
         reponseYeux = input(questionsYeux[indexQuestionsYeux])
-        while ( reponseYeux.upper() != "O" and reponseYeux.upper() != "N" and reponseYeux.upper() != "U") :
+        while reponseYeux.upper() not in ["O","N","U"] :
             reponseYeux = input(questionsYeux[indexQuestionsYeux])
         questionsYeux(reponseYeux ,caracteristiquesYeux[indexQuestionsYeux])
         indexQuestionsYeux += 1
@@ -139,7 +139,7 @@ def questions () :
     indexQuestionsGenie = 0 
     while compteurU[2] < 2 or passerQuestionSuivanteGenie : 
         reponseGenie = input(questionsGenie[indexQuestionsGenie])
-        while ( reponseGenie.upper() != "O" and reponseGenie.upper() != "N" and reponseGenie.upper() != "U") :
+        while reponseGenie.upper() not in ["O","N","U"] :
             reponseGenie = input(questionsGenie[indexQuestionsGenie])
         questionsGenie(reponseGenie, caracteristiquesGenie[indexQuestionsGenie])
         indexQuestionsGenie += 1
