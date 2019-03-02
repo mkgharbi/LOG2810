@@ -1,56 +1,5 @@
 ########################
-
-
-#Classe :
-class Personne:
-
-    def _init_(self, nom, couleurDeCheveux, couleurDesYeux, genie):
-        self.nom = nom
-        self.couleurDeCheveux = couleurDeCheveux
-        self.couleurDesYeux = couleurDesYeux
-        self.genie = genie
-    def __str__(self):
-        return 
-
-
-
-class Relations: 
-    def _init_ (self, nomIndividu1 , nomIndividu2, facteurRelations):
-        self.nomIndividu1 = nomIndividu1
-        self.nomIndividu2 = nomIndividu2
-        self.facteurRelations = facteurRelations
-
-
-tableauRelations = set()
-tableauIndividus = set()
-
-
-#TODO :
-
-#  fonction : creerReseauSocial( , ) :
-#   Lire les fichiers texte contenant les informations
-#   et genere le reseau social correspondant.
-def creerReseauSocial(fichier1, fichier2):
-    individus = open(fichier1, "r")
-    relations = open(fichier2, "r")
-    for ind in individus:
-        personne = ind.split(" ")
-        tableauIndividus.add(Personne(personne[0], personne[1], personne[2], personne[3]))
-    for lignes in relations:  
-        chaines = lignes.split(" ")
-        if chaines[1] > 0 and chaines[1] <= 100:
-            tableauRelations.add(Relations(chaines[0], chaines[2], chaines[1]))
-
-
-#
-#  fonction : afficherReseauSocial()
-#   Affiche le réseau social selon le format présenté en annexe.
-def afficherReseauSocial():
-    #creerReseauSocial("individus.txt","Relations.txt")
-    for x in tableauRelations:
-        print(x.nomIndividu1 , " , " , x.nomIndividu2 , " ( " , x.facteurRelations , " % )")
-
-
+from reseauSocial import *
 
 caracteristiquesCheveux = ["N", "R", "B", "M"]
 
@@ -67,7 +16,7 @@ lesQuestionsYeux = ["Les individues mysteres ont-ils les yeux bleus-B ? ",
                     "Les individues mysteres ont-ils les yeux gris-G ? ",
                     "Les individues mysteres ont-ils les yeux marrons-M ? ", ]
 
-# on n'a pas utiliser les caracteristique
+
 caracteristiquesGenie = ["GI", "GP", "GE",
                         "GC", "GA", "GM", "GB", "GInd", "ER"]
 
@@ -83,7 +32,7 @@ lesQuestionsGenies = [" Les individus sont-ils en génie informatique-GI ?"
 
 compteurQuestionsPosees = [0, 0, 0, 0]
 compteurU = [0, 0, 0]
-# !! pour se rappeller des reponses des questions le max est 6 pas sur de la declaration
+# pour se rappeller des reponses des questions le max est 6 
 conteneurReponse = [""]
 tableauIndividusEvolutif = set()
 
@@ -118,7 +67,7 @@ def questionsCheveux():
                 compteurU[0] = + 1
                 conteneurReponse[compteurU[0] - 1] = caracteristiquesCheveux[indexQuestionsCheveux]
             if (reponseCheveux.upper() == "O") or (reponseCheveux.upper() == "U"):
-                for personne in tableauIndividus:
+                for personne in tableauIndividus: 
                     if personne.cheveux == caracteristiquesCheveux[indexQuestionsCheveux]:
                         tableauIndividusEvolutif.add(personne)
             indexQuestionsCheveux += 1
@@ -232,85 +181,3 @@ def identifierIndividus() :
 
     return
 
-
-#
-#  fonction : enleverArcsIndesirables( 3 caracteristiques indesirables )
-#   Génère le sous-graphe des caractéristiques désirables.
-def get(nom):
-    for personnes in tableauIndividus:
-        if personnes.nom == nom : 
-            return personnes
-
-def enleverArcsIndesirables(cheveux , yeux , genie ) :
-    for relations in tableauRelations : 
-        if not (get(relations.nomIndividu1).cheveux == get(relations.nomIndividu2).cheveux or get(relations.nomIndividu1).yeux == get(relations.nomIndividu2).yeux or get(relations.nomIndividu1).genie == get(relations.nomIndividu2).genie) :
-            relations.facteurRelations = 0 
-    afficherReseauSocial()
-
-
-#  fonction : trouverChaineContacts( 2 noms d'individus )
-
-#TODO with Dijksta algorithm !!
-
-#   L'agent trouve la meilleure chaine de contacts entre 2 individus à partir 
-#   du sous-graphe des caracteristiques désirables.
-
-def trouverChaineContacts(nomSource , nomCible) :  
-    return
-#  fontion : afficherResultat() 
-#   L'agent présente le résultatde ses accomplissements selon le bon format.
-def afficherResultat() :
-    return
-# Interface console qui affiche le menu : 
-#   a/ Créer le résea social.
-#   b/ Afficher le réseau social.
-#   c/ Jouer à Qui est-ce ? 
-#   d/ Afficher le résultat.
-#   e/ Quitter. 
-#
-########################
-
-selections = {
-    0:"afficherMenu",
-    1:"a",
-    2:"b",
-    3:"c",
-    4:"d",
-    5:"e",
-}
-
-def lireInput() :
-    valeur = None
-    while valeur not in ["a","b","c","d","e"]:
-        valeur = input()
-    return valeur
-
-# main 
-def main() :
-    current = selections[0]
-    #Menu
-    while True:
-        if current == "afficherMenu":
-            print("a/ Créer le résea social.")
-            print("b/ Afficher le réseau social.")
-            print("c/ Jouer à Qui est-ce ?")
-            print("d/ Afficher le résultat.")
-            print("e/ Quitter")
-            current = lireInput()
-        elif current == "a":
-            creerReseauSocial("Individus.txt", "Relations.txt")
-            current = selections[0]
-        elif current == "b":
-            afficherReseauSocial()
-            current = selections[0]
-        elif current == "c":
-            #questions()
-            current = selections[0]
-        elif current == "d":
-            afficherResultat()
-            current = selections[0]
-        elif current == "e":
-            break
-
-if __name__== "__main__":
-    main()
