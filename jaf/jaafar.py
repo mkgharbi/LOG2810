@@ -12,7 +12,7 @@ class Personne:
     def __str__(self):
         return 
 
-
+class Graph
 tableauRelations = []
 tableauIndividus = set()
 
@@ -39,7 +39,6 @@ def creerReseauSocial(fichier1, fichier2):
 #  fonction : afficherReseauSocial()
 #   Affiche le réseau social selon le format présenté en annexe.
 def afficherReseauSocial():
-    creerReseauSocial("individus.txt","Relations.txt")
     for x in tableauRelations:
         print(tableauRelations[x])
 #
@@ -222,24 +221,22 @@ def identifierIndividus() :
                     else : 
                         tableauIndividusFinale.add(tableauIndividusFiltre.copy(1, 1))
                         tableauIndividusFinale.add(tableauIndividusFiltre.copy(2, 2))
+
+                        
 #
 #  fonction : enleverArcsIndesirables( 3 caracteristiques indesirables )
 #   Génère le sous-graphe des caractéristiques désirables.
-sousGraphe = set()
-def enleverArcsIndesirables() :
-    sousGraphe = tableauIndividus
-    wasRemoved = False
-    for currentNode in sousGraphe:
-        if not wasRemoved and currentNode.couleurDeCheveux not in conteneurReponse :
-            sousGraphe.remove(currentNode)
-            wasRemoved = True
-        if not wasRemoved and currentNode.couleurDesYeux not in conteneurReponse:
-            sousGraphe.remove(currentNode)
-            wasRemoved = True
-        if not wasRemoved and currentNode.genie not in conteneurReponse:
-            sousGraphe.remove(currentNode)
-            wasRemoved = True
-        wasRemoved = False
+def get(nom):
+    for personnes in tableauIndividus:
+        if personnes.nom == nom : 
+            return personnes
+
+def enleverArcsIndesirables(cheveux , yeux , genie ) :
+    for relations in tableauRelations : 
+        if not (get(relations.nomIndividu1).cheveux == get(relations.nomIndividu2).cheveux or get(relations.nomIndividu1).yeux == get(relations.nomIndividu2).yeux or get(relations.nomIndividu1).genie == get(relations.nomIndividu2).genie) :
+            relations.facteurRelations = 0 
+    afficherReseauSocial()
+
 #  fonction : trouverChaineContacts( 2 noms d'individus )
 
 #TODO with Dijksta algorithm !!
@@ -310,7 +307,9 @@ def main() :
             afficherReseauSocial()
             current = selections[0]
         elif current == "c":
-            #questions()
+            questionsCheveux()
+            questionsYeux()
+            questionsGenie()
             current = selections[0]
         elif current == "d":
             afficherResultat()

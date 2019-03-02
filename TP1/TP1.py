@@ -304,7 +304,10 @@ def main() :
             afficherReseauSocial()
             current = selections[0]
         elif current == "c":
-            #questions()
+            questionsCheveux()
+            questionsYeux()
+            questionsGenie()
+            identifierIndividus()
             current = selections[0]
         elif current == "d":
             afficherResultat()
