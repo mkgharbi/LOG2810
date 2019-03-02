@@ -4,7 +4,7 @@
 #Classe :
 class Personne:
 
-    def _init_(self, nom, couleurDeCheveux, couleurDesYeux, genie):
+    def __init__(self, nom, couleurDeCheveux, couleurDesYeux, genie):
         self.nom = nom
         self.couleurDeCheveux = couleurDeCheveux
         self.couleurDesYeux = couleurDesYeux
@@ -15,7 +15,7 @@ class Personne:
 
 
 class Relations: 
-    def _init_ (self, nomIndividu1 , nomIndividu2, facteurRelations):
+    def __init__(self, nomIndividu1 , nomIndividu2, facteurRelations):
         self.nomIndividu1 = nomIndividu1
         self.nomIndividu2 = nomIndividu2
         self.facteurRelations = facteurRelations
@@ -38,8 +38,8 @@ def creerReseauSocial(fichier1, fichier2):
         tableauIndividus.add(Personne(personne[0], personne[1], personne[2], personne[3]))
     for lignes in relations:  
         chaines = lignes.split(" ")
-        if chaines[1] > 0 and chaines[1] <= 100:
-            tableauRelations.add(Relations(chaines[0], chaines[2], chaines[1]))
+        if int(chaines[1]) > 0 and int(chaines[1]) <= 100:
+            tableauRelations.add(Relations(chaines[0], chaines[2], int(chaines[1])))
 
 
 #
