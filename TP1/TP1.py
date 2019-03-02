@@ -48,7 +48,7 @@ def creerReseauSocial(fichier1, fichier2):
 def afficherReseauSocial():
     #creerReseauSocial("individus.txt","Relations.txt")
     for x in tableauRelations:
-        print(x.nomIndividu1 , " , " , x.nomIndividu2 , " ( " , x.facteurRelations , " % )")
+        print("%s,%s(%s%%)\n" % (x.nomIndividu1.strip(), x.nomIndividu2.strip(), str(x.facteurRelations).strip()))
 
 
 
@@ -65,26 +65,26 @@ lesQuestionsYeux = ["Les individues mysteres ont-ils les yeux bleus-B ? ",
                     "Les individues mysteres ont-ils les yeux verts-V ? ",
                     "Les individues mysteres ont-ils les yeux noirs-N ? ",
                     "Les individues mysteres ont-ils les yeux gris-G ? ",
-                    "Les individues mysteres ont-ils les yeux marrons-M ? ", ]
+                    "Les individues mysteres ont-ils les yeux marrons-M ? "]
 
 # on n'a pas utiliser les caracteristique
 caracteristiquesGenie = ["GI", "GP", "GE",
                         "GC", "GA", "GM", "GB", "GInd", "ER"]
 
-lesQuestionsGenies = [" Les individus sont-ils en génie informatique-GI ?"
-                    " Les individus sont-ils en génie physique-GP ?"
-                    " Les individus sont-ils en génie electrique-GE ?"
-                    " Les individus sont-ils en génie chimique-GC ?"
-                    " Les individus sont-ils en génie aerospatial-GA ?"
-                    " Les individus sont-ils en génie mecanique-GM ?"
-                    " Les individus sont-ils en génie biomédical-GB ?"
-                    " Les individus sont-ils en génie industriel-GInd ?"
+lesQuestionsGenies = [" Les individus sont-ils en génie informatique-GI ?",
+                    " Les individus sont-ils en génie physique-GP ?",
+                    " Les individus sont-ils en génie electrique-GE ?",
+                    " Les individus sont-ils en génie chimique-GC ?",
+                    " Les individus sont-ils en génie aerospatial-GA ?",
+                    " Les individus sont-ils en génie mecanique-GM ?",
+                    " Les individus sont-ils en génie biomédical-GB ?",
+                    " Les individus sont-ils en génie industriel-GInd ?",
                     " Les individus sont-ils en génie énergétique-ER ?"]
 
 compteurQuestionsPosees = [0, 0, 0, 0]
 compteurU = [0, 0, 0]
 # !! pour se rappeller des reponses des questions le max est 6 pas sur de la declaration
-conteneurReponse = [""]
+conteneurReponse = [None, None, None, None, None, None]
 tableauIndividusEvolutif = set()
 
 # Decoupage de la fonction identifierIndividus() :
@@ -101,79 +101,76 @@ def suspects(tableau) :
 #j'ai pensé qu'il nous faut deux valeures car on peut avoir deux solution en cas d'une reponse avec u
 # je pense qu'on peut mettre ce bool comme une condition pour la question des yeux
 def questionsCheveux():
-    passerQuestionCheveux = False
     indexQuestionsCheveux = 0
-    while compteurU[0] < 2 or passerQuestionCheveux:
+    while compteurU[0] < 2:
         reponseCheveux = input(lesQuestionsCheveux[indexQuestionsCheveux])
         while reponseCheveux.upper() not in ["O", "N", "U" , "S"]:
             reponseCheveux = input(lesQuestionsCheveux[indexQuestionsCheveux])
         if reponseCheveux.upper() == "S" : 
             suspects(tableauIndividusEvolutif)
-        else :
-            if (reponseCheveux.upper() == "O"):
-                passerQuestionCheveux = True
-                conteneurReponse[0] = caracteristiquesCheveux[indexQuestionsCheveux]
-                conteneurReponse[1] = "vide"
-            if (reponseCheveux.upper() == "U"):
-                compteurU[0] = + 1
-                conteneurReponse[compteurU[0] - 1] = caracteristiquesCheveux[indexQuestionsCheveux]
-            if (reponseCheveux.upper() == "O") or (reponseCheveux.upper() == "U"):
-                for personne in tableauIndividus:
-                    if personne.cheveux == caracteristiquesCheveux[indexQuestionsCheveux]:
-                        tableauIndividusEvolutif.add(personne)
-            indexQuestionsCheveux += 1
+        elif (reponseCheveux.upper() == "O"):
+            conteneurReponse[0] = caracteristiquesCheveux[indexQuestionsCheveux]
+            conteneurReponse[1] = "vide"
+            compteurU[0] = 2
+            break
+        elif(reponseCheveux.upper() == "U"):
+            compteurU[0] += 1
+            conteneurReponse[compteurU[0] - 1] = caracteristiquesCheveux[indexQuestionsCheveux]
+        elif(reponseCheveux.upper() == "O") or (reponseCheveux.upper() == "U"):
+            for personne in tableauIndividus:
+                 if personne.cheveux == caracteristiquesCheveux[indexQuestionsCheveux]:
+                    tableauIndividusEvolutif.add(personne)
+        indexQuestionsCheveux += 1
     compteurQuestionsPosees[0] = indexQuestionsCheveux+1
     return
 
 
 def questionsYeux():
-    passerQuestionYeux = False
     indexQuestionsYeux = 0
-    while compteurU[1] < 2 or passerQuestionYeux:
+    while compteurU[1] < 2:
         reponseYeux = input(lesQuestionsYeux[indexQuestionsYeux])
         while reponseYeux.upper() not in ["O", "U", "N", "S"]:
             reponseYeux = input(lesQuestionsYeux[indexQuestionsYeux])
         if (reponseYeux.upper() == "S"): 
             suspects(tableauIndividusEvolutif)
-        else : 
-            if (reponseYeux.upper() == "O"):
-                passerQuestionYeux = True
-                conteneurReponse[2] = caracteristiquesYeux[indexQuestionsYeux]
-                conteneurReponse[3] = "vide"
-            if reponseYeux.upper() == "U":
-                compteurU[1] = + 1
-                conteneurReponse[compteurU[1] + 1] = caracteristiquesYeux[indexQuestionsYeux]
-            if reponseYeux.upper() == "N":
-                for personne in tableauIndividusEvolutif:
-                    if personne.yeux == caracteristiquesYeux[indexQuestionsYeux]:
-                        del(personne)
-            indexQuestionsYeux = + 1
+        elif(reponseYeux.upper() == "O"):
+            conteneurReponse[2] = caracteristiquesYeux[indexQuestionsYeux]
+            conteneurReponse[3] = "vide"
+            compteurU[1] = 2
+            break
+        elif reponseYeux.upper() == "U":
+            compteurU[1] = + 1
+            conteneurReponse[compteurU[1] + 1] = caracteristiquesYeux[indexQuestionsYeux]
+        elif reponseYeux.upper() == "N":
+            for personne in tableauIndividusEvolutif:
+                if personne.yeux == caracteristiquesYeux[indexQuestionsYeux]:
+                    del(personne)
+        indexQuestionsYeux = + 1
     compteurQuestionsPosees[1] = indexQuestionsYeux + 1
     return
 
 
 def questionsGenie():
-    passerQuestionGenie = False
     indexQuestionsGenie = 0
-    while compteurU[1] < 2 or passerQuestionGenie:
+    while compteurU[2] < 2:
         reponseGenie = input(lesQuestionsGenies[indexQuestionsGenie])
         while reponseGenie.upper() not in ["O", "U", "N", "S"]:
             reponseGenie = input(lesQuestionsGenies[indexQuestionsGenie])
-        if reponseGenie.upper() == "S" : 
-            suspects(tableauIndividusEvolutif)
-        else : 
-            if (reponseGenie.upper() == "O"):
-                passerQuestionGenie = True
-                conteneurReponse[4] = caracteristiquesYeux[indexQuestionsGenie]
-                conteneurReponse[5] = "vide"
-            if reponseGenie.upper() == "U":
-                compteurU[2] = + 1
-                conteneurReponse[compteurU[1] + 3] = caracteristiquesGenie[indexQuestionsGenie]
-            if reponseGenie.upper() == "N":
-                for personne in tableauIndividusEvolutif:
-                    if personne.genie == caracteristiquesGenie[indexQuestionsGenie]:
-                        del(personne)
-            indexQuestionsGenie = + 1
+        if reponseGenie.upper() == "S": 
+            suspects(tableauIndividusEvolutif) 
+        elif reponseGenie.upper() == "O":
+            conteneurReponse[4] = caracteristiquesYeux[indexQuestionsGenie]
+            conteneurReponse[5] = "vide"
+            compteurU[2] = 2
+            break
+        elif reponseGenie.upper() == "U":
+            compteurU[2] = + 1
+            conteneurReponse[compteurU[1] + 3] = caracteristiquesGenie[indexQuestionsGenie]
+        elif reponseGenie.upper() == "N":
+            for personne in tableauIndividusEvolutif:
+                if personne.genie == caracteristiquesGenie[indexQuestionsGenie]:
+                    del(personne)
+        indexQuestionsGenie = + 1
     compteurQuestionsPosees[2] = indexQuestionsGenie + 1
     return
 
@@ -245,7 +242,6 @@ def enleverArcsIndesirables(cheveux , yeux , genie ) :
     for relations in tableauRelations : 
         if not (get(relations.nomIndividu1).cheveux == get(relations.nomIndividu2).cheveux or get(relations.nomIndividu1).yeux == get(relations.nomIndividu2).yeux or get(relations.nomIndividu1).genie == get(relations.nomIndividu2).genie) :
             relations.facteurRelations = 0 
-    afficherReseauSocial()
 
 
 #  fonction : trouverChaineContacts( 2 noms d'individus )
