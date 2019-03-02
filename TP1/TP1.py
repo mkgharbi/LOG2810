@@ -33,24 +33,24 @@ tableauIndividus = set()
 def creerReseauSocial(fichier1, fichier2):
     individus = open(fichier1, "r")
     relations = open(fichier2, "r")
-    for ind in individus:
-        personne = ind.split(" ")
+    for ligne in individus:
+        personne = ligne.split(" ")
         tableauIndividus.add(Personne(personne[0], personne[1], personne[2], personne[3]))
-    for lignes in relations:  
-        chaines = lignes.split(" ")
+    for ligne in relations:  
+        chaines = ligne.split(" ")
         if int(chaines[1]) > 0 and int(chaines[1]) <= 100:
             tableauRelations.add(Relations(chaines[0], chaines[2], int(chaines[1])))
-
 
 #
 #  fonction : afficherReseauSocial()
 #   Affiche le réseau social selon le format présenté en annexe.
 def afficherReseauSocial():
     #creerReseauSocial("individus.txt","Relations.txt")
-    for x in tableauRelations:
-        print("%s,%s(%s%%)\n" % (x.nomIndividu1.strip(), x.nomIndividu2.strip(), str(x.facteurRelations).strip()))
-
-
+    if len(tableauRelations) == 0:
+        print("Aucun Reseau Trouver!\n")
+        return
+    for relation in tableauRelations:
+        print("%s,%s(%s%%)\n" % (relation.nomIndividu1.strip(), relation.nomIndividu2.strip(), str(relation.facteurRelations).strip()))
 
 caracteristiquesCheveux = ["N", "R", "B", "M"]
 
@@ -104,19 +104,19 @@ def questionsCheveux():
     indexQuestionsCheveux = 0
     while compteurU[0] < 2:
         reponseCheveux = input(lesQuestionsCheveux[indexQuestionsCheveux])
-        while reponseCheveux.upper() not in ["O", "N", "U" , "S"]:
+        while reponseCheveux.upper() not in ["O","N","U","S"]:
             reponseCheveux = input(lesQuestionsCheveux[indexQuestionsCheveux])
         if reponseCheveux.upper() == "S" : 
             suspects(tableauIndividusEvolutif)
-        elif (reponseCheveux.upper() == "O"):
+        elif reponseCheveux.upper() == "O" :
             conteneurReponse[0] = caracteristiquesCheveux[indexQuestionsCheveux]
             conteneurReponse[1] = "vide"
             compteurU[0] = 2
             break
-        elif(reponseCheveux.upper() == "U"):
+        elif reponseCheveux.upper() == "U" :
             compteurU[0] += 1
             conteneurReponse[compteurU[0] - 1] = caracteristiquesCheveux[indexQuestionsCheveux]
-        elif(reponseCheveux.upper() == "O") or (reponseCheveux.upper() == "U"):
+        elif (reponseCheveux.upper() == "O") or (reponseCheveux.upper() == "U"):
             for personne in tableauIndividus:
                  if personne.cheveux == caracteristiquesCheveux[indexQuestionsCheveux]:
                     tableauIndividusEvolutif.add(personne)
@@ -139,13 +139,13 @@ def questionsYeux():
             compteurU[1] = 2
             break
         elif reponseYeux.upper() == "U":
-            compteurU[1] = + 1
+            compteurU[1] += 1
             conteneurReponse[compteurU[1] + 1] = caracteristiquesYeux[indexQuestionsYeux]
         elif reponseYeux.upper() == "N":
             for personne in tableauIndividusEvolutif:
                 if personne.yeux == caracteristiquesYeux[indexQuestionsYeux]:
                     del(personne)
-        indexQuestionsYeux = + 1
+        indexQuestionsYeux += 1
     compteurQuestionsPosees[1] = indexQuestionsYeux + 1
     return
 
@@ -164,13 +164,13 @@ def questionsGenie():
             compteurU[2] = 2
             break
         elif reponseGenie.upper() == "U":
-            compteurU[2] = + 1
+            compteurU[2] += 1
             conteneurReponse[compteurU[1] + 3] = caracteristiquesGenie[indexQuestionsGenie]
         elif reponseGenie.upper() == "N":
             for personne in tableauIndividusEvolutif:
                 if personne.genie == caracteristiquesGenie[indexQuestionsGenie]:
                     del(personne)
-        indexQuestionsGenie = + 1
+        indexQuestionsGenie += 1
     compteurQuestionsPosees[2] = indexQuestionsGenie + 1
     return
 
@@ -226,8 +226,6 @@ def identifierIndividus() :
                     else : 
                         tableauIndividusFinale.add(tableauIndividusFiltre.copy(1, 1))
                         tableauIndividusFinale.add(tableauIndividusFiltre.copy(2, 2))
-
-    return
 
 
 #
