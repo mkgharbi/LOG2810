@@ -199,8 +199,8 @@ def questionsYeux(reponse, valeur1, valeur2):
                         del(tableauIndividusEvolutif[i])  
         if reponse == "u":
             compteurU[1] = compteurU[1]+1
-          #  if compteurU[1]==2 :
-           #     passerQuestionSuivanteYeux= True     
+        #  if compteurU[1]==2 :
+        #     passerQuestionSuivanteYeux= True     
         else:
             passerQuestionSuivanteYeux = True
     compteurQuestionsPosees[1] = compteurQuestionsPosees[1]+1           

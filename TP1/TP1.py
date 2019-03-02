@@ -13,13 +13,21 @@ class Personne:
         return 
 
 
-tableauRelations = []
+
+class Relations: 
+    def _init_ (self, nomIndividu1 , nomIndividu2, facteurRelations):
+        self.nomIndividu1 = nomIndividu1
+        self.nomIndividu2 = nomIndividu2
+        self.facteurRelations = facteurRelations
+
+
+tableauRelations = set()
 tableauIndividus = set()
 
 
 #TODO :
 
-#  fontion : creerReseauSocial( , ) :
+#  fonction : creerReseauSocial( , ) :
 #   Lire les fichiers texte contenant les informations
 #   et genere le reseau social correspondant.
 def creerReseauSocial(fichier1, fichier2):
@@ -27,22 +35,21 @@ def creerReseauSocial(fichier1, fichier2):
     relations = open(fichier2, "r")
     for ind in individus:
         personne = ind.split(" ")
-        tableauIndividus.add(
-            Personne(personne[0], personne[1], personne[2], personne[3]))
+        tableauIndividus.add(Personne(personne[0], personne[1], personne[2], personne[3]))
     for lignes in relations:  
         chaines = lignes.split(" ")
         if chaines[1] > 0 and chaines[1] <= 100:
-            tableauRelations.append( " ( " + chaines[0] + "  " + chaines[2] + "  ( " + chaines[1] + "%")
+            tableauRelations.add(Relations(chaines[0], chaines[2], chaines[1]))
 
 
 #
 #  fonction : afficherReseauSocial()
 #   Affiche le réseau social selon le format présenté en annexe.
 def afficherReseauSocial():
-    creerReseauSocial("individus.txt","Relations.txt")
+    #creerReseauSocial("individus.txt","Relations.txt")
     for x in tableauRelations:
-        print(tableauRelations[x])
-#
+        print(x.nomIndividu1 , " , " , x.nomIndividu2 , " ( " , x.facteurRelations , " % )")
+
 
 
 caracteristiquesCheveux = ["N", "R", "B", "M"]
@@ -222,11 +229,25 @@ def identifierIndividus() :
                     else : 
                         tableauIndividusFinale.add(tableauIndividusFiltre.copy(1, 1))
                         tableauIndividusFinale.add(tableauIndividusFiltre.copy(2, 2))
+
+    return
+
+
 #
 #  fonction : enleverArcsIndesirables( 3 caracteristiques indesirables )
 #   Génère le sous-graphe des caractéristiques désirables.
-def enleverArcsIndesirables() :
-    return
+def get(nom):
+    for personnes in tableauIndividus:
+        if personnes.nom == nom : 
+            return personnes
+
+def enleverArcsIndesirables(cheveux , yeux , genie ) :
+    for relations in tableauRelations : 
+        if not (get(relations.nomIndividu1).cheveux == get(relations.nomIndividu2).cheveux or get(relations.nomIndividu1).yeux == get(relations.nomIndividu2).yeux or get(relations.nomIndividu1).genie == get(relations.nomIndividu2).genie) :
+            relations.facteurRelations = 0 
+    afficherReseauSocial()
+
+
 #  fonction : trouverChaineContacts( 2 noms d'individus )
 
 #TODO with Dijksta algorithm !!
@@ -234,7 +255,7 @@ def enleverArcsIndesirables() :
 #   L'agent trouve la meilleure chaine de contacts entre 2 individus à partir 
 #   du sous-graphe des caracteristiques désirables.
 
-def trouverChaineContacts() :  
+def trouverChaineContacts(nomSource , nomCible) :  
     return
 #  fontion : afficherResultat() 
 #   L'agent présente le résultatde ses accomplissements selon le bon format.
