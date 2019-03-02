@@ -50,7 +50,7 @@ def afficherReseauSocial():
         print("Aucun Reseau Trouver!\n")
         return
     for relation in tableauRelations:
-        print("%s,%s(%s%%)\n" % (relation.nomIndividu1.strip(), relation.nomIndividu2.strip(), str(relation.facteurRelations).strip()))
+        print("(%s,%s(%s%%))\n" % (relation.nomIndividu1.strip(), relation.nomIndividu2.strip(), str(relation.facteurRelations).strip()))
 
 caracteristiquesCheveux = ["N", "R", "B", "M"]
 
@@ -254,6 +254,15 @@ def trouverChaineContacts(nomSource , nomCible) :
 #  fontion : afficherResultat() 
 #   L'agent présente le résultatde ses accomplissements selon le bon format.
 def afficherResultat() :
+    for relation in tableauRelations:
+        if relation.facteurRelations != 0:
+            print("(%s,%s(%s%%))\n" % (relation.nomIndividu1.strip(), relation.nomIndividu2.strip(), str(relation.facteurRelations).strip())) 
+    #Show path
+    print("Nombre de questions posees: ", compteurQuestionsPosees[0] + compteurQuestionsPosees[1] + compteurQuestionsPosees[2] + compteurQuestionsPosees[3],"\n")
+    print()
+    print()
+    print()
+        
     return
 # Interface console qui affiche le menu : 
 #   a/ Créer le résea social.
