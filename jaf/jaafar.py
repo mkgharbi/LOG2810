@@ -225,8 +225,21 @@ def identifierIndividus() :
 #
 #  fonction : enleverArcsIndesirables( 3 caracteristiques indesirables )
 #   Génère le sous-graphe des caractéristiques désirables.
+sousGraphe = set()
 def enleverArcsIndesirables() :
-    return
+    sousGraphe = tableauIndividus
+    wasRemoved = False
+    for currentNode in sousGraphe:
+        if not wasRemoved and currentNode.couleurDeCheveux not in conteneurReponse :
+            sousGraphe.remove(currentNode)
+            wasRemoved = True
+        if not wasRemoved and currentNode.couleurDesYeux not in conteneurReponse:
+            sousGraphe.remove(currentNode)
+            wasRemoved = True
+        if not wasRemoved and currentNode.genie not in conteneurReponse:
+            sousGraphe.remove(currentNode)
+            wasRemoved = True
+        wasRemoved = False
 #  fonction : trouverChaineContacts( 2 noms d'individus )
 
 #TODO with Dijksta algorithm !!
@@ -234,10 +247,24 @@ def enleverArcsIndesirables() :
 #   L'agent trouve la meilleure chaine de contacts entre 2 individus à partir 
 #   du sous-graphe des caracteristiques désirables.
 
-def trouverChaineContacts() :  
-    return
+def trouverChaineContacts(Individu1, Individu2) :  
+    dejaToucher = {}
+    chemin = {}
+    tempSet = set(sousGraphe)
+    currentMin = None
+
+    while True: #???
+        for i in tempSet:
+            if i in dejaToucher:
+                if (currentMin is None) or (dejaToucher[i] < dejaToucher[currentMin]):
+                    currentMin = i
+        if currentMin is None:
+            break
+    #retirer le currentMin
+    #verifier les edges du graph pour la distance
+
 #  fontion : afficherResultat() 
-#   L'agent présente le résultatde ses accomplissements selon le bon format.
+#   L'agent présente le résultat de ses accomplissements selon le bon format.
 def afficherResultat() :
     return
 # Interface console qui affiche le menu : 
