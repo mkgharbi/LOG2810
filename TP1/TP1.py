@@ -266,27 +266,19 @@ def afficherResultat() :
 #
 ########################
 
-selections = {
-    0:"afficherMenu",
-    1:"a",
-    2:"b",
-    3:"c",
-    4:"d",
-    5:"e",
-}
-
 def lireInput() :
-    valeur = None
-    while valeur not in ["a","b","c","d","e"]:
-        valeur = input()
-    return valeur
+    valeur = input()
+    if valeur.lower() not in ["a","b","c","d","e"]:
+        print("Index Invalide, reessayez:\n")
+        valeur = "m"
+    return valeur.lower()
 
 # main 
 def main() :
-    current = selections[0]
+    current = "m"
     #Menu
     while True:
-        if current == "afficherMenu":
+        if current == "m":
             print("a/ Créer le résea social.")
             print("b/ Afficher le réseau social.")
             print("c/ Jouer à Qui est-ce ?")
@@ -295,19 +287,19 @@ def main() :
             current = lireInput()
         elif current == "a":
             creerReseauSocial("Individus.txt", "Relations.txt")
-            current = selections[0]
+            current = "m"
         elif current == "b":
             afficherReseauSocial()
-            current = selections[0]
+            current = "m"
         elif current == "c":
             questionsCheveux()
             questionsYeux()
             questionsGenie()
             identifierIndividus()
-            current = selections[0]
+            current = "m"
         elif current == "d":
             afficherResultat()
-            current = selections[0]
+            current = "m"
         elif current == "e":
             break
 
