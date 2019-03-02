@@ -290,9 +290,6 @@ def main() :
             afficherReseauSocial()
             current = "m"
         elif current == "c":
-            questionsCheveux()
-            questionsYeux()
-            questionsGenie()
             identifierIndividus()
             current = "m"
         elif current == "d":
