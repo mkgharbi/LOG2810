@@ -302,8 +302,58 @@ def lireInputArcs():
 #   L'agent trouve la meilleure chaine de contacts entre 2 individus à partir 
 #   du sous-graphe des caracteristiques désirables.
 
-def trouverChaineContacts(nomSource , nomCible) :
-    return
+
+def creerGraphe():
+    individu1 = set()
+    for relation in tableauRelations:
+        individu1.add(relation.nomIndividu1)
+    graphe.fromkeys(individu1)
+
+    for relation in tableauRelations:
+        graphe[relation.nomIndividu1][relation.nomIndividu2] = relation.facteurRelations
+
+
+def dijkstra(source, cible):
+    distanceMinimale = {}
+    predecesseur = {}
+    relationsNonVisitees = graphe
+    infini = 9999999
+    parcours = []
+    for relation in relationsNonVisitees:
+        distanceMinimale[relation] = infini
+    distanceMinimale[source] = 0
+
+    while relationsNonVisitees:
+        relationMinimale = None
+        for relation in relationsNonVisitees:
+            if relationMinimale is None:
+                relationMinimale = relation
+            elif distanceMinimale[relation] < distanceMinimale[relationMinimale]:
+                relationMinimale = relation
+
+        for relationEnfant, facteurRelations in graphe[relationMinimale].items():
+            if facteurRelations + distanceMinimale[relationMinimale] < distanceMinimale[relationEnfant]:
+                distanceMinimale[relationEnfant] = facteurRelations + \
+                    distanceMinimale[relationMinimale]
+                predecesseur[relationEnfant] = relationMinimale
+        relationsNonVisitees.pop(relationMinimale)
+
+    currentrelation = cible
+    while currentrelation != source:
+        try:
+            parcours.insert(0, currentrelation)
+            currentrelation = predecesseur[currentrelation]
+        except KeyError:
+            print('parcours impossible a etablir')
+            break
+    parcours.insert(0, source)
+    if distanceMinimale[cible] != infini:
+        print('distance minimale est ' + str(distanceMinimale[cible]))
+        print('Le parcours est ' + str(parcours))
+
+
+def trouverChaineContacts(nomSource, nomCible):
+    dijkstra(nomSource, nomCible)
 #  fontion : afficherResultat() 
 #   L'agent présente le résultatde ses accomplissements selon le bon format.
 def afficherResultat() :
