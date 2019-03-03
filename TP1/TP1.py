@@ -277,7 +277,7 @@ def afficherResultat() :
 #
 ########################
 
-def lireInput() :
+def lireInputMenu() :
     valeur = input()
     if valeur.lower() not in ["a","b","c","d","e"]:
         print("Index Invalide, reessayez:\n")
@@ -290,12 +290,12 @@ def main() :
     #Menu
     while True:
         if current == "m":
-            print("a/ Créer le résea social.")
+            print("a/ Créer le réseau social.")
             print("b/ Afficher le réseau social.")
             print("c/ Jouer à Qui est-ce ?")
             print("d/ Afficher le résultat.")
             print("e/ Quitter")
-            current = lireInput()
+            current = lireInputMenu()
         elif current == "a":
             creerReseauSocial("Individus.txt", "Relations.txt")
             current = "m"
