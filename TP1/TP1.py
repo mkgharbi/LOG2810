@@ -35,11 +35,11 @@ def creerReseauSocial(fichier1, fichier2):
     relations = open(fichier2, "r")
     for ligne in individus:
         personne = ligne.split(" ")
-        tableauIndividus.add(Personne(personne[0], personne[1], personne[2], personne[3]))
+        tableauIndividus.add(Personne(personne[0].strip(), personne[1].strip(), personne[2].strip(), personne[3].strip()))
     for ligne in relations:  
         chaines = ligne.split(" ")
         if int(chaines[1]) > 0 and int(chaines[1]) <= 100:
-            tableauRelations.add(Relations(chaines[0], chaines[2], int(chaines[1])))
+            tableauRelations.add(Relations(chaines[0].strip(), chaines[2].strip(), int(chaines[1].strip())))
 
 #
 #  fonction : afficherReseauSocial()
@@ -108,14 +108,11 @@ def questionsCheveux():
             reponseCheveux = input(lesQuestionsCheveux[indexQuestionsCheveux])
         if reponseCheveux.upper() == "S" : 
             suspects(tableauIndividusEvolutif)
+            indexQuestionsCheveux -= 1
         elif reponseCheveux.upper() == "O" :
-            conteneurReponse[0] = caracteristiquesCheveux[indexQuestionsCheveux]
-            conteneurReponse[1] = "vide"
             compteurU[0] = 2
-            break
         elif reponseCheveux.upper() == "U" :
             compteurU[0] += 1
-            conteneurReponse[compteurU[0] - 1] = caracteristiquesCheveux[indexQuestionsCheveux]
         elif (reponseCheveux.upper() == "O") or (reponseCheveux.upper() == "U"): #???
             for personne in tableauIndividus:
                  if personne.cheveux == caracteristiquesCheveux[indexQuestionsCheveux]:
@@ -133,14 +130,11 @@ def questionsYeux():
             reponseYeux = input(lesQuestionsYeux[indexQuestionsYeux])
         if (reponseYeux.upper() == "S"): 
             suspects(tableauIndividusEvolutif)
+            indexQuestionsYeux -= 1
         elif(reponseYeux.upper() == "O"):
-            conteneurReponse[2] = caracteristiquesYeux[indexQuestionsYeux]
-            conteneurReponse[3] = "vide"
             compteurU[1] = 2
-            break
         elif reponseYeux.upper() == "U":
             compteurU[1] += 1
-            conteneurReponse[compteurU[1] + 1] = caracteristiquesYeux[indexQuestionsYeux]
         elif reponseYeux.upper() == "N":
             for personne in tableauIndividusEvolutif:
                 if personne.yeux == caracteristiquesYeux[indexQuestionsYeux]:
@@ -157,15 +151,12 @@ def questionsGenie():
         while reponseGenie.upper() not in ["O", "U", "N", "S"]:
             reponseGenie = input(lesQuestionsGenies[indexQuestionsGenie])
         if reponseGenie.upper() == "S": 
-            suspects(tableauIndividusEvolutif) 
+            suspects(tableauIndividusEvolutif)
+            indexQuestionsGenie -= 1
         elif reponseGenie.upper() == "O":
-            conteneurReponse[4] = caracteristiquesYeux[indexQuestionsGenie]
-            conteneurReponse[5] = "vide"
             compteurU[2] = 2
-            break
         elif reponseGenie.upper() == "U":
             compteurU[2] += 1
-            conteneurReponse[compteurU[1] + 3] = caracteristiquesGenie[indexQuestionsGenie]
         elif reponseGenie.upper() == "N":
             for personne in tableauIndividusEvolutif:
                 if personne.genie == caracteristiquesGenie[indexQuestionsGenie]:
@@ -216,16 +207,15 @@ def identifierIndividus() :
                     tableauIndividusFinale.add(tableauIndividusFiltre.copy(2, 2))
                 if reponsePersonnesFiltre.upper() == "U" :
                     reponsePersonnesFiltre2 = input("Les personnes suspectes sont-ils ", tableauIndividusFiltre.copy(0, 0).name, tableauIndividusFiltre.copy(3, 3).name)
-                    while reponsePersonnesFiltre2.upper() not in ["O", "N",  "S"]:
+                    while reponsePersonnesFiltre2.upper() not in ["O", "N" , "U"]:
                         reponsePersonnesFiltre2 = input("Les personnes suspectes sont-ils ", tableauIndividusFiltre.copy(0, 0).name, tableauIndividusFiltre.copy(3, 3).name)
-                    if reponsePersonnesFiltre2.upper() == "S":
-                        suspects(tableauIndividusFiltre)
-                    if reponsePersonnesFiltre2 == "O" : 
+                    if reponsePersonnesFiltre2.upper() == "O" or reponsePersonnesFiltre2.upper() == "U": 
                         tableauIndividusFinale.add(tableauIndividusFiltre.copy(0,0))
                         tableauIndividusFinale.add(tableauIndividusFiltre.copy(3,3))
-                    else : 
+                    elif reponsePersonnesFiltre2.upper() == "N": 
                         tableauIndividusFinale.add(tableauIndividusFiltre.copy(1, 1))
                         tableauIndividusFinale.add(tableauIndividusFiltre.copy(2, 2))
+                    
 
 
 #
@@ -236,12 +226,26 @@ def get(nom):
         if personnes.nom == nom : 
             return personnes
 
+
 def enleverArcsIndesirables(cheveux , yeux , genie ) :
     for relations in tableauRelations : 
-        if not (get(relations.nomIndividu1).cheveux == get(relations.nomIndividu2).cheveux or get(relations.nomIndividu1).yeux == get(relations.nomIndividu2).yeux or get(relations.nomIndividu1).genie == get(relations.nomIndividu2).genie) :
-            relations.facteurRelations = 0 
+        if not ((get(relations.nomIndividu1)).couleurDeCheveux == (get(relations.nomIndividu2)).couleurDeCheveux and (get(relations.nomIndividu1)).couleurDeCheveux == cheveux) or \
+         ((get(relations.nomIndividu1)).couleurDesYeux == (get(relations.nomIndividu2)).couleurDesYeux and (get(relations.nomIndividu2)).couleurDesYeux == yeux) or \
+         ((get(relations.nomIndividu1)).genie == (get(relations.nomIndividu2)).genie and (get(relations.nomIndividu1)).genie == genie) :
+            if not tableauIndividusFinale.__contains__(get(relations.nomIndividu1)) : 
+                relations.facteurRelations = 0 
 
-
+def lireInputArcs():
+    cheveuxIndesirable = input("Nommer la couleur de cheveux indesirables: ")
+    while cheveuxIndesirable not in caracteristiquesCheveux:
+        cheveuxIndesirable = input("Non-valide. Retaper: ")
+    yeuxIndesirable = input("Nommer la couleur des yeux indesirables: ")
+    while yeuxIndesirable not in caracteristiquesYeux:
+        yeuxIndesirable = input("Non-valide. Retaper: ")
+    genieIndesirable = input("Nommer la type de genie indesirables: ")
+    while genieIndesirable not in caracteristiquesGenie:
+        genieIndesirable = input("Non-valide. Retaper: ")
+    return cheveuxIndesirable, yeuxIndesirable, genieIndesirable
 #  fonction : trouverChaineContacts( 2 noms d'individus )
 
 #TODO with Dijksta algorithm !!
@@ -249,7 +253,7 @@ def enleverArcsIndesirables(cheveux , yeux , genie ) :
 #   L'agent trouve la meilleure chaine de contacts entre 2 individus à partir 
 #   du sous-graphe des caracteristiques désirables.
 
-def trouverChaineContacts(nomSource , nomCible) :  
+def trouverChaineContacts(nomSource , nomCible) :
     return
 #  fontion : afficherResultat() 
 #   L'agent présente le résultatde ses accomplissements selon le bon format.
@@ -295,11 +299,13 @@ def main() :
         elif current == "a":
             creerReseauSocial("Individus.txt", "Relations.txt")
             current = "m"
-        elif current == "b":
+        elif current == "b": 
             afficherReseauSocial()
             current = "m"
-        elif current == "c":
+        elif current == "c":#Verifier que ca fontionne
             identifierIndividus()
+            c, y, g = lireInputArcs()
+            enleverArcsIndesirables(c, y, g)
             current = "m"
         elif current == "d":
             afficherResultat()
