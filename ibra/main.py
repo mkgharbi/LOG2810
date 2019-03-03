@@ -1,25 +1,5 @@
-########################
-
-
-#Classe :
-class Personne:
-
-    def _init_(self, nom, couleurDeCheveux, couleurDesYeux, genie):
-        self.nom = nom
-        self.couleurDeCheveux = couleurDeCheveux
-        self.couleurDesYeux = couleurDesYeux
-        self.genie = genie
-    def __str__(self):
-        return 
-
-
-
-class Relations: 
-    def _init_ (self, nomIndividu1 , nomIndividu2, facteurRelations):
-        self.nomIndividu1 = nomIndividu1
-        self.nomIndividu2 = nomIndividu2
-        self.facteurRelations = facteurRelations
-
+from Relation import *
+from Personne import *
 
 tableauRelations = set()
 tableauIndividus = set()
@@ -33,24 +13,24 @@ tableauIndividus = set()
 def creerReseauSocial(fichier1, fichier2):
     individus = open(fichier1, "r")
     relations = open(fichier2, "r")
-    for ind in individus:
-        personne = ind.split(" ")
+    for ligne in individus:
+        personne = ligne.split(" ")
         tableauIndividus.add(Personne(personne[0], personne[1], personne[2], personne[3]))
-    for lignes in relations:  
-        chaines = lignes.split(" ")
-        if chaines[1] > 0 and chaines[1] <= 100:
-            tableauRelations.add(Relations(chaines[0], chaines[2], chaines[1]))
-
+    for ligne in relations:  
+        chaines = ligne.split(" ")
+        if int(chaines[1]) > 0 and int(chaines[1]) <= 100:
+            tableauRelations.add(Relations(chaines[0], chaines[2], int(chaines[1])))
 
 #
 #  fonction : afficherReseauSocial()
 #   Affiche le réseau social selon le format présenté en annexe.
 def afficherReseauSocial():
     #creerReseauSocial("individus.txt","Relations.txt")
-    for x in tableauRelations:
-        print(x.nomIndividu1 , " , " , x.nomIndividu2 , " ( " , x.facteurRelations , " % )")
-
-
+    if len(tableauRelations) == 0:
+        print("Aucun Reseau Trouver!\n")
+        return
+    for relation in tableauRelations:
+        print("(%s,%s(%s%%))\n" % (relation.nomIndividu1.strip(), relation.nomIndividu2.strip(), str(relation.facteurRelations).strip()))
 
 caracteristiquesCheveux = ["N", "R", "B", "M"]
 
@@ -65,26 +45,26 @@ lesQuestionsYeux = ["Les individues mysteres ont-ils les yeux bleus-B ? ",
                     "Les individues mysteres ont-ils les yeux verts-V ? ",
                     "Les individues mysteres ont-ils les yeux noirs-N ? ",
                     "Les individues mysteres ont-ils les yeux gris-G ? ",
-                    "Les individues mysteres ont-ils les yeux marrons-M ? ", ]
+                    "Les individues mysteres ont-ils les yeux marrons-M ? "]
 
 # on n'a pas utiliser les caracteristique
 caracteristiquesGenie = ["GI", "GP", "GE",
                         "GC", "GA", "GM", "GB", "GInd", "ER"]
 
-lesQuestionsGenies = [" Les individus sont-ils en génie informatique-GI ?"
-                    " Les individus sont-ils en génie physique-GP ?"
-                    " Les individus sont-ils en génie electrique-GE ?"
-                    " Les individus sont-ils en génie chimique-GC ?"
-                    " Les individus sont-ils en génie aerospatial-GA ?"
-                    " Les individus sont-ils en génie mecanique-GM ?"
-                    " Les individus sont-ils en génie biomédical-GB ?"
-                    " Les individus sont-ils en génie industriel-GInd ?"
+lesQuestionsGenies = [" Les individus sont-ils en génie informatique-GI ?",
+                    " Les individus sont-ils en génie physique-GP ?",
+                    " Les individus sont-ils en génie electrique-GE ?",
+                    " Les individus sont-ils en génie chimique-GC ?",
+                    " Les individus sont-ils en génie aerospatial-GA ?",
+                    " Les individus sont-ils en génie mecanique-GM ?",
+                    " Les individus sont-ils en génie biomédical-GB ?",
+                    " Les individus sont-ils en génie industriel-GInd ?",
                     " Les individus sont-ils en génie énergétique-ER ?"]
 
 compteurQuestionsPosees = [0, 0, 0, 0]
 compteurU = [0, 0, 0]
 # !! pour se rappeller des reponses des questions le max est 6 pas sur de la declaration
-conteneurReponse = [""]
+conteneurReponse = [None, None, None, None, None, None]
 tableauIndividusEvolutif = set()
 
 # Decoupage de la fonction identifierIndividus() :
@@ -101,79 +81,76 @@ def suspects(tableau) :
 #j'ai pensé qu'il nous faut deux valeures car on peut avoir deux solution en cas d'une reponse avec u
 # je pense qu'on peut mettre ce bool comme une condition pour la question des yeux
 def questionsCheveux():
-    passerQuestionCheveux = False
     indexQuestionsCheveux = 0
-    while compteurU[0] < 2 or passerQuestionCheveux:
+    while compteurU[0] < 2:
         reponseCheveux = input(lesQuestionsCheveux[indexQuestionsCheveux])
-        while reponseCheveux.upper() not in ["O", "N", "U" , "S"]:
+        while reponseCheveux.upper() not in ["O","N","U","S"]:
             reponseCheveux = input(lesQuestionsCheveux[indexQuestionsCheveux])
         if reponseCheveux.upper() == "S" : 
             suspects(tableauIndividusEvolutif)
-        else :
-            if (reponseCheveux.upper() == "O"):
-                passerQuestionCheveux = True
-                conteneurReponse[0] = caracteristiquesCheveux[indexQuestionsCheveux]
-                conteneurReponse[1] = "vide"
-            if (reponseCheveux.upper() == "U"):
-                compteurU[0] = + 1
-                conteneurReponse[compteurU[0] - 1] = caracteristiquesCheveux[indexQuestionsCheveux]
-            if (reponseCheveux.upper() == "O") or (reponseCheveux.upper() == "U"):
-                for personne in tableauIndividus:
-                    if personne.cheveux == caracteristiquesCheveux[indexQuestionsCheveux]:
-                        tableauIndividusEvolutif.add(personne)
-            indexQuestionsCheveux += 1
+        elif reponseCheveux.upper() == "O" :
+            conteneurReponse[0] = caracteristiquesCheveux[indexQuestionsCheveux]
+            conteneurReponse[1] = "vide"
+            compteurU[0] = 2
+            break
+        elif reponseCheveux.upper() == "U" :
+            compteurU[0] += 1
+            conteneurReponse[compteurU[0] - 1] = caracteristiquesCheveux[indexQuestionsCheveux]
+        elif (reponseCheveux.upper() == "O") or (reponseCheveux.upper() == "U"): #???
+            for personne in tableauIndividus:
+                 if personne.cheveux == caracteristiquesCheveux[indexQuestionsCheveux]:
+                    tableauIndividusEvolutif.add(personne)
+        indexQuestionsCheveux += 1
     compteurQuestionsPosees[0] = indexQuestionsCheveux+1
     return
 
 
 def questionsYeux():
-    passerQuestionYeux = False
     indexQuestionsYeux = 0
-    while compteurU[1] < 2 or passerQuestionYeux:
+    while compteurU[1] < 2:
         reponseYeux = input(lesQuestionsYeux[indexQuestionsYeux])
         while reponseYeux.upper() not in ["O", "U", "N", "S"]:
             reponseYeux = input(lesQuestionsYeux[indexQuestionsYeux])
         if (reponseYeux.upper() == "S"): 
             suspects(tableauIndividusEvolutif)
-        else : 
-            if (reponseYeux.upper() == "O"):
-                passerQuestionYeux = True
-                conteneurReponse[2] = caracteristiquesYeux[indexQuestionsYeux]
-                conteneurReponse[3] = "vide"
-            if reponseYeux.upper() == "U":
-                compteurU[1] = + 1
-                conteneurReponse[compteurU[1] + 1] = caracteristiquesYeux[indexQuestionsYeux]
-            if reponseYeux.upper() == "N":
-                for personne in tableauIndividusEvolutif:
-                    if personne.yeux == caracteristiquesYeux[indexQuestionsYeux]:
-                        del(personne)
-            indexQuestionsYeux = + 1
+        elif(reponseYeux.upper() == "O"):
+            conteneurReponse[2] = caracteristiquesYeux[indexQuestionsYeux]
+            conteneurReponse[3] = "vide"
+            compteurU[1] = 2
+            break
+        elif reponseYeux.upper() == "U":
+            compteurU[1] += 1
+            conteneurReponse[compteurU[1] + 1] = caracteristiquesYeux[indexQuestionsYeux]
+        elif reponseYeux.upper() == "N":
+            for personne in tableauIndividusEvolutif:
+                if personne.yeux == caracteristiquesYeux[indexQuestionsYeux]:
+                    del(personne)
+        indexQuestionsYeux += 1
     compteurQuestionsPosees[1] = indexQuestionsYeux + 1
     return
 
 
 def questionsGenie():
-    passerQuestionGenie = False
     indexQuestionsGenie = 0
-    while compteurU[1] < 2 or passerQuestionGenie:
+    while compteurU[2] < 2:
         reponseGenie = input(lesQuestionsGenies[indexQuestionsGenie])
         while reponseGenie.upper() not in ["O", "U", "N", "S"]:
             reponseGenie = input(lesQuestionsGenies[indexQuestionsGenie])
-        if reponseGenie.upper() == "S" : 
-            suspects(tableauIndividusEvolutif)
-        else : 
-            if (reponseGenie.upper() == "O"):
-                passerQuestionGenie = True
-                conteneurReponse[4] = caracteristiquesYeux[indexQuestionsGenie]
-                conteneurReponse[5] = "vide"
-            if reponseGenie.upper() == "U":
-                compteurU[2] = + 1
-                conteneurReponse[compteurU[1] + 3] = caracteristiquesGenie[indexQuestionsGenie]
-            if reponseGenie.upper() == "N":
-                for personne in tableauIndividusEvolutif:
-                    if personne.genie == caracteristiquesGenie[indexQuestionsGenie]:
-                        del(personne)
-            indexQuestionsGenie = + 1
+        if reponseGenie.upper() == "S": 
+            suspects(tableauIndividusEvolutif) 
+        elif reponseGenie.upper() == "O":
+            conteneurReponse[4] = caracteristiquesYeux[indexQuestionsGenie]
+            conteneurReponse[5] = "vide"
+            compteurU[2] = 2
+            break
+        elif reponseGenie.upper() == "U":
+            compteurU[2] += 1
+            conteneurReponse[compteurU[1] + 3] = caracteristiquesGenie[indexQuestionsGenie]
+        elif reponseGenie.upper() == "N":
+            for personne in tableauIndividusEvolutif:
+                if personne.genie == caracteristiquesGenie[indexQuestionsGenie]:
+                    del(personne)
+        indexQuestionsGenie += 1
     compteurQuestionsPosees[2] = indexQuestionsGenie + 1
     return
 
@@ -230,8 +207,6 @@ def identifierIndividus() :
                         tableauIndividusFinale.add(tableauIndividusFiltre.copy(1, 1))
                         tableauIndividusFinale.add(tableauIndividusFiltre.copy(2, 2))
 
-    return
-
 
 #
 #  fonction : enleverArcsIndesirables( 3 caracteristiques indesirables )
@@ -245,7 +220,6 @@ def enleverArcsIndesirables(cheveux , yeux , genie ) :
     for relations in tableauRelations : 
         if not (get(relations.nomIndividu1).cheveux == get(relations.nomIndividu2).cheveux or get(relations.nomIndividu1).yeux == get(relations.nomIndividu2).yeux or get(relations.nomIndividu1).genie == get(relations.nomIndividu2).genie) :
             relations.facteurRelations = 0 
-    afficherReseauSocial()
 
 
 #  fonction : trouverChaineContacts( 2 noms d'individus )
@@ -260,6 +234,15 @@ def trouverChaineContacts(nomSource , nomCible) :
 #  fontion : afficherResultat() 
 #   L'agent présente le résultatde ses accomplissements selon le bon format.
 def afficherResultat() :
+    for relation in tableauRelations:
+        if relation.facteurRelations != 0:
+            print("(%s,%s(%s%%))\n" % (relation.nomIndividu1.strip(), relation.nomIndividu2.strip(), str(relation.facteurRelations).strip())) 
+    #Show path
+    print("Nombre de questions posees: ", compteurQuestionsPosees[0] + compteurQuestionsPosees[1] + compteurQuestionsPosees[2] + compteurQuestionsPosees[3],"\n")
+    print()
+    print()
+    print()
+        
     return
 # Interface console qui affiche le menu : 
 #   a/ Créer le résea social.
@@ -270,27 +253,19 @@ def afficherResultat() :
 #
 ########################
 
-selections = {
-    0:"afficherMenu",
-    1:"a",
-    2:"b",
-    3:"c",
-    4:"d",
-    5:"e",
-}
-
 def lireInput() :
-    valeur = None
-    while valeur not in ["a","b","c","d","e"]:
-        valeur = input()
-    return valeur
+    valeur = input()
+    if valeur.lower() not in ["a","b","c","d","e"]:
+        print("Index Invalide, reessayez:\n")
+        valeur = "m"
+    return valeur.lower()
 
 # main 
 def main() :
-    current = selections[0]
+    current = "m"
     #Menu
     while True:
-        if current == "afficherMenu":
+        if current == "m":
             print("a/ Créer le résea social.")
             print("b/ Afficher le réseau social.")
             print("c/ Jouer à Qui est-ce ?")
@@ -299,16 +274,16 @@ def main() :
             current = lireInput()
         elif current == "a":
             creerReseauSocial("Individus.txt", "Relations.txt")
-            current = selections[0]
+            current = "m"
         elif current == "b":
             afficherReseauSocial()
-            current = selections[0]
+            current = "m"
         elif current == "c":
-            #questions()
-            current = selections[0]
+            identifierIndividus()
+            current = "m"
         elif current == "d":
             afficherResultat()
-            current = selections[0]
+            current = "m"
         elif current == "e":
             break
 
