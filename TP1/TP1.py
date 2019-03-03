@@ -3,29 +3,56 @@ import collections
 
 #Classe :
 class Personne:
-
     def __init__(self, nom, couleurDeCheveux, couleurDesYeux, genie):
-        self.nom = nom
-        self.couleurDeCheveux = couleurDeCheveux
-        self.couleurDesYeux = couleurDesYeux
-        self.genie = genie
-    def __str__(self):
-        return 
-
-
+        self.__nom = nom
+        self.__couleurDeCheveux = couleurDeCheveux
+        self.__couleurDesYeux = couleurDesYeux
+        self.__genie = genie
+    def getNom(self):
+        return self.__nom
+    def getCouleurDeCheveux(self):
+        return self.__couleurDeCheveux
+    def getCouleurDesYeux (self):
+        return self.__couleurDesYeux
+    def getGenie(self):
+        return self.__genie
+    def setNom(self, nom ):
+        self.__nom = nom
+    def setCouleurDeCheveux(self,couleurDeCheveux):
+        self.__couleurDeCheveux= couleurDeCheveux
+    def setCouleurDesYeux(self,couleurDesYeux):
+        self.__couleurDesYeux=couleurDesYeux
+    def setGenie(self,genie):
+        self.__genie= genie
 
 class Relations: 
-    def __init__(self, nomIndividu1 , nomIndividu2, facteurRelations):
-        self.nomIndividu1 = nomIndividu1
-        self.nomIndividu2 = nomIndividu2
-        self.facteurRelations = facteurRelations
+    def __init__(self, individu1 , individu2, facteurRelations):
+        self.__individu1 = individu1
+        self.__individu2 = individu2
+        self.__facteurRelations = facteurRelations
+    def getIndividu1(self):
+        return self.__individu1
+    def getIndividu2(self):
+        return self.__individu2
+    def getFacteurRelations(self):
+        return self.__facteurRelations
 
+    def setNomIndividu1(self, nomIndividu1):# est ce le paramettre va se melanger avec celui du par constructeur
+        self.__nomIndividu1 = nomIndividu1
+    def setNomIndividu2(self,nomIndividu2):
+        self.__nomIndividu2 = nomIndividu2
+    def setFacteurRelations(self,facteurRelations):
+        self.__facteurRelations = facteurRelations 
 
 tableauRelations = set()
 tableauIndividus = set()
 
-
 #TODO :
+
+def trouverPersonne(tableau,nom):
+    for personne in tableau:
+        if personne.getNom() == nom : 
+            return personne
 
 #  fonction : creerReseauSocial( , ) :
 #   Lire les fichiers texte contenant les informations
@@ -39,7 +66,9 @@ def creerReseauSocial(fichier1, fichier2):
     for ligne in relations:  
         chaines = ligne.split(" ")
         if int(chaines[1]) > 0 and int(chaines[1]) <= 100:
-            tableauRelations.add(Relations(chaines[0].strip(), chaines[2].strip(), int(chaines[1].strip())))
+            Personne1 = trouverPersonne(tableauIndividus,chaines[0].strip())
+            Personne2 = trouverPersonne(tableauIndividus,chaines[2].strip())
+            tableauRelations.add(Relations(Personne1, Personne2, int(chaines[1].strip())))
 
 #
 #  fonction : afficherReseauSocial()
@@ -50,7 +79,7 @@ def afficherReseauSocial():
         print("Aucun Reseau Trouver!\n")
         return
     for relation in tableauRelations:
-        print("(%s,%s(%s%%))\n" % (relation.nomIndividu1.strip(), relation.nomIndividu2.strip(), str(relation.facteurRelations).strip()))
+        print("(%s,%s(%s%%))\n" % (relation.getIndividu1().getNom().strip(), relation.getIndividu2().getNom().strip(), str(relation.getFacteurRelations()).strip()))
 
 caracteristiquesCheveux = ["N", "R", "B", "M"]
 
@@ -93,8 +122,8 @@ tableauIndividusEvolutif = set()
 
 def suspects(tableau) : 
     print("Les suspects sont :")
-    for element in tableau :
-        print(element.nom)
+    for personne in tableau :
+        print(personne.getNom())
 
 # on doit posé la question une par une puis agir en cosequence de la reponse
 #parce que la on a les reponses sans qu'on pose les questions
@@ -115,7 +144,7 @@ def questionsCheveux():
             compteurU[0] += 1
         if (reponseCheveux.upper() == "O") or (reponseCheveux.upper() == "U"): 
             for personne in tableauIndividus:
-                 if personne.couleurDeCheveux == caracteristiquesCheveux[indexQuestionsCheveux]:
+                 if personne.getCouleurDeCheveux() == caracteristiquesCheveux[indexQuestionsCheveux]:
                     tableauIndividusEvolutif.add(personne)
         indexQuestionsCheveux += 1
     compteurQuestionsPosees[0] = indexQuestionsCheveux
@@ -136,7 +165,7 @@ def questionsYeux():
             compteurU[1] = 2
             tempSet = set()
             for personne in tableauIndividusEvolutif:
-                if personne.couleurDesYeux != caracteristiquesYeux[indexQuestionsYeux]:
+                if personne.getCouleurDesYeux() != caracteristiquesYeux[indexQuestionsYeux]:
                     tempSet.add(personne)
             for personne in tempSet:
                 tableauIndividusEvolutif.remove(personne)
@@ -147,7 +176,7 @@ def questionsYeux():
         elif reponseYeux.upper() == "N":
             tempSet = set()
             for personne in tableauIndividusEvolutif:
-                if personne.couleurDesYeux == caracteristiquesYeux[indexQuestionsYeux]:
+                if personne.getCouleurDesYeux() == caracteristiquesYeux[indexQuestionsYeux]:
                     tempSet.add(personne)
             for personne in tempSet:
                 tableauIndividusEvolutif.remove(personne)
@@ -157,7 +186,7 @@ def questionsYeux():
     tempSet = set()
     if len(listeU) == 2:
         for personne in tableauIndividusEvolutif:
-            if personne.couleurDesYeux != listeU[0] and personne.couleurDesYeux != listeU[1]:
+            if personne.getCouleurDesYeux() != listeU[0] and personne.getCouleurDesYeux() != listeU[1]:
                 tempSet.add(personne)
         for personne in tempSet:
             tableauIndividusEvolutif.remove(personne)
@@ -179,7 +208,7 @@ def questionsGenie():
             compteurU[2] = 2
             tempSet = set()
             for personne in tableauIndividusEvolutif:
-                if personne.genie != caracteristiquesGenie[indexQuestionsGenie]:
+                if personne.getGenie() != caracteristiquesGenie[indexQuestionsGenie]:
                     tempSet.add(personne)
             for personne in tempSet:
                 tableauIndividusEvolutif.remove(personne)
@@ -189,7 +218,7 @@ def questionsGenie():
         elif reponseGenie.upper() == "N":
             tempSet = set()
             for personne in tableauIndividusEvolutif:
-                if personne.genie == caracteristiquesGenie[indexQuestionsGenie]:
+                if personne.getGenie() == caracteristiquesGenie[indexQuestionsGenie]:
                     tempSet.add(personne)
             for personne in tempSet:
                 tableauIndividusEvolutif.remove(personne)
@@ -199,7 +228,7 @@ def questionsGenie():
     tempSet = set()
     if len(listeU) == 2:
         for personne in tableauIndividusEvolutif:
-            if personne.genie != listeU[0] and personne.genie != listeU[1]:
+            if personne.getGenie() != listeU[0] and personne.getGenie() != listeU[1]:
                 tempSet.add(personne)
         for personne in tempSet:
             tableauIndividusEvolutif.remove(personne)
@@ -217,7 +246,7 @@ def identifierIndividus() :
     questionsYeux()
     questionsGenie()
     if len(tableauIndividusEvolutif) == 2 : 
-        print("Les individues mysteres sont: ", tableauIndividusEvolutif.pop().nom, " et ", tableauIndividusEvolutif.pop().nom)
+        print("Les individues mysteres sont: ", tableauIndividusEvolutif.pop().getNom(), " et ", tableauIndividusEvolutif.pop().getNom())
     elif len(tableauIndividusEvolutif) > 2 : 
         listeIndividus = list()
         for personne in tableauIndividusEvolutif:
@@ -227,11 +256,11 @@ def identifierIndividus() :
         compteurU = 0  
         while (not personnesTrouvees and compteurU < 3) :
             if index > len(listeIndividus):
-                reponsePersonnes = input("Les personnes suspectes sont-ils " + listeIndividus[index].nom + " et " + listeIndividus[index-1].nom + " ?")
+                reponsePersonnes = input("Les personnes suspectes sont-ils " + listeIndividus[index].getNom() + " et " + listeIndividus[index-1].getNom() + " ?")
             else:
-                reponsePersonnes = input("Les personnes suspectes sont-ils " + listeIndividus[index].nom + " et " + listeIndividus[index+1].nom + " ?")
+                reponsePersonnes = input("Les personnes suspectes sont-ils " + listeIndividus[index].getNom() + " et " + listeIndividus[index+1].getNom() + " ?")
             while reponsePersonnes.upper() not in ["O", "N", "U", "S"]:
-                reponsePersonnes = input("Les personnes suspectes sont-ils " + listeIndividus[index].nom + listeIndividus[index+1].nom)
+                reponsePersonnes = input("Les personnes suspectes sont-ils " + listeIndividus[index].getNom() + listeIndividus[index+1].getNom())
             if reponsePersonnes.upper() == "S" : 
                 suspects(listeIndividus)
                 index -= 2
@@ -253,9 +282,9 @@ def identifierIndividus() :
             compteurQuestionsPosees[3] = compteurQuestionsPosees[3] + 1 
             index += 2 
             if len(tableauIndividusFiltre) > 2  :
-                reponsePersonnesFiltre = input("Les personnes suspectes sont-ils " + tableauIndividusFiltre[0].nom + " et " + tableauIndividusFiltre[2].nom + " ?")
+                reponsePersonnesFiltre = input("Les personnes suspectes sont-ils " + tableauIndividusFiltre[0].getNom() + " et " + tableauIndividusFiltre[2].getNom() + " ?")
                 while reponsePersonnesFiltre.upper() not in ["O", "N", "U", "S"]:
-                    reponsePersonnesFiltre = input("Les personnes suspectes sont-ils " + listeIndividus[0].nom  + " et " + listeIndividus[2].nom + " ?")
+                    reponsePersonnesFiltre = input("Les personnes suspectes sont-ils " + listeIndividus[0].getNom()  + " et " + listeIndividus[2].getNom() + " ?")
                 if reponsePersonnesFiltre.upper() == "S" : 
                     suspects(tableauIndividusFiltre)
                 elif reponsePersonnesFiltre.upper() == "O" :
@@ -271,9 +300,9 @@ def identifierIndividus() :
                     compteurU += 1
                     if compteurU == 3:
                         break
-                    reponsePersonnesFiltre2 = input("Les personnes suspectes sont-ils " + tableauIndividusFiltre[0].nom + " et " + tableauIndividusFiltre[3].nom + " ?")
+                    reponsePersonnesFiltre2 = input("Les personnes suspectes sont-ils " + tableauIndividusFiltre[0].getNom() + " et " + tableauIndividusFiltre[3].getNom() + " ?")
                     while reponsePersonnesFiltre2.upper() not in ["O", "N" , "U"]:
-                        reponsePersonnesFiltre2 = input("Les personnes suspectes sont-ils " + tableauIndividusFiltre[0].nom + " et " +tableauIndividusFiltre[3].nom + " ?")
+                        reponsePersonnesFiltre2 = input("Les personnes suspectes sont-ils " + tableauIndividusFiltre[0].getNom() + " et " +tableauIndividusFiltre[3].getNom() + " ?")
                     if reponsePersonnesFiltre2.upper() == "O": 
                         personnesTrouvees = True
                         tableauIndividusFinale.append(tableauIndividusFiltre[0])
@@ -308,22 +337,16 @@ def identifierIndividus() :
             tableauPersonnesMysteresTrouvees.append(personneMystere2)
         else:
             tableauPersonnesMysteresIntrouvees.append(personneMystere2)
-        
-
-def get(nom):
-    for personnes in tableauIndividus:
-        if personnes.nom == nom : 
-            return personnes
 
 #  fonction : enleverArcsIndesirables( 3 caracteristiques indesirables )
 #   Génère le sous-graphe des caractéristiques désirables.
 def enleverArcsIndesirables(cheveux , yeux , genie ) :
     for relations in tableauRelations : 
-        if (((get(relations.nomIndividu1)).couleurDeCheveux == (get(relations.nomIndividu2)).couleurDeCheveux) and ((get(relations.nomIndividu1)).couleurDeCheveux == cheveux)) or \
-         (((get(relations.nomIndividu1)).couleurDesYeux == (get(relations.nomIndividu2)).couleurDesYeux) and ((get(relations.nomIndividu2)).couleurDesYeux == yeux)) or \
-         (((get(relations.nomIndividu1)).genie == (get(relations.nomIndividu2)).genie) and ((get(relations.nomIndividu1)).genie == genie)) :
-            if not (tableauIndividusFinale.__contains__(get(relations.nomIndividu1)) or tableauIndividusFinale.__contains__(get(relations.nomIndividu2)))  : 
-                relations.facteurRelations = 0 
+        if ((relations.getIndividu1().getCouleurDeCheveux() == relations.getIndividu2().getCouleurDeCheveux()) and ((relations.getIndividu1().getCouleurDeCheveux() == cheveux))) or \
+         ((relations.getIndividu1().getCouleurDesYeux() == relations.getIndividu2().getCouleurDesYeux()) and (relations.getIndividu2().getCouleurDesYeux() == yeux)) or \
+         ((relations.getIndividu1().getGenie() == relations.getIndividu2().getGenie()) and (relations.getIndividu1().getGenie == genie)) :
+            if not (tableauIndividusFinale.__contains__(relations.getIndividu1()) or tableauIndividusFinale.__contains__(relations.getIndividu2()))  : 
+                relations.setFacteurRelations(0) 
 
 def lireInputArcs():
     cheveuxIndesirable = input("Nommer la couleur de cheveux indesirables: ")
@@ -347,11 +370,11 @@ graphe = collections.defaultdict(dict)
 def creerGraphe():
     individu1 = set()
     for individu in tableauIndividus:
-        individu1.add(individu.nom)
+        individu1.add(individu.getNom())
     graphe.fromkeys(individu1,0)
     for relation in tableauRelations:
-        graphe[relation.nomIndividu1][relation.nomIndividu2] = relation.facteurRelations
-        graphe[relation.nomIndividu2][relation.nomIndividu1] = relation.facteurRelations
+        graphe[relation.getIndividu1().getNom()][relation.getIndividu2().getNom()] = relation.getFacteurRelations()
+        graphe[relation.getIndividu2().getNom()][relation.getIndividu1().getNom()] = relation.getFacteurRelations()
 
 
 def dijkstra(source, cible):
@@ -400,13 +423,13 @@ def trouverChaineContacts(nomSource, nomCible):
 #   L'agent présente le résultatde ses accomplissements selon le bon format.
 def afficherResultat(c,y,g) :
     for relation in tableauRelations:
-        if relation.facteurRelations != 0:
-            print("(%s,%s(%s%%))\n" % (relation.nomIndividu1.strip(), relation.nomIndividu2.strip(), str(relation.facteurRelations).strip()))
+        if relation.getFacteurRelations() != 0:
+            print("(%s,%s(%s%%))\n" % (relation.getIndividu1().getNom().strip(), relation.getIndividu2().getNom().strip(), str(relation.getFacteurRelations()).strip()))
     if len(tableauIndividusFinale) == 2: 
         trouverChaineContacts(tableauIndividusFinale[0], tableauIndividusFinale[1])
     nombreQuestions = compteurQuestionsPosees[0] + compteurQuestionsPosees[1] + compteurQuestionsPosees[2] + compteurQuestionsPosees[3]
     print("Nombre de questions posees: ", nombreQuestions ,"\n")
-    if len(tableauIndividusFinale) == 2: 
+    if len(tableauIndividusFinale) >= 2: 
         print("Les individus mysteres sont ", tableauIndividusFinale[0], tableauIndividusFinale[1])
     print()
     print("Caracteristiques indesirables: ",c,y,g)
