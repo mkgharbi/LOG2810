@@ -223,7 +223,7 @@ def identifierIndividus() :
         index = 0
         personnesTrouvees = False
         compteurU = 0  
-        while (not personnesTrouvees and compteurU < 2) :
+        while (not personnesTrouvees and compteurU < 3) :
             reponsePersonnes = input("Les personnes suspectes sont-ils " + listeIndividus[index].nom + " et " + listeIndividus[index+1].nom + " ?")
             while reponsePersonnes.upper() not in ["O", "N", "U", "S"]:
                 reponsePersonnes = input("Les personnes suspectes sont-ils ", listeIndividus[index].nom , listeIndividus[index+1].nom)
@@ -234,11 +234,15 @@ def identifierIndividus() :
                 tableauIndividusFinale.append(listeIndividus[index])
                 tableauIndividusFinale.append(listeIndividus[index+1])
                 break
+            elif reponsePersonnes.upper() == "N":
+                compteurU += 1
+                if compteurU == 3:
+                    break
             elif reponsePersonnes.upper() == "U" :
                 compteurU = compteurU + 1 
                 tableauIndividusFiltre.append(listeIndividus[index])
                 tableauIndividusFiltre.append(listeIndividus[index+1])
-                if compteurU == 2:
+                if compteurU == 3:
                     break
             compteurQuestionsPosees[3] = compteurQuestionsPosees[3] + 1 
             index += 2 
@@ -248,27 +252,44 @@ def identifierIndividus() :
                     reponsePersonnesFiltre = input("Les personnes suspectes sont-ils ", listeIndividus[0].nom, listeIndividus[2].nom)
                 if reponsePersonnesFiltre.upper() == "S" : 
                     suspects(tableauIndividusFiltre)
-                if reponsePersonnesFiltre.upper() == "O" :
+                elif reponsePersonnesFiltre.upper() == "O" :
                     personnesTrouvees = True
                     tableauIndividusFinale.append(tableauIndividusFiltre[0])
                     tableauIndividusFinale.append(tableauIndividusFiltre[2])
                     break
-                if reponsePersonnesFiltre.upper() == "U" :
+                elif reponsePersonnesFiltre.upper() == "N":
                     compteurU += 1
-                    if compteurU == 2:
+                    if compteurU == 3:
+                        break
+                elif reponsePersonnesFiltre.upper() == "U" :
+                    compteurU += 1
+                    if compteurU == 3:
                         break
                     reponsePersonnesFiltre2 = input("Les personnes suspectes sont-ils ", tableauIndividusFiltre[0].nom, tableauIndividusFiltre[3].nom)
                     while reponsePersonnesFiltre2.upper() not in ["O", "N" , "U"]:
                         reponsePersonnesFiltre2 = input("Les personnes suspectes sont-ils ", tableauIndividusFiltre[0].nom, tableauIndividusFiltre[3].nom)
-                    if reponsePersonnesFiltre2.upper() == "O" or reponsePersonnesFiltre2.upper() == "U": 
+                    if reponsePersonnesFiltre2.upper() == "O": 
                         personnesTrouvees = True
                         tableauIndividusFinale.append(tableauIndividusFiltre[0])
                         tableauIndividusFinale.append(tableauIndividusFiltre[3])
                         break
+                    elif reponsePersonnesFiltre2.upper() == "U":
+                        tableauIndividusFinale.append(tableauIndividusFiltre[0])
+                        tableauIndividusFinale.append(tableauIndividusFiltre[3])
+                        compteurU += 1
+                        if compteurU == 3:
+                            break
                     elif reponsePersonnesFiltre2.upper() == "N": 
                         tableauIndividusFinale.append(tableauIndividusFiltre[1])
                         tableauIndividusFinale.append(tableauIndividusFiltre[2])
-                    
+                        compteurU += 1
+                        if compteurU == 3:
+                            break
+    if (not personnesTrouvees):
+        print("Qui sont les personne mysteres? ")
+        tableauIndividusFinale.clear()
+        tableauIndividusFinale.append(input("Premiere: ")) 
+        tableauIndividusFinale.append(input("Deuxieme: "))
 
 
 #
@@ -282,9 +303,9 @@ def get(nom):
 
 def enleverArcsIndesirables(cheveux , yeux , genie ) :
     for relations in tableauRelations : 
-        if ((get(relations.nomIndividu1)).couleurDeCheveux == (get(relations.nomIndividu2)).couleurDeCheveux and (get(relations.nomIndividu1)).couleurDeCheveux == cheveux) or \
-         ((get(relations.nomIndividu1)).couleurDesYeux == (get(relations.nomIndividu2)).couleurDesYeux and (get(relations.nomIndividu2)).couleurDesYeux == yeux) or \
-         ((get(relations.nomIndividu1)).genie == (get(relations.nomIndividu2)).genie and (get(relations.nomIndividu1)).genie == genie) :
+        if (((get(relations.nomIndividu1)).couleurDeCheveux == (get(relations.nomIndividu2)).couleurDeCheveux) and ((get(relations.nomIndividu1)).couleurDeCheveux == cheveux)) or \
+         (((get(relations.nomIndividu1)).couleurDesYeux == (get(relations.nomIndividu2)).couleurDesYeux) and ((get(relations.nomIndividu2)).couleurDesYeux == yeux)) or \
+         (((get(relations.nomIndividu1)).genie == (get(relations.nomIndividu2)).genie) and ((get(relations.nomIndividu1)).genie == genie)) :
             if not tableauIndividusFinale.__contains__(get(relations.nomIndividu1)) : 
                 relations.facteurRelations = 0 
 
@@ -312,7 +333,6 @@ def creerGraphe():
     for relation in tableauRelations:
         individu1.add(relation.nomIndividu1)
     graphe.fromkeys(individu1)
-
     for relation in tableauRelations:
         graphe[relation.nomIndividu1][relation.nomIndividu2] = relation.facteurRelations
 
@@ -406,7 +426,9 @@ def main() :
             print("e/ Quitter")
             current = lireInputMenu()
         elif current == "a":
-            creerReseauSocial("Individus.txt", "Relations.txt")
+            file1 = input("Fichier Individus(avec extension): ")
+            file2 = input("Fichier Relations(avec extension): ")
+            creerReseauSocial(file1, file2)
             current = "m"
         elif current == "b": 
             afficherReseauSocial()
