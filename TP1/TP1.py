@@ -116,7 +116,7 @@ def questionsCheveux():
         elif reponseCheveux.upper() == "U" :
             compteurU[0] += 1
             conteneurReponse[compteurU[0] - 1] = caracteristiquesCheveux[indexQuestionsCheveux]
-        elif (reponseCheveux.upper() == "O") or (reponseCheveux.upper() == "U"):
+        elif (reponseCheveux.upper() == "O") or (reponseCheveux.upper() == "U"): #???
             for personne in tableauIndividus:
                  if personne.cheveux == caracteristiquesCheveux[indexQuestionsCheveux]:
                     tableauIndividusEvolutif.add(personne)
