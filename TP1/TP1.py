@@ -93,8 +93,9 @@ tableauIndividusEvolutif = set()
 
 def suspects(tableau) : 
     print("Les suspects sont :")
-    for personne in tableau :
-        print(personne.nom)
+    for element in tableau :
+        if element != 0:
+            print(element.nom)
 
 # on doit posé la question une par une puis agir en cosequence de la reponse
 #parce que la on a les reponses sans qu'on pose les questions
@@ -113,9 +114,9 @@ def questionsCheveux():
             compteurU[0] = 2
         elif reponseCheveux.upper() == "U" :
             compteurU[0] += 1
-        elif (reponseCheveux.upper() == "O") or (reponseCheveux.upper() == "U"): #???
+        if (reponseCheveux.upper() == "O") or (reponseCheveux.upper() == "U"): 
             for personne in tableauIndividus:
-                 if personne.cheveux == caracteristiquesCheveux[indexQuestionsCheveux]:
+                 if personne.couleurDeCheveux == caracteristiquesCheveux[indexQuestionsCheveux]:
                     tableauIndividusEvolutif.add(personne)
         indexQuestionsCheveux += 1
     compteurQuestionsPosees[0] = indexQuestionsCheveux+1
@@ -124,6 +125,7 @@ def questionsCheveux():
 
 def questionsYeux():
     indexQuestionsYeux = 0
+    listeU = list()
     while compteurU[1] < 2:
         reponseYeux = input(lesQuestionsYeux[indexQuestionsYeux])
         while reponseYeux.upper() not in ["O", "U", "N", "S"]:
@@ -133,19 +135,40 @@ def questionsYeux():
             indexQuestionsYeux -= 1
         elif(reponseYeux.upper() == "O"):
             compteurU[1] = 2
+            tempSet = set()
+            for personne in tableauIndividusEvolutif:
+                if personne.couleurDesYeux != caracteristiquesYeux[indexQuestionsYeux]:
+                    tempSet.add(personne)
+            for personne in tempSet:
+                tableauIndividusEvolutif.remove(personne)
+            del(tempSet)
         elif reponseYeux.upper() == "U":
             compteurU[1] += 1
+            listeU.append(caracteristiquesYeux[indexQuestionsYeux])
         elif reponseYeux.upper() == "N":
+            tempSet = set()
             for personne in tableauIndividusEvolutif:
-                if personne.yeux == caracteristiquesYeux[indexQuestionsYeux]:
-                    del(personne)
+                if personne.couleurDesYeux == caracteristiquesYeux[indexQuestionsYeux]:
+                    tempSet.add(personne)
+            for personne in tempSet:
+                tableauIndividusEvolutif.remove(personne)
+            del(tempSet)
         indexQuestionsYeux += 1
     compteurQuestionsPosees[1] = indexQuestionsYeux + 1
+    tempSet = set()
+    if len(listeU) == 2:
+        for personne in tableauIndividusEvolutif:
+            if personne.genie != listeU[0] and personne.genie != listeU[1]:
+                tempSet.add(personne)
+        for personne in tempSet:
+            tableauIndividusEvolutif.remove(personne)
+        del(tempSet)
     return
 
 
 def questionsGenie():
     indexQuestionsGenie = 0
+    listeU = list()
     while compteurU[2] < 2:
         reponseGenie = input(lesQuestionsGenies[indexQuestionsGenie])
         while reponseGenie.upper() not in ["O", "U", "N", "S"]:
@@ -155,66 +178,92 @@ def questionsGenie():
             indexQuestionsGenie -= 1
         elif reponseGenie.upper() == "O":
             compteurU[2] = 2
+            tempSet = set()
+            for personne in tableauIndividusEvolutif:
+                if personne.genie != caracteristiquesGenie[indexQuestionsGenie]:
+                    tempSet.add(personne)
+            for personne in tempSet:
+                tableauIndividusEvolutif.remove(personne)
+            del(tempSet)
         elif reponseGenie.upper() == "U":
             compteurU[2] += 1
         elif reponseGenie.upper() == "N":
+            tempSet = set()
             for personne in tableauIndividusEvolutif:
                 if personne.genie == caracteristiquesGenie[indexQuestionsGenie]:
-                    del(personne)
+                    tempSet.add(personne)
+            for personne in tempSet:
+                tableauIndividusEvolutif.remove(personne)
+            del(tempSet)
         indexQuestionsGenie += 1
     compteurQuestionsPosees[2] = indexQuestionsGenie + 1
+    tempSet = set()
+    if len(listeU) == 2:
+        for personne in tableauIndividusEvolutif:
+            if personne.couleurDesYeux != listeU[0] and personne.couleurDesYeux != listeU[1]:
+                tempSet.add(personne)
+        for personne in tempSet:
+            tableauIndividusEvolutif.remove(personne)
+        del(tempSet)
     return
 
-tableauIndividusFinale = set()
+tableauIndividusFinale = list()
 #  fonction : identifierIndividus()
 #   l'agent trouve les noms des deux individues mystères.
 def identifierIndividus() : 
-    tableauIndividusFiltre = set() 
+    tableauIndividusFiltre = list() 
     questionsCheveux()
     questionsYeux()
     questionsGenie()
     if len(tableauIndividusEvolutif) == 2 : 
-        print("Les individues mysteres sont: ", tableauIndividusEvolutif.copy(0, 0).name, " et ", tableauIndividusEvolutif.copy(1, 1).name)
-    else : 
+        print("Les individues mysteres sont: ", tableauIndividusEvolutif.pop().nom, " et ", tableauIndividusEvolutif.pop().nom)
+    elif len(tableauIndividusEvolutif) > 2 : 
+        listeIndividus = list()
+        for personne in tableauIndividusEvolutif:
+            listeIndividus.append(personne)
         index = 0
         personnesTrouvees = False
         compteurU = 0  
-        while (personnesTrouvees and compteurU < 2) :
-            reponsePersonnes = input("Les personnes suspectes sont-ils ", tableauIndividusEvolutif.copy(index, index).name, tableauIndividusEvolutif.copy(index+1, index+1).name)
+        while (not personnesTrouvees and compteurU < 2) :
+            reponsePersonnes = input("Les personnes suspectes sont-ils " + listeIndividus[index].nom + " et " + listeIndividus[index+1].nom + " ?")
             while reponsePersonnes.upper() not in ["O", "N", "U", "S"]:
-                reponsePersonnes = input("Les personnes suspectes sont-ils ", tableauIndividusEvolutif.copy(index, index).name , tableauIndividusEvolutif.copy(index+1,index+1).name)
+                reponsePersonnes = input("Les personnes suspectes sont-ils ", listeIndividus[index].nom , listeIndividus[index+1].nom)
             if reponsePersonnes.upper() == "S" : 
                 suspects(tableauIndividusFiltre)
-            else :
-                if reponsePersonnes.upper() == "O" : 
-                    personnesTrouvees = True 
-                    tableauIndividusFinale.add(tableauIndividusEvolutif.copy(index,index))
-                    tableauIndividusFinale.add(tableauIndividusEvolutif.copy(index+1,index+1))
-                if reponsePersonnes.upper() == "U" :
-                    compteurU = compteurU + 1 
-                    tableauIndividusFiltre.add(tableauIndividusEvolutif.copy(index,index))
-                    tableauIndividusFiltre.add(tableauIndividusEvolutif.copy(index+1, index+1))
+            elif reponsePersonnes.upper() == "O" : 
+                personnesTrouvees = True 
+                tableauIndividusFinale.append(listeIndividus[index])
+                tableauIndividusFinale.append(listeIndividus[index+1])
+                break
+            elif reponsePersonnes.upper() == "U" :
+                compteurU = compteurU + 1 
+                tableauIndividusFiltre.append(listeIndividus[index])
+                tableauIndividusFiltre.append(listeIndividus[index+1])
             compteurQuestionsPosees[3] = compteurQuestionsPosees[3] + 1 
-            index =+ 2 
+            index += 2 
             if len(tableauIndividusFiltre) > 2  :
-                reponsePersonnesFiltre = input("Les personnes suspectes sont-ils ", tableauIndividusFiltre.copy(0, 0).name, tableauIndividusFiltre.copy(2, 2).name)
+                reponsePersonnesFiltre = input("Les personnes suspectes sont-ils ", tableauIndividusFiltre[0].nom, tableauIndividusFiltre[2].nom)
                 while reponsePersonnesFiltre.upper() not in ["O", "N", "U", "S"]:
-                    reponsePersonnesFiltre = input("Les personnes suspectes sont-ils ", tableauIndividusEvolutif.copy(0, 0).name, tableauIndividusEvolutif.copy(2, 2).name)
+                    reponsePersonnesFiltre = input("Les personnes suspectes sont-ils ", listeIndividus[0].nom, listeIndividus[2].nom)
                 if reponsePersonnesFiltre.upper() == "S" : 
                     suspects(tableauIndividusFiltre)
-                if reponsePersonnesFiltre.upper() == "O" : 
-                    tableauIndividusFinale.add(tableauIndividusFiltre.copy(0, 0))
-                    tableauIndividusFinale.add(tableauIndividusFiltre.copy(2, 2))
+                if reponsePersonnesFiltre.upper() == "O" :
+                    personnesTrouvees = True
+                    tableauIndividusFinale.append(tableauIndividusFiltre[0])
+                    tableauIndividusFinale.append(tableauIndividusFiltre[2])
+                    break
                 if reponsePersonnesFiltre.upper() == "U" :
-                    reponsePersonnesFiltre2 = input("Les personnes suspectes sont-ils ", tableauIndividusFiltre.copy(0, 0).name, tableauIndividusFiltre.copy(3, 3).name)
+                    reponsePersonnesFiltre2 = input("Les personnes suspectes sont-ils ", tableauIndividusFiltre[0].nom, tableauIndividusFiltre[3].nom)
                     while reponsePersonnesFiltre2.upper() not in ["O", "N" , "U"]:
-                        reponsePersonnesFiltre2 = input("Les personnes suspectes sont-ils ", tableauIndividusFiltre.copy(0, 0).name, tableauIndividusFiltre.copy(3, 3).name)
+                        reponsePersonnesFiltre2 = input("Les personnes suspectes sont-ils ", tableauIndividusFiltre[0].nom, tableauIndividusFiltre[3].nom)
                     if reponsePersonnesFiltre2.upper() == "O" or reponsePersonnesFiltre2.upper() == "U": 
-                        tableauIndividusFinale.add(tableauIndividusFiltre.copy(0,0))
-                        tableauIndividusFinale.add(tableauIndividusFiltre.copy(3,3))
+                        personnesTrouvees = True
+                        tableauIndividusFinale.append(tableauIndividusFiltre[0])
+                        tableauIndividusFinale.append(tableauIndividusFiltre[3])
+                        break
                     elif reponsePersonnesFiltre2.upper() == "N": 
-                        tableauIndividusFinale.add(tableauIndividusFiltre.copy(1, 1))
-                        tableauIndividusFinale.add(tableauIndividusFiltre.copy(2, 2))
+                        tableauIndividusFinale.append(tableauIndividusFiltre[1])
+                        tableauIndividusFinale.append(tableauIndividusFiltre[2])
                     
 
 
@@ -242,7 +291,7 @@ def lireInputArcs():
     yeuxIndesirable = input("Nommer la couleur des yeux indesirables: ")
     while yeuxIndesirable not in caracteristiquesYeux:
         yeuxIndesirable = input("Non-valide. Retaper: ")
-    genieIndesirable = input("Nommer la type de genie indesirables: ")
+    genieIndesirable = input("Nommer le type de genie indesirables: ")
     while genieIndesirable not in caracteristiquesGenie:
         genieIndesirable = input("Non-valide. Retaper: ")
     return cheveuxIndesirable, yeuxIndesirable, genieIndesirable
