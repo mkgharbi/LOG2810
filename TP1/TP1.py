@@ -338,9 +338,10 @@ def creerGraphe():
 
 
 def dijkstra(source, cible):
+    creerGraphe()
     distanceMinimale = {}
     predecesseur = {}
-    relationsNonVisitees = graphe
+    relationsNonVisitees = graphe.copy()
     infini = float('inf')
     parcours = []
     for relation in relationsNonVisitees:
