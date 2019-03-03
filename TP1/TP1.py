@@ -224,9 +224,12 @@ def identifierIndividus() :
         personnesTrouvees = False
         compteurU = 0  
         while (not personnesTrouvees and compteurU < 3) :
-            reponsePersonnes = input("Les personnes suspectes sont-ils " + listeIndividus[index].nom + " et " + listeIndividus[index+1].nom + " ?")
+            if index > len(listeIndividus):
+                reponsePersonnes = input("Les personnes suspectes sont-ils " + listeIndividus[index].nom + " et " + listeIndividus[index-1].nom + " ?")
+            else:
+                reponsePersonnes = input("Les personnes suspectes sont-ils " + listeIndividus[index].nom + " et " + listeIndividus[index+1].nom + " ?")
             while reponsePersonnes.upper() not in ["O", "N", "U", "S"]:
-                reponsePersonnes = input("Les personnes suspectes sont-ils ", listeIndividus[index].nom , listeIndividus[index+1].nom)
+                reponsePersonnes = input("Les personnes suspectes sont-ils " + listeIndividus[index].nom + listeIndividus[index+1].nom)
             if reponsePersonnes.upper() == "S" : 
                 suspects(tableauIndividusFiltre)
             elif reponsePersonnes.upper() == "O" : 
@@ -247,9 +250,9 @@ def identifierIndividus() :
             compteurQuestionsPosees[3] = compteurQuestionsPosees[3] + 1 
             index += 2 
             if len(tableauIndividusFiltre) > 2  :
-                reponsePersonnesFiltre = input("Les personnes suspectes sont-ils ", tableauIndividusFiltre[0].nom, tableauIndividusFiltre[2].nom)
+                reponsePersonnesFiltre = input("Les personnes suspectes sont-ils " + tableauIndividusFiltre[0].nom + " et " + tableauIndividusFiltre[2].nom + " ?")
                 while reponsePersonnesFiltre.upper() not in ["O", "N", "U", "S"]:
-                    reponsePersonnesFiltre = input("Les personnes suspectes sont-ils ", listeIndividus[0].nom, listeIndividus[2].nom)
+                    reponsePersonnesFiltre = input("Les personnes suspectes sont-ils " + listeIndividus[0].nom  + " et " + listeIndividus[2].nom + " ?")
                 if reponsePersonnesFiltre.upper() == "S" : 
                     suspects(tableauIndividusFiltre)
                 elif reponsePersonnesFiltre.upper() == "O" :
@@ -265,9 +268,9 @@ def identifierIndividus() :
                     compteurU += 1
                     if compteurU == 3:
                         break
-                    reponsePersonnesFiltre2 = input("Les personnes suspectes sont-ils ", tableauIndividusFiltre[0].nom, tableauIndividusFiltre[3].nom)
+                    reponsePersonnesFiltre2 = input("Les personnes suspectes sont-ils " + tableauIndividusFiltre[0].nom + " et " + tableauIndividusFiltre[3].nom + " ?")
                     while reponsePersonnesFiltre2.upper() not in ["O", "N" , "U"]:
-                        reponsePersonnesFiltre2 = input("Les personnes suspectes sont-ils ", tableauIndividusFiltre[0].nom, tableauIndividusFiltre[3].nom)
+                        reponsePersonnesFiltre2 = input("Les personnes suspectes sont-ils " + tableauIndividusFiltre[0].nom + " et " +tableauIndividusFiltre[3].nom + " ?")
                     if reponsePersonnesFiltre2.upper() == "O": 
                         personnesTrouvees = True
                         tableauIndividusFinale.append(tableauIndividusFiltre[0])
@@ -332,7 +335,7 @@ def creerGraphe():
     individu1 = set()
     for relation in tableauRelations:
         individu1.add(relation.nomIndividu1)
-    graphe.fromkeys(individu1)
+    graphe.fromkeys(individu1,0)
     for relation in tableauRelations:
         graphe[relation.nomIndividu1][relation.nomIndividu2] = relation.facteurRelations
 
