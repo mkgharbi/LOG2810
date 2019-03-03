@@ -1,5 +1,5 @@
 ########################
-
+import collections
 
 #Classe :
 class Personne:
@@ -94,8 +94,7 @@ tableauIndividusEvolutif = set()
 def suspects(tableau) : 
     print("Les suspects sont :")
     for element in tableau :
-        if element != 0:
-            print(element.nom)
+        print(element.nom)
 
 # on doit posé la question une par une puis agir en cosequence de la reponse
 #parce que la on a les reponses sans qu'on pose les questions
@@ -119,7 +118,7 @@ def questionsCheveux():
                  if personne.couleurDeCheveux == caracteristiquesCheveux[indexQuestionsCheveux]:
                     tableauIndividusEvolutif.add(personne)
         indexQuestionsCheveux += 1
-    compteurQuestionsPosees[0] = indexQuestionsCheveux+1
+    compteurQuestionsPosees[0] = indexQuestionsCheveux
     return
 
 
@@ -154,11 +153,11 @@ def questionsYeux():
                 tableauIndividusEvolutif.remove(personne)
             del(tempSet)
         indexQuestionsYeux += 1
-    compteurQuestionsPosees[1] = indexQuestionsYeux + 1
+    compteurQuestionsPosees[1] = indexQuestionsYeux
     tempSet = set()
     if len(listeU) == 2:
         for personne in tableauIndividusEvolutif:
-            if personne.genie != listeU[0] and personne.genie != listeU[1]:
+            if personne.couleurDesYeux != listeU[0] and personne.couleurDesYeux != listeU[1]:
                 tempSet.add(personne)
         for personne in tempSet:
             tableauIndividusEvolutif.remove(personne)
@@ -196,11 +195,11 @@ def questionsGenie():
                 tableauIndividusEvolutif.remove(personne)
             del(tempSet)
         indexQuestionsGenie += 1
-    compteurQuestionsPosees[2] = indexQuestionsGenie + 1
+    compteurQuestionsPosees[2] = indexQuestionsGenie
     tempSet = set()
     if len(listeU) == 2:
         for personne in tableauIndividusEvolutif:
-            if personne.couleurDesYeux != listeU[0] and personne.couleurDesYeux != listeU[1]:
+            if personne.genie != listeU[0] and personne.genie != listeU[1]:
                 tempSet.add(personne)
         for personne in tempSet:
             tableauIndividusEvolutif.remove(personne)
@@ -239,6 +238,8 @@ def identifierIndividus() :
                 compteurU = compteurU + 1 
                 tableauIndividusFiltre.append(listeIndividus[index])
                 tableauIndividusFiltre.append(listeIndividus[index+1])
+                if compteurU == 2:
+                    break
             compteurQuestionsPosees[3] = compteurQuestionsPosees[3] + 1 
             index += 2 
             if len(tableauIndividusFiltre) > 2  :
@@ -253,6 +254,9 @@ def identifierIndividus() :
                     tableauIndividusFinale.append(tableauIndividusFiltre[2])
                     break
                 if reponsePersonnesFiltre.upper() == "U" :
+                    compteurU += 1
+                    if compteurU == 2:
+                        break
                     reponsePersonnesFiltre2 = input("Les personnes suspectes sont-ils ", tableauIndividusFiltre[0].nom, tableauIndividusFiltre[3].nom)
                     while reponsePersonnesFiltre2.upper() not in ["O", "N" , "U"]:
                         reponsePersonnesFiltre2 = input("Les personnes suspectes sont-ils ", tableauIndividusFiltre[0].nom, tableauIndividusFiltre[3].nom)
@@ -302,7 +306,7 @@ def lireInputArcs():
 #   L'agent trouve la meilleure chaine de contacts entre 2 individus à partir 
 #   du sous-graphe des caracteristiques désirables.
 
-
+graphe = collections.defaultdict(dict)
 def creerGraphe():
     individu1 = set()
     for relation in tableauRelations:
@@ -317,7 +321,7 @@ def dijkstra(source, cible):
     distanceMinimale = {}
     predecesseur = {}
     relationsNonVisitees = graphe
-    infini = 9999999
+    infini = float('inf')
     parcours = []
     for relation in relationsNonVisitees:
         distanceMinimale[relation] = infini
@@ -359,8 +363,9 @@ def trouverChaineContacts(nomSource, nomCible):
 def afficherResultat() :
     for relation in tableauRelations:
         if relation.facteurRelations != 0:
-            print("(%s,%s(%s%%))\n" % (relation.nomIndividu1.strip(), relation.nomIndividu2.strip(), str(relation.facteurRelations).strip())) 
-    #Show path
+            print("(%s,%s(%s%%))\n" % (relation.nomIndividu1.strip(), relation.nomIndividu2.strip(), str(relation.facteurRelations).strip()))
+    if len(tableauIndividusFinale) == 2: 
+        trouverChaineContacts(tableauIndividusFinale[0], tableauIndividusFinale[1])
     nombreQuestions = compteurQuestionsPosees[0] + compteurQuestionsPosees[1] + compteurQuestionsPosees[2] + compteurQuestionsPosees[3]
     print("Nombre de questions posees: ", nombreQuestions ,"\n")
     print()
