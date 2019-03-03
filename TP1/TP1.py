@@ -231,7 +231,8 @@ def identifierIndividus() :
             while reponsePersonnes.upper() not in ["O", "N", "U", "S"]:
                 reponsePersonnes = input("Les personnes suspectes sont-ils " + listeIndividus[index].nom + listeIndividus[index+1].nom)
             if reponsePersonnes.upper() == "S" : 
-                suspects(tableauIndividusFiltre)
+                suspects(listeIndividus)
+                index -= 2
             elif reponsePersonnes.upper() == "O" : 
                 personnesTrouvees = True 
                 tableauIndividusFinale.append(listeIndividus[index])
@@ -294,22 +295,19 @@ def identifierIndividus() :
         tableauIndividusFinale.append(input("Premiere: ")) 
         tableauIndividusFinale.append(input("Deuxieme: "))
 
-
-#
-#  fonction : enleverArcsIndesirables( 3 caracteristiques indesirables )
-#   Génère le sous-graphe des caractéristiques désirables.
 def get(nom):
     for personnes in tableauIndividus:
         if personnes.nom == nom : 
             return personnes
 
-
+#  fonction : enleverArcsIndesirables( 3 caracteristiques indesirables )
+#   Génère le sous-graphe des caractéristiques désirables.
 def enleverArcsIndesirables(cheveux , yeux , genie ) :
     for relations in tableauRelations : 
         if (((get(relations.nomIndividu1)).couleurDeCheveux == (get(relations.nomIndividu2)).couleurDeCheveux) and ((get(relations.nomIndividu1)).couleurDeCheveux == cheveux)) or \
          (((get(relations.nomIndividu1)).couleurDesYeux == (get(relations.nomIndividu2)).couleurDesYeux) and ((get(relations.nomIndividu2)).couleurDesYeux == yeux)) or \
          (((get(relations.nomIndividu1)).genie == (get(relations.nomIndividu2)).genie) and ((get(relations.nomIndividu1)).genie == genie)) :
-            if not tableauIndividusFinale.__contains__(get(relations.nomIndividu1)) : 
+            if not (tableauIndividusFinale.__contains__(get(relations.nomIndividu1)) or tableauIndividusFinale.__contains__(get(relations.nomIndividu2)))  : 
                 relations.facteurRelations = 0 
 
 def lireInputArcs():
@@ -333,11 +331,12 @@ def lireInputArcs():
 graphe = collections.defaultdict(dict)
 def creerGraphe():
     individu1 = set()
-    for relation in tableauRelations:
-        individu1.add(relation.nomIndividu1)
+    for individu in tableauIndividus:
+        individu1.add(individu.nom)
     graphe.fromkeys(individu1,0)
     for relation in tableauRelations:
         graphe[relation.nomIndividu1][relation.nomIndividu2] = relation.facteurRelations
+        graphe[relation.nomIndividu2][relation.nomIndividu1] = relation.facteurRelations
 
 
 def dijkstra(source, cible):
@@ -345,7 +344,7 @@ def dijkstra(source, cible):
     distanceMinimale = {}
     predecesseur = {}
     relationsNonVisitees = graphe.copy()
-    infini = float('inf')
+    infini = 999999
     parcours = []
     for relation in relationsNonVisitees:
         distanceMinimale[relation] = infini
