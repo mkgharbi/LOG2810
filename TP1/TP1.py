@@ -360,7 +360,7 @@ def trouverChaineContacts(nomSource, nomCible):
     dijkstra(nomSource, nomCible)
 #  fontion : afficherResultat() 
 #   L'agent présente le résultatde ses accomplissements selon le bon format.
-def afficherResultat() :
+def afficherResultat(c,y,g) :
     for relation in tableauRelations:
         if relation.facteurRelations != 0:
             print("(%s,%s(%s%%))\n" % (relation.nomIndividu1.strip(), relation.nomIndividu2.strip(), str(relation.facteurRelations).strip()))
@@ -368,9 +368,10 @@ def afficherResultat() :
         trouverChaineContacts(tableauIndividusFinale[0], tableauIndividusFinale[1])
     nombreQuestions = compteurQuestionsPosees[0] + compteurQuestionsPosees[1] + compteurQuestionsPosees[2] + compteurQuestionsPosees[3]
     print("Nombre de questions posees: ", nombreQuestions ,"\n")
+    if len(tableauIndividusFinale) == 2: 
+        print("Les individus mysteres sont ", tableauIndividusFinale[0], tableauIndividusFinale[1])
     print()
-    print()
-    print()
+    print("Caracteristiques indesirables: ",c,y,g)
         
     return
 # Interface console qui affiche le menu : 
@@ -392,6 +393,9 @@ def lireInputMenu() :
 # main 
 def main() :
     current = "m"
+    c = None
+    y = None
+    g = None
     #Menu
     while True:
         if current == "m":
@@ -413,7 +417,7 @@ def main() :
             enleverArcsIndesirables(c, y, g)
             current = "m"
         elif current == "d":
-            afficherResultat()
+            afficherResultat(c,y,g)
             current = "m"
         elif current == "e":
             break
