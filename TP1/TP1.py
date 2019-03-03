@@ -262,7 +262,8 @@ def afficherResultat() :
         if relation.facteurRelations != 0:
             print("(%s,%s(%s%%))\n" % (relation.nomIndividu1.strip(), relation.nomIndividu2.strip(), str(relation.facteurRelations).strip())) 
     #Show path
-    print("Nombre de questions posees: ", compteurQuestionsPosees[0] + compteurQuestionsPosees[1] + compteurQuestionsPosees[2] + compteurQuestionsPosees[3],"\n")
+    nombreQuestions = compteurQuestionsPosees[0] + compteurQuestionsPosees[1] + compteurQuestionsPosees[2] + compteurQuestionsPosees[3]
+    print("Nombre de questions posees: ", nombreQuestions ,"\n")
     print()
     print()
     print()
