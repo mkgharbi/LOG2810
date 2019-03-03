@@ -229,7 +229,7 @@ def get(nom):
 
 def enleverArcsIndesirables(cheveux , yeux , genie ) :
     for relations in tableauRelations : 
-        if not ((get(relations.nomIndividu1)).couleurDeCheveux == (get(relations.nomIndividu2)).couleurDeCheveux and (get(relations.nomIndividu1)).couleurDeCheveux == cheveux) or \
+        if ((get(relations.nomIndividu1)).couleurDeCheveux == (get(relations.nomIndividu2)).couleurDeCheveux and (get(relations.nomIndividu1)).couleurDeCheveux == cheveux) or \
          ((get(relations.nomIndividu1)).couleurDesYeux == (get(relations.nomIndividu2)).couleurDesYeux and (get(relations.nomIndividu2)).couleurDesYeux == yeux) or \
          ((get(relations.nomIndividu1)).genie == (get(relations.nomIndividu2)).genie and (get(relations.nomIndividu1)).genie == genie) :
             if not tableauIndividusFinale.__contains__(get(relations.nomIndividu1)) : 
