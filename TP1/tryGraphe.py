@@ -167,9 +167,10 @@ def main() :
 
     graph = Graph()
 
-    personneIndiv1 = set()
+    personneIndiv1 = []
     for relation in tableauRelations: 
-        personneIndiv1.add(relation.getIndividu1())
+        if not personneIndiv1.__contains__(relation.getIndividu1().getNom()) :
+            personneIndiv1.append(relation.getIndividu1().getNom())
     
     for personne in personneIndiv1: 
         graph.add_node(personne)
@@ -179,7 +180,7 @@ def main() :
 
     print(graph)
 
-    print(shortest_path(graph, personneMystere1,personneMystere2))
+    print(shortest_path(graph, "Maximer", "Clorise"))
     
     #creerGraphe()
 

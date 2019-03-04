@@ -14,7 +14,7 @@ Adam 33 Nathurin
 Adam 100 Rita 
 Adam 12 Morido 
 Adam 7 Penelope 
-Adilard 22 Penelope 
+Adilard 22 Penelope  
 Adilard 15 France 
 Adilard 60 Alarie 
 Adilard 35 Albert 
@@ -30,7 +30,7 @@ Adjudor 1 Rolande
 Adjudor 88 Midiril 
 Adrien 21 Mozart 
 Alarie 10 Pecine 
-Alarie 1 Alban  
+Alarie 1 Alban 
 Florence 35 Midiril 
 Florence 30 Alban 
 Midiril 67 Albarick 

@@ -158,10 +158,19 @@ def creerGraphe():
 
 
 def main(): 
+<<<<<<< HEAD
+    creerReseauSocial("Individus.txt","Relations.txt")
+=======
     creerReseauSocial("Inidividus.txt","Relations.txt")
+>>>>>>> 40094c8fcb785da09fec2d226a9fb71b38233359
     creerGraphe()
     print(graphe)
 
     print(graphe.shortest_path("Maximer", "Adam"))
 
+<<<<<<< HEAD
+if __name__ == "__main__":
+    main()
+=======
 
+>>>>>>> 40094c8fcb785da09fec2d226a9fb71b38233359
