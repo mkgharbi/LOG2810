@@ -68,8 +68,8 @@ tableauIndividus = set()
 #TODO :
 
 
-def trouverPersonne(tableau, nom):
-    for personne in tableau:
+def trouverPersonne(nom):
+    for personne in tableauIndividus:
         if personne.getNom() == nom:
             return personne
 
@@ -83,15 +83,13 @@ def creerReseauSocial(fichier1, fichier2):
     relations = open(fichier2, "r")
     for ligne in individus:
         personne = ligne.split(" ")
-        tableauIndividus.add(Personne(personne[0].strip(
-        ), personne[1].strip(), personne[2].strip(), personne[3].strip()))
+        tableauIndividus.add(Personne(personne[0].strip(), personne[1].strip(), personne[2].strip(), personne[3].strip()))
     for ligne in relations:
         chaines = ligne.split(" ")
         if int(chaines[1].strip()) > 0 and int(chaines[1].strip()) <= 100:
-            Personne1 = trouverPersonne(tableauIndividus, chaines[0].strip())
-            Personne2 = trouverPersonne(tableauIndividus, chaines[2].strip())
-            tableauRelations.add(
-                Relations(Personne1, Personne2, int(chaines[1].strip())))
+            Personne1 = trouverPersonne(chaines[0].strip())
+            Personne2 = trouverPersonne(chaines[2].strip())
+            tableauRelations.add(Relations(Personne1, Personne2, int(chaines[1].strip())))
 
 #
 #  fonction : afficherReseauSocial()
@@ -104,8 +102,7 @@ def afficherReseauSocial():
         print("Aucun Reseau Trouver!\n")
         return
     for relation in tableauRelations:
-        print("(%s,%s(%s%%))\n" % (relation.getIndividu1().getNom().strip(
-        ), relation.getIndividu2().getNom().strip(), str(relation.getFacteurRelations()).strip()))
+        print("(%s,%s(%s%%))\n" % (relation.getIndividu1().getNom().strip(), relation.getIndividu2().getNom().strip(), str(relation.getFacteurRelations()).strip()))
 
 
 caracteristiquesCheveux = ["N", "R", "B", "M"]
@@ -124,8 +121,7 @@ lesQuestionsYeux = ["Les individues mysteres ont-ils les yeux bleus-B ? ",
                     "Les individues mysteres ont-ils les yeux marrons-M ? "]
 
 # on n'a pas utiliser les caracteristique
-caracteristiquesGenie = ["GI", "GP", "GE",
-                            "GC", "GA", "GM", "GB", "GInd", "ER"]
+caracteristiquesGenie = ["GI", "GP", "GE","GC", "GA", "GM", "GB", "GInd", "ER"]
 
 lesQuestionsGenies = [" Les individus sont-ils en génie informatique-GI ?",
                         " Les individus sont-ils en génie physique-GP ?",
@@ -297,19 +293,21 @@ def identifierIndividus():
         compteurU = 0
         while (not personnesTrouvees and compteurU < 3):
             if index+1 >= len(listeIndividus):
-                reponsePersonnes = input("Les personnes suspectes sont-ils " + listeIndividus[index].getNom() + " et " + listeIndividus[index-1].getNom() + " ?")
+                index -= 1
+                reponsePersonnes = input("Les personnes suspectes sont-ils " + listeIndividus[index].getNom() + " et " + listeIndividus[index+1].getNom() + " ?")
             else:
                 reponsePersonnes = input("Les personnes suspectes sont-ils " + listeIndividus[index].getNom() + " et " + listeIndividus[index+1].getNom() + " ?")
             while reponsePersonnes.upper() not in ["O", "N", "U", "S"]:
+                if index+1 >= len(listeIndividus):
+                    index -= 1
                 reponsePersonnes = input("Les personnes suspectes sont-ils " + listeIndividus[index].getNom() + listeIndividus[index+1].getNom())
             if reponsePersonnes.upper() == "S":
                 suspects(listeIndividus)
                 index -= 2
             elif reponsePersonnes.upper() == "O":
                 personnesTrouvees = True
-                tableauIndividusFinale.clear()
-                tableauIndividusFinale.append(listeIndividus[index])
-                tableauIndividusFinale.append(listeIndividus[index+1])
+                tableauPersonnesMysteresTrouvees.append(listeIndividus[index].getNom())
+                tableauPersonnesMysteresTrouvees.append(listeIndividus[index+1].getNom())
                 break
             elif reponsePersonnes.upper() == "N":
                 compteurU += 1
@@ -317,8 +315,8 @@ def identifierIndividus():
                     break
             elif reponsePersonnes.upper() == "U":
                 compteurU = compteurU + 1
-                tableauIndividusFiltre.append(listeIndividus[index])
-                tableauIndividusFiltre.append(listeIndividus[index+1])
+                tableauIndividusFiltre.append(listeIndividus[index].getNom())
+                tableauIndividusFiltre.append(listeIndividus[index+1].getNom())
                 if compteurU == 3:
                     break
             compteurQuestionsPosees[3] = compteurQuestionsPosees[3] + 1
@@ -326,14 +324,13 @@ def identifierIndividus():
             if len(tableauIndividusFiltre) > 2:
                 reponsePersonnesFiltre = input("Les personnes suspectes sont-ils " + tableauIndividusFiltre[0].getNom() + " et " + tableauIndividusFiltre[2].getNom() + " ?")
                 while reponsePersonnesFiltre.upper() not in ["O", "N", "U", "S"]:
-                    reponsePersonnesFiltre = input("Les personnes suspectes sont-ils " + listeIndividus[0].getNom() + " et " + listeIndividus[2].getNom() + " ?")
+                    reponsePersonnesFiltre = input("Les personnes suspectes sont-ils " + tableauIndividusFiltre[0].getNom() + " et " + tableauIndividusFiltre[2].getNom() + " ?")
                 if reponsePersonnesFiltre.upper() == "S":
                     suspects(tableauIndividusFiltre)
                 elif reponsePersonnesFiltre.upper() == "O":
                     personnesTrouvees = True
-                    tableauIndividusFinale.clear()
-                    tableauIndividusFinale.append(tableauIndividusFiltre[0])
-                    tableauIndividusFinale.append(tableauIndividusFiltre[2])
+                    tableauPersonnesMysteresTrouvees.append(tableauIndividusFiltre[0].getNom())
+                    tableauPersonnesMysteresTrouvees.append(tableauIndividusFiltre[2].getNom())
                     break
                 elif reponsePersonnesFiltre.upper() == "N":
                     compteurU += 1
@@ -348,25 +345,25 @@ def identifierIndividus():
                         reponsePersonnesFiltre2 = input("Les personnes suspectes sont-ils " + tableauIndividusFiltre[0].getNom() + " et " + tableauIndividusFiltre[3].getNom() + " ?")
                     if reponsePersonnesFiltre2.upper() == "O":
                         personnesTrouvees = True
-                        tableauIndividusFinale.clear()
-                        tableauIndividusFinale.append(tableauIndividusFiltre[0])
-                        tableauIndividusFinale.append(tableauIndividusFiltre[3])
+                        tableauPersonnesMysteresTrouvees.append(tableauIndividusFiltre[0].getNom())
+                        tableauPersonnesMysteresTrouvees.append(tableauIndividusFiltre[3].getNom())
                         break
                     elif reponsePersonnesFiltre2.upper() == "U":
-                        tableauIndividusFinale.append(tableauIndividusFiltre[0])
-                        tableauIndividusFinale.append(tableauIndividusFiltre[3])
+                        tableauPersonnesMysteresTrouvees.append(tableauIndividusFiltre[0].getNom())
+                        tableauPersonnesMysteresTrouvees.append(tableauIndividusFiltre[3].getNom())
                         compteurU += 1
                         if compteurU == 3:
                             break
                     elif reponsePersonnesFiltre2.upper() == "N":
-                        tableauIndividusFinale.append(tableauIndividusFiltre[1])
-                        tableauIndividusFinale.append(tableauIndividusFiltre[2])
+                        tableauPersonnesMysteresTrouvees.append(tableauIndividusFiltre[1].getNom())
+                        tableauPersonnesMysteresTrouvees.append(tableauIndividusFiltre[2].getNom())
                         compteurU += 1
                         if compteurU == 3:
                             break
     if (not personnesTrouvees):
         print("Qui sont les personne mysteres? ")
-
+        tableauPersonnesMysteresTrouvees.clear()
+        tableauPersonnesMysteresIntrouvees.clear()
         personneMystere1 = input("Premiere: ")
         personneMystere2 = input("Deuxieme: ")
 
@@ -382,8 +379,8 @@ def identifierIndividus():
         else:
             tableauPersonnesMysteresIntrouvees.append(personneMystere2)
     else:
-        personneMystere1 = tableauIndividusFinale[0]
-        personneMystere2 = tableauIndividusFinale[1]
+        personneMystere1 = tableauPersonnesMysteresTrouvees[0]
+        personneMystere2 = tableauPersonnesMysteresTrouvees[1]
 
 #  fonction : enleverArcsIndesirables( 3 caracteristiques indesirables )
 #   Génère le sous-graphe des caractéristiques désirables.
@@ -422,7 +419,7 @@ def creerGraphe():
     individu1 = set()
     for individu in tableauIndividus:
         individu1.add(individu.getNom())
-    graphe.fromkeys(individu1)
+    graphe.fromkeys(individu1,0)
     for relation in tableauRelations:
         if relation.getFacteurRelations() != 0:
             graphe[relation.getIndividu1().getNom()][relation.getIndividu2().getNom()] = relation.getFacteurRelations()
@@ -431,6 +428,7 @@ def creerGraphe():
 
 def dijkstra(source, cible):
     creerGraphe()
+    print(graphe)
     distanceMinimale = {}
     predecesseur = {}
     relationsNonVisitees = graphe.copy()
@@ -450,19 +448,14 @@ def dijkstra(source, cible):
 
         for relationEnfant, facteurRelations in graphe[relationMinimale].items():
             if facteurRelations + distanceMinimale[relationMinimale] < distanceMinimale[relationEnfant]:
-                distanceMinimale[relationEnfant] = facteurRelations + \
-                    distanceMinimale[relationMinimale]
+                distanceMinimale[relationEnfant] = facteurRelations + distanceMinimale[relationMinimale]
                 predecesseur[relationEnfant] = relationMinimale
         relationsNonVisitees.pop(relationMinimale)
 
     currentrelation = cible
     while currentrelation != source:
-        try:
-            parcours.insert(0, currentrelation)
-            currentrelation = predecesseur[currentrelation]
-        except KeyError:
-            print('parcours impossible a etablir')
-            break
+        parcours.insert(0, currentrelation)
+        currentrelation = predecesseur[currentrelation]
     parcours.insert(0, source)
     if distanceMinimale[cible] != infini:
         print('distance minimale est ' + str(distanceMinimale[cible]))
