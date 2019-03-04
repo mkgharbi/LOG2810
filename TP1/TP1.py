@@ -423,7 +423,6 @@ def creerGraphe():
     for relation in tableauRelations:
         if relation.getFacteurRelations() != 0:
             graphe[relation.getIndividu1().getNom()][relation.getIndividu2().getNom()] = relation.getFacteurRelations()
-            graphe[relation.getIndividu2().getNom()][relation.getIndividu1().getNom()] = relation.getFacteurRelations()
 
 
 def dijkstra(source, cible):
