@@ -429,13 +429,8 @@ def creerGraphe():
         individu1.add(individu.getNom())
     graphe.fromkeys(individu1,0)
     for relation in tableauRelations:
-<<<<<<< HEAD
         graphe[relation.getIndividu1()][relation.getIndividu2()] = relation.getFacteurRelations()
         graphe[relation.getIndividu2()][relation.getIndividu1()] = relation.getFacteurRelations()
-=======
-        if relation.getFacteurRelations() != 0:
-            graphe[relation.getIndividu1().getNom()][relation.getIndividu2().getNom()] = relation.getFacteurRelations()
->>>>>>> 40094c8fcb785da09fec2d226a9fb71b38233359
 
 #  fonction : trouverChaineContacts( 2 noms d'individus )
 #   L'agent trouve la meilleure chaine de contacts entre 2 individus à partir

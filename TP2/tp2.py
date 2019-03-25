@@ -6,12 +6,12 @@ def remplirFichier (nbrFichier):#remplir le tableau avec les fichier
 #ef lireFichier():#lire les fichier
 
 #compliquer
-def ouvrirPorte (tableauFichier ): 
+def ouvrirPorte (porte): 
     #cette fonction dois:lire les fichier (utiliser la fonction lireFichier),
     #crée l'automate , valider le mot de passe, retourne une liste de portes
 
 #moyen
-def affronterLeBoss(Boss.txt):
+def affronterLeBoss():
     #lis le fichier Boss.txt
     #generer l'automate associé au chemin decrit dans le fichier 
     #valider la concatenation des mot de passe des le debut 
@@ -38,3 +38,36 @@ def afficher():
     #ouvrir une porte
     #afficher le chemin parcouru (fonction qu'on a deja fait)
     #quitter
+
+def lireInputMenu():
+    valeur = input()
+    if valeur.lower() not in ["a", "b", "c", "d"]:
+        print("Index Invalide, reessayez:\n")
+        valeur = "m"
+    return valeur.lower()
+
+def main():
+    current = "m" # m -> "menu"
+    while True:
+        if current == "m":
+            print("(a) Entrer dans le labyrinthe.")
+            print("(b) Ouvrir une porte.")
+            print("(c) Afficher le chemin parcouru.")
+            print("(d) Quitter")
+            current = lireInputMenu()
+        elif current == "a":
+            ouvrirPorte("Labyrinthe/Porte1.txt")
+            current == "m"
+        elif current == "b":
+            numero = input("Entrer le numero de la porte : ")
+            ouvrirPorte("Labyrinthe/Porte" + numero + ".txt")
+            current = "m"
+        elif current == "c":
+            afficherLeCheminParcouru()
+            current = "m"
+        elif current == "d":
+            break
+
+
+if __name__ == "__main__":
+    main()
