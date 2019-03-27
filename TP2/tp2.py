@@ -8,8 +8,9 @@ def remplirFichier (nbrFichier):
 #ef lireFichier():#lire les fichier
 
 #compliquer
-def ouvrirPorte (porte): 
+def ouvrirPorte (fichier): 
     t = True
+    porte = open (fichier, "r")
     #cette fonction dois:lire les fichier (utiliser la fonction lireFichier),
     #crée l'automate , valider le mot de passe, retourne une liste de portes
 
