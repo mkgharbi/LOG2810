@@ -44,7 +44,8 @@ def getMax(array):
 
 
 def genererCode(array,max):
-    t = True
+    returnArray = []
+    return returnArray
 
 
 
