@@ -1,27 +1,33 @@
 #facile 
 tableauFichier =[]#tableau des fichier données 
-def remplirFichier (nbrFichier):#remplir le tableau avec les fichier 
+def remplirFichier (nbrFichier):
+    t = True
+    #remplir le tableau avec les fichier 
     #on devera faire une boucle ou on met les 21 fichier c'est long d'ecrire 21 fichier 
 
 #ef lireFichier():#lire les fichier
 
 #compliquer
 def ouvrirPorte (porte): 
+    t = True
     #cette fonction dois:lire les fichier (utiliser la fonction lireFichier),
     #crée l'automate , valider le mot de passe, retourne une liste de portes
 
 #moyen
 def affronterLeBoss():
+    t = True
     #lis le fichier Boss.txt
     #generer l'automate associé au chemin decrit dans le fichier 
     #valider la concatenation des mot de passe des le debut 
     #trouver le language
 
 #moyen
-def genererAutomate ():#question :est-ce que on utilise cette fonction pour affronterBoss?
+def genererAutomate ():
+    t = True
 
 #facile
 def afficherLeCheminParcouru():
+    t = True
     #on a le choix entre :
     #1 precisant: choix d'une porte,
     #les mots de passes valide associer a cette porte avec chacune des portes vers lesquelles il mene
@@ -33,6 +39,7 @@ def afficherLeCheminParcouru():
 
 #facile
 def afficher():
+    t = True
     #interface console qui affiche :
     #entrer dans le labyrinthe (porte1)
     #ouvrir une porte
@@ -60,7 +67,10 @@ def main():
             current == "m"
         elif current == "b":
             numero = input("Entrer le numero de la porte : ")
-            ouvrirPorte("Labyrinthe/Porte" + numero + ".txt")
+            if numero == ("boss" or "Boss" or "BOSS"):
+                ouvrirPorte("Boss.txt")
+            else:
+                ouvrirPorte("Labyrinthe/Porte" + numero + ".txt")
             current = "m"
         elif current == "c":
             afficherLeCheminParcouru()
