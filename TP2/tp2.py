@@ -1,3 +1,6 @@
+terminaux = ["","a", "b", "c", "d", "e"]
+nonTerminaux = ["A","B", "C", "D",  "S"]
+
 #facile 
 tableauFichier =[]#tableau des fichier données 
 def remplirFichier (nbrFichier):
@@ -6,13 +9,21 @@ def remplirFichier (nbrFichier):
     #on devera faire une boucle ou on met les 21 fichier c'est long d'ecrire 21 fichier 
 
 #ef lireFichier():#lire les fichier
-
-#compliquer
-def ouvrirPorte (fichier): 
-    t = True
-    porte = open (fichier, "r")
     #cette fonction dois:lire les fichier (utiliser la fonction lireFichier),
     #crée l'automate , valider le mot de passe, retourne une liste de portes
+#compliquer
+
+States = []
+inputs = [] 
+nextState = [] 
+
+def ouvrirPorte (fichier, numero): 
+    porte = open (fichier, "r")
+    porte.next()
+    tempGrammar = porte.read()
+    arrayGrammar = tempGrammar.split(", ")
+    genererAutomate(arrayGrammar, porte, numero)  # call genererAutomate
+    
 
 #moyen
 def affronterLeBoss():
@@ -23,8 +34,42 @@ def affronterLeBoss():
     #trouver le language
 
 #moyen
-def genererAutomate ():
+def getMax(array):
+    maximum = array[0].length()
+    for item in array: 
+        if maximum < item.length() : 
+            maximum = item.length()
+    return maximum 
+
+
+
+def genererCode(array,max):
     t = True
+
+
+
+def genererAutomate (array, file, numero):
+    file.next()
+    tempArray = []
+    while True:
+        currentLine = file.read()
+        if currentLine is None:
+            break
+        currentLineArray = currentLine.split(" ")
+        tempArray.append(currentLineArray[0], currentLineArray[1])
+    porteArray = []
+    passwordArray = []
+    for current in tempArray:
+        if "Porte" in current:
+            porteArray.append(current)
+        else:
+            passwordArray.append(current)
+    tempArray.clear()
+    codeArray = genererCode(array, getMax(passwordArray))
+    codeArray.append("")
+
+
+
 
 #facile
 def afficherLeCheminParcouru():
@@ -69,9 +114,9 @@ def main():
         elif current == "b":
             numero = input("Entrer le numero de la porte : ")
             if numero == ("boss" or "Boss" or "BOSS"):
-                ouvrirPorte("Boss.txt")
+                ouvrirPorte("Labyrithe/Boss.txt", 0)
             else:
-                ouvrirPorte("Labyrinthe/Porte" + numero + ".txt")
+                ouvrirPorte("Labyrinthe/Porte" + numero + ".txt", numero)
             current = "m"
         elif current == "c":
             afficherLeCheminParcouru()
