@@ -11,8 +11,8 @@ nextState = []
 
 porteArray = []  # TODO: Split as dictionnary??
 gouffreArray = [] #TODO: Si une porte se trouve a etre un gouffre, on lajoute
-passwordArray = []
-codeArray = []
+passwordArray = [] # contenant les mots de passe dans chaque porte 
+codeArray = [] # contenant les mots de passe valides 
 
 chemins = defaultdict(list) # Cles: Les portes ouvertes, Valeurs: Tableau des portes essayes (Ex: {efedda, Porte6, valide})
 
@@ -56,24 +56,38 @@ def affronterLeBoss():
   #          maximum = len(item)
   #  return maximum 
 
+def fillTerminaux(etatFinaux, nonTerminauxPorte,arrayGrammar) : 
+    for i in arrayGrammar:
+        if i[1].size()==0:
+            etatFinaux.append(i[0])
+        if i[1].size() ==1:
+            nonTerminauxPorte.append(i[1])
+
+
+
 def genererCode(array,max):
     etatFinaux = set()
     #terminauxPorte =[] #lettre majuscule 
     nonTerminauxPorte = set() # lettre miniscule
-    for i in arrayGrammar:
-       if i[1].size()==0:
-           etatFinaux.append(i[0])
-        if i[1].size() ==1 :
-            nonTerminauxPorte.append(i[1])
+    global codeArray 
+    fillTerminaux(etatFinaux,nonTerminauxPorte,array)
+
+    for code in passwordArray:
+        if  code[code.length()-1] in nonTerminauxPorte :
+            codeArray.append(code)
         
-    
 
     returnArray = []
     return returnArray
 
 def genererAutomate (array, porte):
+    global passwordArray 
+    global porteArray
+
+    codeArray.clear()
     passwordArray.clear()
     porteArray.clear()
+
     tempArray = []
     porteFile = open(porte+".txt", "r")
     porteFile.readline()
