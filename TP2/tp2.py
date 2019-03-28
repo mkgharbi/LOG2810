@@ -1,4 +1,5 @@
 import random
+from collections import defaultdict
 
 terminaux = ["","a", "b", "c", "d", "e"]
 nonTerminaux = ["A","B", "C", "D",  "S"]
@@ -9,19 +10,24 @@ inputs = []
 nextState = []
 
 porteArray = []  # TODO: Split as dictionnary??
+gouffreArray = [] #TODO: Si une porte se trouve a etre un gouffre, on lajoute
 passwordArray = []
 codeArray = []
 
-chemins = dict() # Cles: Les portes ouvertes, Valeurs: Tableau des portes essayes (Ex: {efedda, Porte6, valide})
+chemins = defaultdict(list) # Cles: Les portes ouvertes, Valeurs: Tableau des portes essayes (Ex: {efedda, Porte6, valide})
 
-def tryPorte(): #TODO: Sauvegarder les chemins selon le standard du dictionaire ci-haut
-    tempPorte = porteArray[random.randint(1, len(porteArray)) - 1]
+def tryPorte(): #TODO: Find a way to append multiple doors
+    index = random.randint(1, len(porteArray)) - 1
+    tempPorte = porteArray[index]
+    global chemins
     if checkPassword(tempPorte):
         afficher(tempPorte, True)
         ouvrirPorte(tempPorte+".txt", tempPorte)
+        chemins[currentPorte].append([passwordArray[index], porteArray[index], "Valide"])
         return
     else:
         afficher(tempPorte, False)
+        chemins[currentPorte].append([passwordArray[index], porteArray[index], "Non-valide"])
         return
    
 def ouvrirPorte (fichier, porte): #TODO: update porte courrante
@@ -92,17 +98,19 @@ def checkPassword(porte):
 
 #facile
 def afficherLeCheminParcouru():
-    t = True
-    #on a le choix entre :
-    #1 precisant: choix d'une porte,
-    #les mots de passes valide associer a cette porte avec chacune des portes vers lesquelles il mene
-    # si la porte est un gouffre et force l'agent a recommencer le labyrunthe
-    # ou bien 2 le choix du boss
-    # la concatenation des mot de passe depuis l'entre du labyrinthe pour le boss 
-    #et le langage universel reconu par le boss
-    #si le boss est vaincu ou non (si c'est non force l'agent a recommencer)
+    for key, value in chemins.items():
+        print("Evenement Porte")
+        print("a.   "+key)
+        print("b.   ", end ="")
+        for current in value:
+            print(current, end = "")
+        print()
+        if key in gouffreArray:
+            print("c.   Cette porte est un gouffre, retour a Porte1")
+        else:
+            print("c.   Cette porte n'est pas un gouffre")
+    return
 
-#facile
 def afficher(porte, success):
     if currentPorte == "None":
         print("Vous etes maintenant a la porte 1 du Labyrinthe")
@@ -130,11 +138,15 @@ def main():
             print("(d) Quitter")
             current = lireInputMenu()
         elif current == "a":
+            afficher("Porte1", True)
             ouvrirPorte("Porte1.txt", "Porte1")
             labyritheEntrer = True
             current = "m"
         elif current == "b":
-            tryPorte()
+            if labyritheEntrer:
+                tryPorte()
+            else:
+                print("Veuillez entrer dans le labyrithe")
             current = "m"
         elif current == "c":
             afficherLeCheminParcouru()
