@@ -1,5 +1,4 @@
 import random
-from collections import defaultdict
 
 terminaux = ["","a", "b", "c", "d", "e"]
 nonTerminaux = ["A","B", "C", "D",  "S"]
@@ -10,24 +9,19 @@ inputs = []
 nextState = []
 
 porteArray = []  # TODO: Split as dictionnary??
-gouffreArray = [] #TODO: Si une porte se trouve a etre un gouffre, on lajoute
 passwordArray = []
 codeArray = []
 
-chemins = defaultdict(list) # Cles: Les portes ouvertes, Valeurs: Tableau des portes essayes (Ex: {efedda, Porte6, valide})
+chemins = dict() # Cles: Les portes ouvertes, Valeurs: Tableau des portes essayes (Ex: {efedda, Porte6, valide})
 
-def tryPorte(): #TODO: Find a way to append multiple doors
-    index = random.randint(1, len(porteArray)) - 1
-    tempPorte = porteArray[index]
-    global chemins
+def tryPorte(): #TODO: Sauvegarder les chemins selon le standard du dictionaire ci-haut
+    tempPorte = porteArray[random.randint(1, len(porteArray)) - 1]
     if checkPassword(tempPorte):
         afficher(tempPorte, True)
         ouvrirPorte(tempPorte+".txt", tempPorte)
-        chemins[currentPorte].append([passwordArray[index], porteArray[index], "Valide"])
         return
     else:
         afficher(tempPorte, False)
-        chemins[currentPorte].append([passwordArray[index], porteArray[index], "Non-valide"])
         return
    
 def ouvrirPorte (fichier, porte): #TODO: update porte courrante
@@ -49,24 +43,30 @@ def affronterLeBoss():
     #trouver le language
 
 #moyen
-#def getMax(array):
- ##   maximum = len(array[0])
- #   for item in array: 
- #       if maximum < len(item) : 
-  #          maximum = len(item)
-  #  return maximum 
+def getMax(array):
+    maximum = len(array[0])
+    for item in array: 
+        if maximum < len(item) : 
+            maximum = len(item)
+    return maximum 
 
 def genererCode(array,max):
-    etatFinaux = set()
-    #terminauxPorte =[] #lettre majuscule 
-    nonTerminauxPorte = set() # lettre miniscule
+    terminauxPorte =[]
+    nonTerminauxPorte =[]
+    tabletemp=[]
     for i in arrayGrammar:
-       if i[1].size()==0:
-           etatFinaux.append(i[0])
-        if i[1].size() ==1 :
-            nonTerminauxPorte.append(i[1])
-        
-    
+        if i[1].size()<= 1 :
+            terminauxPorte[].append(i[1]) 
+    for i in terminauxPorte:
+        if tabletemp.size() <= max:
+            tabletemp[i]=terminauxPorte[i]
+            for j in arrayGrammar:
+                if terminauxPorte[i]==j[1]:
+                    tabletemp[i+1]= j
+                    nonTerminauxPorte[].append = j[2]
+                #peut faire une fonction
+                    if nonTerminauxPorte[i]== j[2]:
+                        tabletemp[i+2]=j
 
     returnArray = []
     return returnArray
@@ -109,19 +109,17 @@ def checkPassword(porte):
 
 #facile
 def afficherLeCheminParcouru():
-    for key, value in chemins.items():
-        print("Evenement Porte")
-        print("a.   "+key)
-        print("b.   ", end ="")
-        for current in value:
-            print(current, end = "")
-        print()
-        if key in gouffreArray:
-            print("c.   Cette porte est un gouffre, retour a Porte1")
-        else:
-            print("c.   Cette porte n'est pas un gouffre")
-    return
+    t = True
+    #on a le choix entre :
+    #1 precisant: choix d'une porte,
+    #les mots de passes valide associer a cette porte avec chacune des portes vers lesquelles il mene
+    # si la porte est un gouffre et force l'agent a recommencer le labyrunthe
+    # ou bien 2 le choix du boss
+    # la concatenation des mot de passe depuis l'entre du labyrinthe pour le boss 
+    #et le langage universel reconu par le boss
+    #si le boss est vaincu ou non (si c'est non force l'agent a recommencer)
 
+#facile
 def afficher(porte, success):
     if currentPorte == "None":
         print("Vous etes maintenant a la porte 1 du Labyrinthe")
@@ -149,15 +147,11 @@ def main():
             print("(d) Quitter")
             current = lireInputMenu()
         elif current == "a":
-            afficher("Porte1", True)
             ouvrirPorte("Porte1.txt", "Porte1")
             labyritheEntrer = True
             current = "m"
         elif current == "b":
-            if labyritheEntrer:
-                tryPorte()
-            else:
-                print("Veuillez entrer dans le labyrithe")
+            tryPorte()
             current = "m"
         elif current == "c":
             afficherLeCheminParcouru()
