@@ -1,7 +1,9 @@
+import random
+
 terminaux = ["","a", "b", "c", "d", "e"]
 nonTerminaux = ["A","B", "C", "D",  "S"]
 
-currentPorte = -1
+currentPorte = "None"
 States = []
 inputs = []
 nextState = []
@@ -10,28 +12,27 @@ porteArray = []  # TODO: Split as dictionnary??
 passwordArray = []
 codeArray = []
 
-def tryPorte(numero):
-    tempPorte = "Porte"+numero
-    if tempPorte in porteArray:
-        if checkPassword(numero):
-            ouvrirPorte("Labyrinthe/Porte"+numero+".txt", numero)
-        else:
-            print("Mot de Passe Invalide. Je vous renvois a la porte 1")
-            ouvrirPorte("Labyrinthe/Porte1.txt", 1)
-            return
-    else:
-        print("Porte Invalide. Je vous renvois a la porte 1")
-        ouvrirPorte("Labyrinthe/Porte1.txt", 1)
+chemins = dict() # Cles: Les portes ouvertes, Valeurs: Tableau des portes essayes (Ex: {efedda, Porte6, valide})
+
+def tryPorte(): #TODO: Sauvegarder les chemins selon le standard du dictionaire ci-haut
+    tempPorte = porteArray[random.randint(1, len(porteArray)) - 1]
+    if checkPassword(tempPorte):
+        afficher(tempPorte, True)
+        ouvrirPorte(tempPorte+".txt", tempPorte)
         return
-
-
-def ouvrirPorte (fichier, numero): #TODO: update porte courrante
-    currentPorte = numero
-    porte = open (fichier, "r")
-    porte.next()
-    tempGrammar = porte.read()
+    else:
+        afficher(tempPorte, False)
+        return
+   
+def ouvrirPorte (fichier, porte): #TODO: update porte courrante
+    global currentPorte
+    currentPorte = porte
+    porteFile = open(fichier, "r")
+    porteFile.readline()
+    tempGrammar = porteFile.readline().strip("\n")
     arrayGrammar = tempGrammar.split(", ")
-    genererAutomate(arrayGrammar, porte, numero)  # call genererAutomate
+    genererAutomate(arrayGrammar, porte)
+    return
 
 #moyen
 def affronterLeBoss():
@@ -43,41 +44,48 @@ def affronterLeBoss():
 
 #moyen
 def getMax(array):
-    maximum = array[0].length()
+    maximum = len(array[0])
     for item in array: 
-        if maximum < item.length() : 
-            maximum = item.length()
+        if maximum < len(item) : 
+            maximum = len(item)
     return maximum 
 
 def genererCode(array,max):
     returnArray = []
     return returnArray
 
-def genererAutomate (array, file, numero):
+def genererAutomate (array, porte):
     passwordArray.clear()
     porteArray.clear()
-    codeArray.clear()
-    file.next()
     tempArray = []
+    porteFile = open(porte+".txt", "r")
+    porteFile.readline()
+    porteFile.readline()
+    porteFile.readline()
     while True:
-        currentLine = file.read()
-        if currentLine is None:
+        currentLine = porteFile.readline().strip("\n")
+        if not currentLine:
             break
         currentLineArray = currentLine.split(" ")
-        tempArray.append(currentLineArray[0], currentLineArray[1])
+        tempArray.append(currentLineArray[0])
+        tempArray.append(currentLineArray[1])
     for current in tempArray: #separe les mots de passes et les portes
+        print
         if "Porte" in current:
             porteArray.append(current)
         else:
             passwordArray.append(current)
     tempArray.clear()
+    global codeArray
+    codeArray.clear()
     codeArray = genererCode(array, getMax(passwordArray))
     codeArray.append("")
+    return
 
-def checkPassword(numero):
+def checkPassword(porte):
     passwordFound = False
-    for current in codes:
-        if current == passwordArray[porteArray.index("Porte"+numero)]:
+    for current in codeArray:
+        if current == passwordArray[porteArray.index(porte)]:
             passwordFound = True
             break
     return passwordFound
@@ -95,14 +103,14 @@ def afficherLeCheminParcouru():
     #si le boss est vaincu ou non (si c'est non force l'agent a recommencer)
 
 #facile
-def afficher():
-    t = True
-    #interface console qui affiche :
-    #entrer dans le labyrinthe (porte1)
-    #ouvrir une porte
-    #afficher le chemin parcouru (fonction qu'on a deja fait)
-    #quitter
-
+def afficher(porte, success):
+    if currentPorte == "None":
+        print("Vous etes maintenant a la porte 1 du Labyrinthe")
+    elif success:
+        print(porte+" ouverte")
+    elif not success:
+        print("Tentative d'ouvrir "+porte+" a echouer.")
+        
 def lireInputMenu():
     valeur = input()
     if valeur.lower() not in ["a", "b", "c", "d"]:
@@ -111,6 +119,8 @@ def lireInputMenu():
     return valeur.lower()
 
 def main():
+    labyritheEntrer = False
+    bossTuer = False
     current = "m" # m -> "menu"
     while True:
         if current == "m":
@@ -120,14 +130,11 @@ def main():
             print("(d) Quitter")
             current = lireInputMenu()
         elif current == "a":
-            ouvrirPorte("Labyrinthe/Porte1.txt", 1)
-            current == "m"
+            ouvrirPorte("Porte1.txt", "Porte1")
+            labyritheEntrer = True
+            current = "m"
         elif current == "b":
-            numero = input("Entrer le numero de la porte : ")
-            if numero == ("boss" or "Boss" or "BOSS"):
-                tryPorte(0)
-            else:
-                tryPorte(numero)
+            tryPorte()
             current = "m"
         elif current == "c":
             afficherLeCheminParcouru()
