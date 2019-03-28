@@ -7,6 +7,7 @@ nonTerminaux = ["A","B", "C", "D",  "S"]
 
 currentPorte = "None"
 doorsArray = set()
+
 inputs = []
 nextState = []
 
@@ -57,12 +58,13 @@ def affronterLeBoss():
   #          maximum = len(item)
   #  return maximum 
 
+
 #a fillTables :  
 def fillTables(etatFinaux, nonTerminauxPorte,arrayGrammar) : 
     for i in arrayGrammar:
         if i[1].size()==0:
             etatFinaux.append(i[0])
-        if i[1].size() ==1:
+        if i[1].size() == 1:
             nonTerminauxPorte.append(i[1])
 
 #: estGouffre  : 
@@ -72,22 +74,27 @@ def estGouffre(etatfinaux, nonTerminauxPorte):
     return False 
 
 # motdePasse valide : 
-def validMotDePasse(etatsFinaux, nonTerminauxPorte,passwordArray,):
+def findTerminal(terminal,etatFinaux, arrayGrammar): 
+    for item in arrayGrammar :
+        if terminal == item[2][0] and item[2][1] in etatFinaux : 
+            return True 
+    return False 
 
+def validMotDePasse(etatsFinaux, nonTerminauxPorte,passwordArray,arrayGrammar):
+    for code in passwordArray:
+        if  code[code.length()-1] in nonTerminauxPorte :
+            codeArray.append(code)
+        else :
+            if findTerminal(code[code.legth()-1],etatsFinaux, arrayGrammar):
+                codeArray.append(code)
 
 #
 def genererCode(array,max):
     etatFinaux = set()
-    #terminauxPorte =[] #lettre majuscule 
     nonTerminauxPorte = set() # lettre miniscule
     global codeArray 
     fillTables(etatFinaux,nonTerminauxPorte,array)
-
-    for code in passwordArray:
-        if  code[code.length()-1] in nonTerminauxPorte :
-            codeArray.append(code)
-        
-
+    validMotDePasse(etatFinaux,nonTerminauxPorte,passwordArray,array)
     returnArray = []
     return returnArray
 
@@ -96,7 +103,7 @@ def genererAutomate (array, porte):
     global passwordArray 
     global porteArray
 
-    codeArray.clear()
+    #codeArray.clear()
     passwordArray.clear()
     porteArray.clear()
 
@@ -121,7 +128,7 @@ def genererAutomate (array, porte):
     tempArray.clear()
     global codeArray
     codeArray.clear()
-    codeArray = genererCode(array, getMax(passwordArray))
+    codeArray = genererCode()
     codeArray.append("")
     return
 
