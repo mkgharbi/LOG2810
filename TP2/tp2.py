@@ -1,29 +1,37 @@
 terminaux = ["","a", "b", "c", "d", "e"]
 nonTerminaux = ["A","B", "C", "D",  "S"]
 
-#facile 
-tableauFichier =[]#tableau des fichier données 
-def remplirFichier (nbrFichier):
-    t = True
-    #remplir le tableau avec les fichier 
-    #on devera faire une boucle ou on met les 21 fichier c'est long d'ecrire 21 fichier 
-
-#ef lireFichier():#lire les fichier
-    #cette fonction dois:lire les fichier (utiliser la fonction lireFichier),
-    #crée l'automate , valider le mot de passe, retourne une liste de portes
-#compliquer
-
+currentPorte = -1
 States = []
-inputs = [] 
-nextState = [] 
+inputs = []
+nextState = []
 
-def ouvrirPorte (fichier, numero): 
+porteArray = []  # TODO: Split as dictionnary??
+passwordArray = []
+codeArray = []
+
+def tryPorte(numero):
+    tempPorte = "Porte"+numero
+    if tempPorte in porteArray:
+        if checkPassword(numero):
+            ouvrirPorte("Labyrinthe/Porte"+numero+".txt", numero)
+        else:
+            print("Mot de Passe Invalide. Je vous renvois a la porte 1")
+            ouvrirPorte("Labyrinthe/Porte1.txt", 1)
+            return
+    else:
+        print("Porte Invalide. Je vous renvois a la porte 1")
+        ouvrirPorte("Labyrinthe/Porte1.txt", 1)
+        return
+
+
+def ouvrirPorte (fichier, numero): #TODO: update porte courrante
+    currentPorte = numero
     porte = open (fichier, "r")
     porte.next()
     tempGrammar = porte.read()
     arrayGrammar = tempGrammar.split(", ")
     genererAutomate(arrayGrammar, porte, numero)  # call genererAutomate
-    
 
 #moyen
 def affronterLeBoss():
@@ -41,15 +49,14 @@ def getMax(array):
             maximum = item.length()
     return maximum 
 
-
-
 def genererCode(array,max):
     returnArray = []
     return returnArray
 
-
-
 def genererAutomate (array, file, numero):
+    passwordArray.clear()
+    porteArray.clear()
+    codeArray.clear()
     file.next()
     tempArray = []
     while True:
@@ -58,9 +65,7 @@ def genererAutomate (array, file, numero):
             break
         currentLineArray = currentLine.split(" ")
         tempArray.append(currentLineArray[0], currentLineArray[1])
-    porteArray = []
-    passwordArray = []
-    for current in tempArray:
+    for current in tempArray: #separe les mots de passes et les portes
         if "Porte" in current:
             porteArray.append(current)
         else:
@@ -69,8 +74,13 @@ def genererAutomate (array, file, numero):
     codeArray = genererCode(array, getMax(passwordArray))
     codeArray.append("")
 
-
-
+def checkPassword(numero):
+    passwordFound = False
+    for current in codes:
+        if current == passwordArray[porteArray.index("Porte"+numero)]:
+            passwordFound = True
+            break
+    return passwordFound
 
 #facile
 def afficherLeCheminParcouru():
@@ -110,14 +120,14 @@ def main():
             print("(d) Quitter")
             current = lireInputMenu()
         elif current == "a":
-            ouvrirPorte("Labyrinthe/Porte1.txt")
+            ouvrirPorte("Labyrinthe/Porte1.txt", 1)
             current == "m"
         elif current == "b":
             numero = input("Entrer le numero de la porte : ")
             if numero == ("boss" or "Boss" or "BOSS"):
-                ouvrirPorte("Labyrithe/Boss.txt", 0)
+                tryPorte(0)
             else:
-                ouvrirPorte("Labyrinthe/Porte" + numero + ".txt", numero)
+                tryPorte(numero)
             current = "m"
         elif current == "c":
             afficherLeCheminParcouru()
