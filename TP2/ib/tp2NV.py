@@ -60,9 +60,9 @@ def affronterLeBoss():
 
 
 #a fillTables :  
-def fillTables(etatFinaux, nonTerminauxPorte,arrayGrammar) : 
-    for i in arrayGrammar:
-        if i[1].size()==0:
+def fillTables(etatFinaux,nonTerminauxPorte,array) : 
+   for i in array::
+        if i[1].size()==0
             etatFinaux.append(i[0])
         if i[1].size() == 1:
             nonTerminauxPorte.append(i[1])
@@ -74,35 +74,47 @@ def estGouffre(etatfinaux, nonTerminauxPorte):
     return False 
 
 # motdePasse valide : 
-def findTerminal(terminal,etatFinaux, arrayGrammar): 
+def findTerminal(terminal,etatFinaux,nonTerminauxPorte, arrayGrammar): 
     for item in arrayGrammar :
+        if terminal in nonTerminauxPorte:
+            return True
         if terminal == item[2][0] and item[2][1] in etatFinaux : 
-            return True 
-    return False 
+            return True
+        
+    return False
+
+
 
 def validMotDePasse(etatsFinaux, nonTerminauxPorte,passwordArray,arrayGrammar):
+    global passwordArray 
+    global porteArray
+    global codeArray
+
     for code in passwordArray:
         if  code[code.length()-1] in nonTerminauxPorte :
             codeArray.append(code)
         else :
-            if findTerminal(code[code.legth()-1],etatsFinaux, arrayGrammar):
+            if findTerminal(code[code.legth()-1],etatsFinaux,nonTerminauxPorte, arrayGrammar):
                 codeArray.append(code)
 
-#
+
 def genererCode(array,max):
+    for item in array : 
+        grammar = item.split("->")
+    
     etatFinaux = set()
     nonTerminauxPorte = set() # lettre miniscule
-    global codeArray 
-    fillTables(etatFinaux,nonTerminauxPorte,array)
-    validMotDePasse(etatFinaux,nonTerminauxPorte,passwordArray,array)
-    returnArray = []
-    return returnArray
+    global passwordArray 
+    global porteArray
+    global codeArray
+    fillTables(etatFinaux,nonTerminauxPorte,grammar)
+    validMotDePasse(etatFinaux,nonTerminauxPorte,passwordArray,grammar)
 
 #TODO : genererAutomate () : 
 def genererAutomate (array, porte):
     global passwordArray 
     global porteArray
-
+    
     #codeArray.clear()
     passwordArray.clear()
     porteArray.clear()
@@ -128,7 +140,6 @@ def genererAutomate (array, porte):
     tempArray.clear()
     global codeArray
     codeArray.clear()
-    codeArray = genererCode()
     codeArray.append("")
     return
 
