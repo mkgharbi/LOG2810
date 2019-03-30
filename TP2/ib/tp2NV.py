@@ -1,22 +1,27 @@
 import random
 from collections import defaultdict
 
+# je pense qu'on n'a pas besoin de ces deux tableau ??????
 terminaux = ["","a", "b", "c", "d", "e"]
 nonTerminaux = ["A","B", "C", "D",  "S"]
-
 
 currentPorte = "None"
 doorsArray = set()
 
-inputs = []
-nextState = []
+inputs = [] # est ce que c'est necessaire ????????
+nextState = [] # on ne l'as pas utilisé est ce que c'est important ??????
 
 porteArray = []  # TODO: Split as dictionnary??
 gouffreArray = [] #TODO: Si une porte se trouve a etre un gouffre, on lajoute
 passwordArray = [] # contenant les mots de passe dans chaque porte 
 codeArray = [] # contenant les mots de passe valides 
 
+# je pense qu'il faut changé le nom ????????????? est ce que lesPossibiliter ce'est bon ???????
 chemins = defaultdict(list) # Cles: Les portes ouvertes, Valeurs: Tableau des portes essayes (Ex: {efedda, Porte6, valide})
+
+
+# je pense qu'il veut mieux changer cette methode on peut je pense la fusionner avec checkmotdepasse
+
 
 def tryPorte(): #TODO: Find a way to append multiple doors
     index = random.randint(1, len(porteArray)) - 1
@@ -61,8 +66,8 @@ def affronterLeBoss():
 
 #a fillTables :  
 def fillTables(etatFinaux,nonTerminauxPorte,array) : 
-   for i in array::
-        if i[1].size()==0
+   for i in array:
+        if i[1].size()==0:
             etatFinaux.append(i[0])
         if i[1].size() == 1:
             nonTerminauxPorte.append(i[1])
