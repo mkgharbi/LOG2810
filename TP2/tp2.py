@@ -142,7 +142,7 @@ def afficher(porte, success):
     elif success:
         print(porte+" ouverte")
     elif not success:
-        print("Tentative d'ouvrir "+porte+" a echouer.")
+        print("Tentative d'ouvrir "+porte+" a echoué.")
         
 def lireInputMenu():
     valeur = input()
