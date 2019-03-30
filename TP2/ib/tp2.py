@@ -1,29 +1,52 @@
-terminaux = ["","a", "b", "c", "d", "e"]
-nonTerminaux = ["A","B", "C", "D",  "S"]
+import random
+from collections import defaultdict
 
-#facile 
-tableauFichier =[]#tableau des fichier données 
-def remplirFichier (nbrFichier):
-    t = True
-    #remplir le tableau avec les fichier 
-    #on devera faire une boucle ou on met les 21 fichier c'est long d'ecrire 21 fichier 
+currentPorte = "None"
+doorsArray = set()
 
-#ef lireFichier():#lire les fichier
-    #cette fonction dois:lire les fichier (utiliser la fonction lireFichier),
-    #crée l'automate , valider le mot de passe, retourne une liste de portes
-#compliquer
 
-States = []
-inputs = [] 
-nextState = [] 
+porteArray = []  # TODO: Split as dictionnary??
+gouffreArray = [] #TODO: Si une porte se trouve a etre un gouffre, on lajoute
+passwordArray = [] # contenant les mots de passe dans chaque porte 
+codeArray = [] # contenant les mots de passe valides 
 
-def ouvrirPorte (fichier, numero): 
-    porte = open (fichier, "r")
-    porte.next()
-    tempGrammar = porte.read()
+# je pense qu'il faut changé le nom ????????????? est ce que lesPossibiliter ce'est bon ???????
+chemins = defaultdict(list) # Cles: Les portes ouvertes, Valeurs: Tableau des portes essayes (Ex: {efedda, Porte6, valide})
+
+
+# je pense qu'il veut mieux changer cette methode on peut je pense la fusionner avec checkmotdepasse
+
+
+
+def ouvrirPorte (fichier, porte): #TODO: update porte courrante
+    global currentPorte
+    currentPorte = porte
+    porteFile = open(fichier, "r")
+    porteFile.readline()
+    tempGrammar = porteFile.readline().strip("\n")
     arrayGrammar = tempGrammar.split(", ")
-    genererAutomate(arrayGrammar, porte, numero)  # call genererAutomate
-    
+    genererAutomate(arrayGrammar, porte)
+    return
+
+
+
+
+
+def tryPorte(): #TODO: Find a way to append multiple doors
+    index = random.randint(1, len(porteArray)) - 1
+    tempPorte = porteArray[index]
+    global chemins
+    if checkPassword(tempPorte):
+        afficher(tempPorte, True)
+        ouvrirPorte(tempPorte+".txt", tempPorte)
+        chemins[currentPorte].append([passwordArray[index], porteArray[index], "Valide"])
+        return
+    else:
+        afficher(tempPorte, False)
+        chemins[currentPorte].append([passwordArray[index], porteArray[index], "Non-valide"])
+        return
+   
+
 
 #moyen
 def affronterLeBoss():
@@ -33,83 +56,131 @@ def affronterLeBoss():
     #valider la concatenation des mot de passe des le debut 
     #trouver le language
 
-#moyen
-def getMax(array):
-    maximum = array[0].length()
-    for item in array: 
-        if maximum < item.length() : 
-            maximum = item.length()
-    return maximum 
+
+#a fillTables :  
+def fillTables(etatFinaux,nonTerminauxPorte,array) : 
+   for i in array:
+        if i[1].size()==0:
+            etatFinaux.append(i[0])
+        if i[1].size() == 1:
+            nonTerminauxPorte.append(i[1])
+
+#: estGouffre  : 
+def estGouffre(etatfinaux, nonTerminauxPorte):
+    if etatfinaux.length == 0 and nonTerminauxPorte.length == 0 : 
+        return True 
+    return False 
+
+# motdePasse valide : 
+def findTerminal(terminal,etatFinaux,nonTerminauxPorte, arrayGrammar): 
+    for item in arrayGrammar :
+        if terminal in nonTerminauxPorte:
+            return True
+        if terminal == item[2][0] and item[2][1] in etatFinaux : 
+            return True
+        if item[2][1] in etatFinaux:
+            return True
+        
+    return False
+
+## faire pour validMotDePasse quand c'est valide rajouter la porte dans le tableau porteValide
+# sinon rajouter la porte 
+porteInvalid= set()
+porteValid= set()
+
+def validMotDePasse(etatsFinaux, nonTerminauxPorte,passwordArray,arrayGrammar):
+    global passwordArray 
+    global porteArray
+    global codeArray
+
+    for code in passwordArray:
+        if  code[code.length()-1] in nonTerminauxPorte :
+            codeArray.append(code)
+        else :
+            if findTerminal(code[code.legth()-1],etatsFinaux,nonTerminauxPorte, arrayGrammar):
+                codeArray.append(code)
+        
 
 
 
-def genererCode(array,max):
-    terminauxPorte =[]
-    nonTerminauxPorte =[]
-    tabletemp=[]
-    for i in arrayGrammar:
-        if i[1].size()<= 1 :
-            terminauxPorte[].append(i[1]) 
-    for i in terminauxPorte:
-        if tabletemp.size() <= max:
-            tabletemp[i]=terminauxPorte[i]
-            for j in arrayGrammar:
-                if terminauxPorte[i]==j[1]:
-                    tabletemp[i+1]= j
-                    nonTerminauxPorte[].append = j[2]
-                #peut faire une fonction
-                    if nonTerminauxPorte[i]== j[2]:
-                        tabletemp[i+2]=j
-
-    returnArray = []
-    return returnArray
 
 
+def genererCode(array): 
+    for item in array : 
+        grammar = item.split("->")
+    
+    etatFinaux = set()
+    nonTerminauxPorte = set() # lettre miniscule
+    global passwordArray 
+    global porteArray
+    global codeArray
+    fillTables(etatFinaux,nonTerminauxPorte,grammar)
+    validMotDePasse(etatFinaux,nonTerminauxPorte,passwordArray,grammar)
 
-def genererAutomate (array, file, numero):
-    file.next()
+#TODO : genererAutomate () : 
+def genererAutomate (array, porte):
+    global passwordArray 
+    global porteArray
+    
+    #codeArray.clear()
+    passwordArray.clear()
+    porteArray.clear()
+
     tempArray = []
+    porteFile = open(porte+".txt", "r")
+    porteFile.readline()
+    porteFile.readline()
+    porteFile.readline()
     while True:
-        currentLine = file.read()
-        if currentLine is None:
+        currentLine = porteFile.readline().strip("\n")
+        if not currentLine:
             break
         currentLineArray = currentLine.split(" ")
-        tempArray.append(currentLineArray[0], currentLineArray[1])
-    porteArray = []
-    passwordArray = []
-    for current in tempArray:
+        tempArray.append(currentLineArray[0])
+        tempArray.append(currentLineArray[1])
+    for current in tempArray: #separe les mots de passes et les portes
+        print
         if "Porte" in current:
             porteArray.append(current)
         else:
             passwordArray.append(current)
     tempArray.clear()
-    codeArray = genererCode(array, getMax(passwordArray))
+    global codeArray
+    codeArray.clear()
     codeArray.append("")
+    return
 
-
-
+def checkPassword(porte):
+    passwordFound = False
+    for current in codeArray:
+        if current == passwordArray[porteArray.index(porte)]:
+            passwordFound = True
+            break
+    return passwordFound
 
 #facile
 def afficherLeCheminParcouru():
-    t = True
-    #on a le choix entre :
-    #1 precisant: choix d'une porte,
-    #les mots de passes valide associer a cette porte avec chacune des portes vers lesquelles il mene
-    # si la porte est un gouffre et force l'agent a recommencer le labyrunthe
-    # ou bien 2 le choix du boss
-    # la concatenation des mot de passe depuis l'entre du labyrinthe pour le boss 
-    #et le langage universel reconu par le boss
-    #si le boss est vaincu ou non (si c'est non force l'agent a recommencer)
+    for key, value in chemins.items():
+        print("Evenement Porte")
+        print("a.   "+key)
+        print("b.   ", end ="")
+        for current in value:
+            print(current, end = "")
+        print()
+        if key in gouffreArray:
+            print("c.   Cette porte est un gouffre, retour a Porte1")
+        else:
+            print("c.   Cette porte n'est pas un gouffre")
+    return
 
-#facile
-def afficher():
-    t = True
-    #interface console qui affiche :
-    #entrer dans le labyrinthe (porte1)
-    #ouvrir une porte
-    #afficher le chemin parcouru (fonction qu'on a deja fait)
-    #quitter
-
+def afficher(porte, success):
+    if currentPorte == "None":
+        print("Vous etes maintenant a la porte 1 du Labyrinthe")
+    elif success:
+        print(porte+" ouverte")
+    elif not success:
+        print("Tentative d'ouvrir "+porte+" a echouer.")
+        
 def lireInputMenu():
     valeur = input()
     if valeur.lower() not in ["a", "b", "c", "d"]:
@@ -118,6 +189,8 @@ def lireInputMenu():
     return valeur.lower()
 
 def main():
+    labyritheEntrer = False
+    bossTuer = False
     current = "m" # m -> "menu"
     while True:
         if current == "m":
@@ -127,14 +200,15 @@ def main():
             print("(d) Quitter")
             current = lireInputMenu()
         elif current == "a":
-            ouvrirPorte("Labyrinthe/Porte1.txt")
-            current == "m"
+            afficher("Porte1", True)
+            ouvrirPorte("Porte1.txt", "Porte1")
+            labyritheEntrer = True
+            current = "m"
         elif current == "b":
-            numero = input("Entrer le numero de la porte : ")
-            if numero == ("boss" or "Boss" or "BOSS"):
-                ouvrirPorte("Labyrithe/Boss.txt", 0)
+            if labyritheEntrer:
+                tryPorte()
             else:
-                ouvrirPorte("Labyrinthe/Porte" + numero + ".txt", numero)
+                print("Veuillez entrer dans le labyrithe")
             current = "m"
         elif current == "c":
             afficherLeCheminParcouru()
