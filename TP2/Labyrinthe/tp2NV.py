@@ -138,7 +138,7 @@ def genererAutomate (array, porte):
         if not currentLine:
             break
         currentLineArray = currentLine.split(" ")
-        if currentLineArray.length == 2 :
+        if len(currentLineArray) == 2 :
             tempArray.append(currentLineArray[0])
             tempArray.append(currentLineArray[1])
         elif currentLineArray == 1 :
