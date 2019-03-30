@@ -27,7 +27,6 @@ def checkPassword(porte):
     if validPasswords.index(passwordArray[porteArray.index(porte)]) >= 0:
         return True 
     return False 
-    
 
 def tryPorte(numero): #TODO: Find a way to append multiple doors
     index = porteArray.index("Porte"+numero)
@@ -56,6 +55,24 @@ def ouvrirPorte (fichier, porte): #TODO: update porte courrante
 #moyen
 def affronterLeBoss():
     t = True
+
+    # lit la premiere ligne du fichier 
+    #on met chaque mot de passe de chaque porte dans une case d'un tableau (tableauBoss)
+    # on prend le  premier caractere de chaque case on met S-> premiercaratere A ,j'usqu'au dernier caractere (premiere case A , deuxieme case B .....)
+    #on cherche la taille de chaque case 
+        # si la taille est de 1   S->premier caractere A1,  A1 ->
+        #si la taille >1 on met pour le premier caractere S-> prermier caractere A1 , puis deuxieme caractere A1->deuxieme cacatere A2 j'usqu'au derniere caractere 
+        #on verifier si c'est le dernier par rapport a la taille de la case grace a la taille de mot de passe pour la premiere porte et on fait An-1 -> derniercar An
+        # An->
+    # aller a la derniere case dernier caractere et faire Zn-> , Zn-1 -> denrier caractere Zn jusqu'a on termine la derniere case puis aller a avant derniere case 
+    # Yn-> derniere caractere de Y (avant derniere case ) Z1
+    # et on arrivant a la premiere case on fait S-> premier caractere de la case E 
+    # C'EST POUR GENERER LE LANGUAGE        
+    
+
+    
+
+
     #lis le fichier Boss.txt
     #generer l'automate associé au chemin decrit dans le fichier 
     #valider la concatenation des mot de passe des le debut 
@@ -80,7 +97,7 @@ def fillTables(etatFinaux,nonTerminauxPorte,array) :
 
 #: estGouffre  : 
 def estGouffre(etatfinaux, nonTerminauxPorte):
-    if etatfinaux.length == 0 and nonTerminauxPorte.length == 0 : 
+    if len(etatfinaux) == 0 and len(nonTerminauxPorte) == 0 : 
         return True 
     return False 
 
@@ -100,10 +117,10 @@ def validMotDePasse(etatsFinaux, nonTerminauxPorte,passwordArray,arrayGrammar):
     global validPasswords
 
     for code in passwordArray:
-        if  code[code.length()-1] in nonTerminauxPorte :
+        if  code[len(code)-1] in nonTerminauxPorte :
             validPasswords.append(code)
         else :
-            if findTerminal(code[code.legth()-1],etatsFinaux,nonTerminauxPorte, arrayGrammar):
+            if findTerminal(code[len(code)-1],etatsFinaux,nonTerminauxPorte, arrayGrammar):
                 validPasswords.append(code)
 
 
@@ -138,7 +155,7 @@ def genererAutomate (array, porte):
         if not currentLine:
             break
         currentLineArray = currentLine.split(" ")
-        if currentLineArray.length == 2 :
+        if len(currentLineArray) == 2 :
             tempArray.append(currentLineArray[0])
             tempArray.append(currentLineArray[1])
         elif currentLineArray == 1 :
@@ -211,7 +228,7 @@ def main():
             current = "m"
         elif current == "b":
             if labyritheEntrer:
-                numero = lireInputMenu()
+                numero = input("Numero de la porte ?")
                 tryPorte(numero)
             else:
                 print("Veuillez entrer dans le labyrithe")
