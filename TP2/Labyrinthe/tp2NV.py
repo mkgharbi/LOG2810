@@ -27,7 +27,6 @@ def checkPassword(porte):
     if validPasswords.index(passwordArray[porteArray.index(porte)]) >= 0:
         return True 
     return False 
-    
 
 def tryPorte(numero): #TODO: Find a way to append multiple doors
     index = porteArray.index("Porte"+numero)
@@ -80,7 +79,7 @@ def fillTables(etatFinaux,nonTerminauxPorte,array) :
 
 #: estGouffre  : 
 def estGouffre(etatfinaux, nonTerminauxPorte):
-    if etatfinaux.length == 0 and nonTerminauxPorte.length == 0 : 
+    if len(etatfinaux) == 0 and len(nonTerminauxPorte) == 0 : 
         return True 
     return False 
 
@@ -100,10 +99,10 @@ def validMotDePasse(etatsFinaux, nonTerminauxPorte,passwordArray,arrayGrammar):
     global validPasswords
 
     for code in passwordArray:
-        if  code[code.length()-1] in nonTerminauxPorte :
+        if  code[len(code)-1] in nonTerminauxPorte :
             validPasswords.append(code)
         else :
-            if findTerminal(code[code.legth()-1],etatsFinaux,nonTerminauxPorte, arrayGrammar):
+            if findTerminal(code[len(code)-1],etatsFinaux,nonTerminauxPorte, arrayGrammar):
                 validPasswords.append(code)
 
 
@@ -211,7 +210,7 @@ def main():
             current = "m"
         elif current == "b":
             if labyritheEntrer:
-                numero = lireInputMenu()
+                numero = input("Numero de la porte ?")
                 tryPorte(numero)
             else:
                 print("Veuillez entrer dans le labyrithe")
