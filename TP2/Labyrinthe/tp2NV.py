@@ -64,7 +64,7 @@ def ouvrirPorte(fichier):  # TODO: update currentPorte & read all the file in on
     passwordArray.clear()
     porteArray.clear()
     for current in tempArray: # separate passwords and PorteX in the current table.  
-        if "Porte" in current:
+        if "Porte" in current or "Boss" in current:
             porteArray.append(current) # all the passwords connectec with the doors.
         else:
             passwordArray.append(current) # the current doors. 
@@ -120,7 +120,7 @@ def findNonTerminal(nonTerminal,arrayGrammar):
                 return 
         if item[1][len(item[1])-1] in etatsFinaux:
             return True
-        if nonTerminal == item[1][0] and item[1][len(item[1])-1] in etatsFinaux:
+        if nonTerminal == item[1][0] and item[1][len(item[1])-1] in etatsFinaux: # TODO : check another condition when a terminal lets us go to a final state. Like : S is in etatsFinaux and S->eS (e leads us to S)
             return True
     return False
 
