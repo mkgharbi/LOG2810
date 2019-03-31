@@ -54,20 +54,40 @@ def ouvrirPorte (fichier, porte): #TODO: update porte courrante
     return
 
 #moyen
-arrayCodeBosse=[]
+arrayCheminSuiviBosse=[]
 arrayPorteBosse = []
-
+arrayCodeBosse =[]
+#a modifier
+#il faut que je lise la premiere porte 
+#lire la deuxieme porte 
+#chercher la deuxieme porte dans la liste de la premiere porte 
+#prendre la mot de passe de la porte 
 def genererCodeBosse(arrayGrammar):
-    codeBosse = arrayGrammar.size()
+  #selon le chemin suivi 
+    for i in range(0,len(chemins)):
+        for j in chemins[i]:
+            for k in chemins[i][j][1]:
+                if chemins[i+1] == k:
+                    arrayCheminSuiviBosse.append(chemins[i][0])
+ # selon le fichier bosse
+    codeBosse= arrayGrammar.size()
     arrayPorteBosse = codeBosse.split(" ")
-    for i in  arrayPorteBosse:
+    for i in range(0,len(arrayPorteBosse)):
+        for j in chemins[i]:
+            if arrayPorteBosse[i] in chemins[i][j][1]:
+                arrayCodeBosse.append(chemins[0])
+        
+
+   # codeBosse = arrayGrammar.size()
+   # arrayPorteBosse = codeBosse.split(" ")
+   # for i in range(0,len(arrayPorteBosse)):
         #ce que je veux faire 
         # c'est de chercher le nom de la porte ({efedda, Porte6, valide})
         # et prendre la premiere case de  {efedda, Porte6, valide} et la mettre dans 
         #le arrayCodeBosse
-        if arrayPorteBosse[i] in chemins [1]: #????est ce que ça fonctionne
-            #est ce que il parcours tous le tableau des chemins 
-            arrayCodeBosse.append(chemins[0])
+    #    if arrayPorteBosse[i] in chemins [1]: #????est ce que ça fonctionne
+    #        #est ce que il parcours tous le tableau des chemins 
+     #       arrayCodeBosse.append(chemins[0])
 
 #arrayDebutDeCase=[]
 alphabet =list(string.ascii_uppercase)
@@ -91,7 +111,9 @@ def genererLanguageBosee():
 
 
 def affronterLeBoss():
-    t = True
+
+    genererCodeBosse()
+    genererLanguageBosee()
 
     # lit la premiere ligne du fichier 
     
