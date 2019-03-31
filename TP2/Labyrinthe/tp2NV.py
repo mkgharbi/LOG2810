@@ -14,19 +14,17 @@ validPasswords = [] # contenant les mots de passe valides.
 validDoors = [] #contenant les portes valides reliees aux mots de passe valides.
 # je pense qu'il faut changé le nom ????????????? est ce que lesPossibiliter ce'est bon ???????
 chemins = defaultdict(list) # Cles: Les portes ouvertes, Valeurs: Tableau des portes essayes (Ex: {efedda, Porte6, valide})
-
+grammar = [] # grammaire 
 
 etatsFinaux = set()
 nonTerminauxPorte = set()
-
-
-
 
 
 def checkPassword(porte):
     if validPasswords.index(passwordArray[porteArray.index(porte)]) >= 0:
         return True 
     return False  
+
 
 def fillChemins(numero):
     global chemins 
@@ -51,9 +49,10 @@ def ouvrirPorte(fichier):  # TODO: update currentPorte & read all the file in on
     porteFile = open(fichier, "r")
     porteFile.readline() # ignore the { 
     tempGrammar = porteFile.readline().strip("\n") #Read only the grammar. 
-    arrayGrammar = tempGrammar.split(", ") #split it in a table 
-    porteFile.readline() # ignore the } 
+    tempGrammar.rstrip()
+    arrayGrammar = tempGrammar.split(", ") #split it in a table
 
+    porteFile.readline() # ignore the } 
     tempArray = []
     #Read the next lines : 
     while True:
@@ -61,7 +60,7 @@ def ouvrirPorte(fichier):  # TODO: update currentPorte & read all the file in on
         if not currentLine: #not the end of the file. 
             break
         currentLineArray = currentLine.split(" ") # split each line (password PorteX)
-        if len(currentLineArray) == 2: #if there's a password 
+        if len(currentLineArray) >= 2: #if there's a password 
             tempArray.append(currentLineArray[0])
             tempArray.append(currentLineArray[1])
         elif currentLineArray == 1: # if there isn't a password.
@@ -77,42 +76,40 @@ def ouvrirPorte(fichier):  # TODO: update currentPorte & read all the file in on
             passwordArray.append(current) # the current doors. 
 
     tempArray.clear() #clear the temporary table. 
-    validPasswords.clear() # clear the ancient valid passwords. 
-    validPasswords.append("")
-    validDoors.clear() 
     genererAutomate(arrayGrammar, porte) #generate the automate depending on the grammar : separate the valid passwords & put them in the table validPasswords. 
     return validDoors
 
 
 #TODO : genererAutomate () : 
 def genererAutomate(array, porte):
+
     global passwordArray
     global porteArray
     global validDoors
+    
+    validPasswords.clear()  # clear the ancient valid passwords.
+    validDoors.clear()
+
     tempArray = []
     for item in array:
         grammar = item.split("->")
         tempArray.append(grammar)
     
-    fillTables(tempArray)
-
-    validMotDePasse(tempArray)
-
-    
+    grammar = tempArray
+    fillTables(grammar)
+    validMotDePasse(grammar)    
     return
 
-
 # fillTables :
-def fillTables(array):
+def fillTables(grammar):
     global etatsFinaux
     global nonTerminauxPorte
 
-    for item in array:
-        if len(item[1]) == 0:
-            etatsFinaux.add(item[0])
-        if len(item[1]) == 1:
-            nonTerminauxPorte.add(item[1])
-
+    for items in grammar:
+        if len(items[1]) == 0:
+            etatsFinaux.add(items[0])
+        if len(items[1]) == 1 or items[1][len(items[1])-1] ==" ":
+            nonTerminauxPorte.add(items[1][0])
 
 #: estGouffre  :
 def estGouffre(etatfinaux, nonTerminauxPorte):
@@ -120,11 +117,15 @@ def estGouffre(etatfinaux, nonTerminauxPorte):
         return True
     return False
 
-
-
 def findNonTerminal(nonTerminal,arrayGrammar):
     for item in arrayGrammar:
-        if (nonTerminal in nonTerminauxPorte) or (item[2][1] in etatsFinaux) or (nonTerminal == item[2][0] and item[2][1] in etatsFinaux):
+        if nonTerminal in nonTerminauxPorte:
+            return True
+        if len(item[1]) == 0 : 
+                return 
+        if item[1][len(item[1])-1] in etatsFinaux:
+            return True
+        if nonTerminal == item[1][0] and item[1][len(item[1])-1] in etatsFinaux:
             return True
     return False
 
@@ -136,8 +137,6 @@ def validMotDePasse(arrayGrammar):
         if (code[len(code)-1] in nonTerminauxPorte) or (findNonTerminal(code[len(code)-1],arrayGrammar)):
             validPasswords.append(code)
             validDoors.append(porteArray[passwordArray.index(code)])
-
-
 
 def tryPorte(numero): #TODO: Find a way to append multiple doors
     index = porteArray.index("Porte"+numero)
@@ -210,6 +209,7 @@ def main():
         elif current == "a":
             afficher("Porte1", True)
             ouvrirPorte("Porte1.txt")
+            print(validDoors)
             labyritheEntrer = True
             current = "m"
         elif current == "b":
