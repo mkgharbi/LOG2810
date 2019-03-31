@@ -1,4 +1,5 @@
 import random
+import string
 from collections import defaultdict
 
 # je pense qu'on n'a pas besoin de ces deux tableau ??????
@@ -53,11 +54,48 @@ def ouvrirPorte (fichier, porte): #TODO: update porte courrante
     return
 
 #moyen
+arrayCodeBosse=[]
+arrayPorteBosse = []
+
+def genererCodeBosse(arrayGrammar):
+    codeBosse = arrayGrammar.size()
+    arrayPorteBosse = codeBosse.split(" ")
+    for i in  arrayPorteBosse:
+        #ce que je veux faire 
+        # c'est de chercher le nom de la porte ({efedda, Porte6, valide})
+        # et prendre la premiere case de  {efedda, Porte6, valide} et la mettre dans 
+        #le arrayCodeBosse
+        if arrayPorteBosse[i] in chemins [1]: #????est ce que ça fonctionne
+            #est ce que il parcours tous le tableau des chemins 
+            arrayCodeBosse.append(chemins[0])
+
+#arrayDebutDeCase=[]
+alphabet =list(string.ascii_uppercase)
+
+def genererLanguageBosee():
+
+   # for item in arrayCodeBosse:
+    #    arrayDebutDeCase.append(item[0])
+   # for i in range(0,len(arrayDebutDeCase)): 
+       # print("S-> "+arrayDebutDeCase[i]+alphabet[i]+arrayDebutDeCase.index(arrayDebutDeCase[i]))# objectif :c'est quelle affiche S-> eA1 si c'est dans la premiere case premiere lettre 
+    for i in range(0,len(arrayCodeBosse)):
+        for j in range(0,len(arrayCodeBosse[i])):
+            if arrayCodeBosse[i][j] == arrayCodeBosse[i][0]:
+                print("S-> "+arrayCodeBosse[i][0]+alphabet[i]+j)
+            if arrayCodeBosse[i][j].size():#derniere case du tableau
+                print(alphabet[i]+len(arrayCodeBosse[i])+"-> ")
+                print(alphabet[i]+len(arrayCodeBosse[i])+"-> "+arrayCodeBosse[i][-1]+alphabet[i]+(j-1))
+            else:
+                print( alphabet[i]+j+"->"+arrayCodeBosse[i][j]+alphabet[i]+(j+1))
+
+
+
 def affronterLeBoss():
     t = True
 
     # lit la premiere ligne du fichier 
-    #on met chaque mot de passe de chaque porte dans une case d'un tableau (tableauBoss)
+    
+    #on met chaque mot de passe de chaque porte dans une case d'un tableau (arrayPorteBosse)
     # on prend le  premier caractere de chaque case on met S-> premiercaratere A ,j'usqu'au dernier caractere (premiere case A , deuxieme case B .....)
     #on cherche la taille de chaque case 
         # si la taille est de 1   S->premier caractere A1,  A1 ->
