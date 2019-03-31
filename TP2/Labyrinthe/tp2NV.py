@@ -6,7 +6,8 @@ terminaux = ["","a", "b", "c", "d", "e"]
 nonTerminaux = ["A","B", "C", "D",  "S"]
 
 currentPorte = "None" #porte Courante. 
-parcours = []
+parcours = [] #Historique des portes visitees
+chemins = [] #Chemins possibles d'une porte (Index de parcours -> Index de chemins)
 
 porteArray = []  # TODO: Split as dictionnary??
 gouffreArray = [] #TODO: Si une porte se trouve a etre un gouffre, on lajoute.
@@ -14,7 +15,6 @@ passwordArray = [] # contenant les mots de passe dans chaque porte.
 validPasswords = [] # contenant les mots de passe valides.
 validDoors = [] #contenant les portes valides reliees aux mots de passe valides.
 # je pense qu'il faut changé le nom ????????????? est ce que lesPossibiliter ce'est bon ???????
-chemins = defaultdict(list) # Cles: Les portes ouvertes, Valeurs: Tableau des portes essayes (Ex: {efedda, Porte6, valide})
 grammar = [] # grammaire 
 
 etatsFinaux = set()
@@ -38,6 +38,7 @@ def ouvrirPorte(fichier):  # TODO: update currentPorte & read all the file in on
     
     currentPorte = porte
     parcours.append(currentPorte)
+    chemins.append([])
 
     porteFile = open(fichier, "r")
     porteFile.readline() # ignore the { 
@@ -112,15 +113,15 @@ def estGouffre():
     if len(etatsFinaux) == 0 and len(nonTerminauxPorte) == 0:
         gouffreArray.append(currentPorte)
 
-def findNonTerminal(nonTerminal,arrayGrammar):
+def findTerminal(terminal,arrayGrammar):
     for item in arrayGrammar:
-        if nonTerminal in nonTerminauxPorte:
+        if terminal in nonTerminauxPorte:
             return True
         if len(item[1]) == 0 : 
                 return 
         if item[1][len(item[1])-1] in etatsFinaux:
             return True
-        if nonTerminal == item[1][0] and item[1][len(item[1])-1] in etatsFinaux: # TODO : check another condition when a terminal lets us go to a final state. Like : S is in etatsFinaux and S->eS (e leads us to S)
+        if terminal == item[1][0] and item[1][len(item[1])-1] in etatsFinaux: # TODO : check another condition when a terminal lets us go to a final state. Like : S is in etatsFinaux and S->eS (e leads us to S)
             return True
     return False
 
@@ -129,7 +130,7 @@ def validMotDePasse(arrayGrammar):
     global validDoors
 
     for code in passwordArray:
-        if (code[len(code)-1] in nonTerminauxPorte) or (findNonTerminal(code[len(code)-1],arrayGrammar)):
+        if (code[len(code)-1] in nonTerminauxPorte) or (findTerminal(code[len(code)-1],arrayGrammar)):
             validPasswords.append(code)
             validDoors.append(porteArray[passwordArray.index(code)])
 
@@ -138,9 +139,9 @@ def fillChemins():
     for porte in porteArray:
             position = porteArray.index(porte)
             if checkPassword(porte) :
-                chemins[currentPorte].append([passwordArray[position], porteArray[position], "Valide"])
+                chemins[parcours.index(currentPorte)].append([passwordArray[position], porteArray[position], "Valide"])
             else : 
-                chemins[currentPorte].append([passwordArray[position], porteArray[position], "Non-valide"])
+                chemins[parcours.index(currentPorte)].append([passwordArray[position], porteArray[position], "Non-valide"])
 
 
 
@@ -155,9 +156,8 @@ def tryPorte(numero): #TODO: Find a way to append multiple doors
     else:
         afficher(tempPorte, False)
         
-    print(chemins[tempPorte])
+    print(chemins[parcours.index(tempPorte)])
     return
-
 
 #moyen
 arrayCodeBosse = []
@@ -227,7 +227,7 @@ def afficherLeCheminParcouru():
         print("Evenement Porte")
         print()
         print("a.   ", currentPorte)
-        print("b.   ", chemins[currentPorte])
+        print("b.   ", chemins[parcours.index(currentPorte)])
         if parcours[len(parcours)-1] in gouffreArray:
             print("c.   Cette porte est un gouffre, retour a Porte1")
         else:
