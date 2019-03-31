@@ -95,12 +95,16 @@ def genererAutomate(array, porte):
 def fillTables(grammar):
     global etatsFinaux
     global nonTerminauxPorte
+    etatsFinaux.clear()
+    nonTerminauxPorte.clear()
+
 
     for items in grammar:
         if len(items[1]) == 0:
             etatsFinaux.add(items[0])
-        if len(items[1]) == 1 or items[1][len(items[1])-1] ==" ":
-            nonTerminauxPorte.add(items[1][0])
+        if len(items[1]) >= 1 :
+            if (len(items[1]) == 1) or (len(items[1]) == 2 and items[1][1] == " "):
+                nonTerminauxPorte.add(items[1][0])
 
 #: estGouffre  :
 def estGouffre():
@@ -156,20 +160,74 @@ def tryPorte(numero): #TODO: Find a way to append multiple doors
 
 
 #moyen
+arrayCodeBosse = []
+arrayPorteBosse = []
+
+
+def genererCodeBosse(arrayGrammar):
+    codeBosse = arrayGrammar.size()
+    arrayPorteBosse = codeBosse.split(" ")
+    for i in arrayPorteBosse:
+        #ce que je veux faire
+        # c'est de chercher le nom de la porte ({efedda, Porte6, valide})
+        # et prendre la premiere case de  {efedda, Porte6, valide} et la mettre dans
+        #le arrayCodeBosse
+        if arrayPorteBosse[i] in chemins[1]:  # ????est ce que ça fonctionne
+            #est ce que il parcours tous le tableau des chemins
+            arrayCodeBosse.append(chemins[0])
+
+
+#arrayDebutDeCase=[]
+#alphabet = list(string.ascii_uppercase)
+
+
+def genererLanguageBosee():
+
+    # for item in arrayCodeBosse:
+    #    arrayDebutDeCase.append(item[0])
+    # # for i in range(0,len(arrayDebutDeCase)):
+    # print("S-> "+arrayDebutDeCase[i]+alphabet[i]+arrayDebutDeCase.index(arrayDebutDeCase[i]))# objectif :c'est quelle affiche S-> eA1 si c'est dans la premiere case premiere lettre
+    for i in range(0, len(arrayCodeBosse)):
+        for j in range(0, len(arrayCodeBosse[i])):
+            if arrayCodeBosse[i][j] == arrayCodeBosse[i][0]:
+                print("S-> "+arrayCodeBosse[i][0]+alphabet[i]+j)
+            if arrayCodeBosse[i][j].size():  # derniere case du tableau
+                print(alphabet[i]+len(arrayCodeBosse[i])+"-> ")
+                print(alphabet[i]+len(arrayCodeBosse[i])+"-> " +
+                    arrayCodeBosse[i][-1]+alphabet[i]+(j-1))
+            else:
+                print(alphabet[i]+j+"->"+arrayCodeBosse[i]
+                    [j]+alphabet[i]+(j+1))
+
+
 def affronterLeBoss():
     t = True
+
+    # lit la premiere ligne du fichier
+
+    #on met chaque mot de passe de chaque porte dans une case d'un tableau (arrayPorteBosse)
+    # on prend le  premier caractere de chaque case on met S-> premiercaratere A ,j'usqu'au dernier caractere (premiere case A , deuxieme case B .....)
+    #on cherche la taille de chaque case
+    # si la taille est de 1   S->premier caractere A1,  A1 ->
+    #si la taille >1 on met pour le premier caractere S-> prermier caractere A1 , puis deuxieme caractere A1->deuxieme cacatere A2 j'usqu'au derniere caractere
+    #on verifier si c'est le dernier par rapport a la taille de la case grace a la taille de mot de passe pour la premiere porte et on fait An-1 -> derniercar An
+    # An->
+    # aller a la derniere case dernier caractere et faire Zn-> , Zn-1 -> denrier caractere Zn jusqu'a on termine la derniere case puis aller a avant derniere case
+    # Yn-> derniere caractere de Y (avant derniere case ) Z1
+    # et on arrivant a la premiere case on fait S-> premier caractere de la case E
+    # C'EST POUR GENERER LE LANGUAGE
+
     #lis le fichier Boss.txt
-    #generer l'automate associé au chemin decrit dans le fichier 
-    #valider la concatenation des mot de passe des le debut 
+    #generer l'automate associé au chemin decrit dans le fichier
+    #valider la concatenation des mot de passe des le debut
     #trouver le language
 
 
 def afficherLeCheminParcouru():
         print("Evenement Porte")
-        print("a.   " + parcours[len(parcours)-1])
         print()
-        print("b.   " + str(chemins[parcours[len(parcours)-1]])
-        print()
+        print("a.   ", currentPorte)
+        print("b.   ", chemins[currentPorte])
         if parcours[len(parcours)-1] in gouffreArray:
             print("c.   Cette porte est un gouffre, retour a Porte1")
         else:
@@ -185,7 +243,6 @@ def afficher(porte, success):
     elif not success:
         print("Tentative d'ouvrir "+porte+" a echoué.")
         currentPorte = "Porte1"
-        
         print("Vous etes retourne a la Porte 1 , veuillez appuyer sur b")
         
 def lireInputMenu():
@@ -215,16 +272,12 @@ def main():
             current = "m"
         elif current == "b":
             if labyritheEntrer:
-                afficherLeCheminParcouru()
                 numero = input("Numero de la porte ?")
                 nomPorte = "Porte" + numero
                 if nomPorte in porteArray:
                     tryPorte(numero)
                 else :
                     currentPorte = "Porte1"
-                    print("Vous êtes revenu à la Porte 1. Ressayez.")
-                    chemins.clear()
-                
             else:
                 print("Veuillez entrer dans le labyrithe")
             current = "m"
