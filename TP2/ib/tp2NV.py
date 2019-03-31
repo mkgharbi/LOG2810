@@ -75,7 +75,7 @@ def genererCodeBosse(arrayGrammar):
     for i in range(0,len(arrayPorteBosse)):
         for j in chemins[i]:
             if arrayPorteBosse[i] in chemins[i][j][1]:
-                arrayCodeBosse.append(chemins[0])
+                arrayCodeBosse.append(chemins[i][j][0])
         
 
    # codeBosse = arrayGrammar.size()
@@ -110,9 +110,9 @@ def genererLanguageBosee():
 
 
 
-def affronterLeBoss():
+def affronterLeBoss(arrayGrammar):
 
-    genererCodeBosse()
+    genererCodeBosse(arrayGrammar)
     genererLanguageBosee()
 
     # lit la premiere ligne du fichier 
