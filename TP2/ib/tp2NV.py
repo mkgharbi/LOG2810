@@ -54,7 +54,7 @@ def ouvrirPorte (fichier, porte): #TODO: update porte courrante
     return
 
 #moyen
-arrayCheminSuiviBosse=[]
+arrayCheminSuiviBosse=[]#code du chemin suivie 
 arrayPorteBosse = []
 arrayCodeBosse =[]
 #a modifier
@@ -64,19 +64,27 @@ arrayCodeBosse =[]
 #prendre la mot de passe de la porte 
 def genererCodeBosse(arrayGrammar):
   #selon le chemin suivi 
-    for i in range(0,len(chemins)):
-        for j in chemins[i]:
-            for k in chemins[i][j][1]:
-                if chemins[i+1] == k:
-                    arrayCheminSuiviBosse.append(chemins[i][0])
+  
+  #  for i in range(0,len(chemins)):
+   #     for j in chemins[i]:# changer avec for j in range(0,len(chemins[i]):
+   #         for k in chemins[i][j][1]:
+   #             if chemins[i+1] == k:
+   #                 arrayCheminSuiviBosse.append(chemins[i][0])
+
+
+
  # selon le fichier bosse
     codeBosse= arrayGrammar.size()
     arrayPorteBosse = codeBosse.split(" ")
-    for i in range(0,len(arrayPorteBosse)):
-        for j in chemins[i]:
-            if arrayPorteBosse[i] in chemins[i][j][1]:
-                arrayCodeBosse.append(chemins[i][j][0])
+    for i in range(0,len(arrayPorteBosse)-2):
+      for porte in arrayPorteBosse:
+        if "Boss" in porte: 
+          for item in chemins[arrayPorteBosse[i]] : 
+              if (arrayPorteBosse[i+1] in chemins[arrayPorteBosse[i]][item][1]): 
+                  arrayCodeBosse.append(chemins[arrayPorteBosse[i]][item][0])
         
+        #for j in range(0,len(chemins[arrayPorteBosse[i]]-1)) :
+            #if (arrayPorteBosse[i+1] in chemins[arrayPorteBosse[i]][j][1]): #and (chemins[arrayPorteBosse[i]][j][2] == "Valide"):
 
    # codeBosse = arrayGrammar.size()
    # arrayPorteBosse = codeBosse.split(" ")
