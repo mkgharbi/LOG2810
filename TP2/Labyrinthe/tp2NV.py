@@ -170,10 +170,11 @@ def tryPorte(numero): #TODO: Find a way to append multiple doors
         afficher(tempPorte, True)
         ouvrirPorte(tempPorte+".txt")
         fillChemins()
+        print(chemins[parcours.index(tempPorte)])
     else:
         afficher(tempPorte, False)
+        parcours.append("Porte1")
         
-    print(chemins[parcours.index(tempPorte)])
     return
 
 def genererCodeBosse(arrayGrammar):
@@ -190,49 +191,49 @@ def genererCodeBosse(arrayGrammar):
 
 
 #def genererCodeBosse(arrayGrammar):
-  #selon le chemin suivi 
-  
-  #  for i in range(0,len(chemins)):
-   #     for j in chemins[i]:# changer avec for j in range(0,len(chemins[i]):
-   #         for k in chemins[i][j][1]:
-   #             if chemins[i+1] == k:
-   #                 arrayCheminSuiviBosse.append(chemins[i][0])
+    #selon le chemin suivi 
+    
+    #  for i in range(0,len(chemins)):
+    #     for j in chemins[i]:# changer avec for j in range(0,len(chemins[i]):
+    #         for k in chemins[i][j][1]:
+    #             if chemins[i+1] == k:
+    #                 arrayCheminSuiviBosse.append(chemins[i][0])
 
 
 
- # selon le fichier bosse
+# selon le fichier bosse
     codeBosse= arrayGrammar.size()
     arrayPorteBosse = codeBosse.split(" ")
     for i in range(0,len(arrayPorteBosse)-2):
-      for porte in arrayPorteBosse:
-        if "Boss" in porte: 
-          for item in chemins[arrayPorteBosse[i]] : 
-              if (arrayPorteBosse[i+1] in chemins[arrayPorteBosse[i]][item][1]): 
-                  arrayCodeBosse.append(chemins[arrayPorteBosse[i]][item][0])
+        for porte in arrayPorteBosse:
+            if "Boss" in porte: 
+                for item in chemins[arrayPorteBosse[i]] : 
+                    if (arrayPorteBosse[i+1] in chemins[arrayPorteBosse[i]][item][1]): 
+                        arrayCodeBosse.append(chemins[arrayPorteBosse[i]][item][0])
         
         #for j in range(0,len(chemins[arrayPorteBosse[i]]-1)) :
             #if (arrayPorteBosse[i+1] in chemins[arrayPorteBosse[i]][j][1]): #and (chemins[arrayPorteBosse[i]][j][2] == "Valide"):
 
-   # codeBosse = arrayGrammar.size()
-   # arrayPorteBosse = codeBosse.split(" ")
-   # for i in range(0,len(arrayPorteBosse)):
+    # codeBosse = arrayGrammar.size()
+    # arrayPorteBosse = codeBosse.split(" ")
+    # for i in range(0,len(arrayPorteBosse)):
         #ce que je veux faire 
         # c'est de chercher le nom de la porte ({efedda, Porte6, valide})
         # et prendre la premiere case de  {efedda, Porte6, valide} et la mettre dans 
         #le arrayCodeBosse
     #    if arrayPorteBosse[i] in chemins [1]: #????est ce que ça fonctionne
     #        #est ce que il parcours tous le tableau des chemins 
-     #       arrayCodeBosse.append(chemins[0])
+    #       arrayCodeBosse.append(chemins[0])
 
 
 alphabet =list(string.ascii_uppercase)
 
 def genererLanguageBosee():
 
-   # for item in arrayCodeBosse:
+    # for item in arrayCodeBosse:
     #    arrayDebutDeCase.append(item[0])
-   # for i in range(0,len(arrayDebutDeCase)): 
-       # print("S-> "+arrayDebutDeCase[i]+alphabet[i]+arrayDebutDeCase.index(arrayDebutDeCase[i]))# objectif :c'est quelle affiche S-> eA1 si c'est dans la premiere case premiere lettre 
+    # for i in range(0,len(arrayDebutDeCase)): 
+    # print("S-> "+arrayDebutDeCase[i]+alphabet[i]+arrayDebutDeCase.index(arrayDebutDeCase[i]))# objectif :c'est quelle affiche S-> eA1 si c'est dans la premiere case premiere lettre 
     for i in range(0,len(arrayCodeBosse)):
         for j in range(0,len(arrayCodeBosse[i])):
             if arrayCodeBosse[i][j] == arrayCodeBosse[i][0]:
@@ -307,7 +308,7 @@ def afficher(porte, success):
     elif not success:
         print("Tentative d'ouvrir "+porte+" a echoué.")
         currentPorte = "Porte1"
-        print("Vous etes retourne a la Porte 1 , veuillez appuyer sur b")
+        print("Vous etes retourne a la Porte 1")
 
 # Cette fonction verifie les entrés de l'utilisateur lors de la navigation du menu
 def lireInputMenu():
