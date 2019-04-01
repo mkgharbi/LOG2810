@@ -30,8 +30,7 @@ def checkPassword(porte):
     return False  
 
 # C1) Cette fonction est appelé dès que l'on a confirmer que la porte voulus est accessible
-def ouvrirPorte(fichier):  # TODO: update currentPorte & read all the file in one function : 
-    #TODO : return the valid doors. 
+def ouvrirPorte(fichier): 
     global currentPorte
     global porteArray
     global passwordArray
@@ -221,10 +220,11 @@ def affronterLeBoss():
 
 #Cette fonction affiche l'historique du chemin parcouru
 def afficherLeCheminParcouru():
+    for i in parcours:
         print("Evenement Porte")
         print()
-        print("a.   ", currentPorte)
-        print("b.   ", chemins[parcours.index(currentPorte)])
+        print("a.   ", i)
+        print("b.   ", chemins[parcours.index(i)])
         if parcours[len(parcours)-1] in gouffreArray:
             print("c.   Cette porte est un gouffre, retour a Porte1")
         else:
