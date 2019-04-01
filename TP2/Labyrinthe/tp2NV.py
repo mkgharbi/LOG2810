@@ -117,15 +117,21 @@ def findTerminal(terminal,arrayGrammar):
     for item in arrayGrammar:
         if terminal in terminauxPorte:
             return True
-        if len(item[1]) == 0 : 
-            return True
-        if item[1][len(item[1])-1] in etatsFinaux:
-            return True
-        if terminal == item[1][0] and item[1][len(item[1])-1] in etatsFinaux: # TODO : check another condition when a terminal lets us go to a final state. Like : S is in etatsFinaux and S->eS (e leads us to S)
-            return True
-        for anotherItem in arrayGrammar: #Pour chaque item de arrayGrammar, on itere encore une fois pour voir s'il y a un cas du type S-> , S->eS
-            if (item[1] is "") and (anotherItem[1][len(anotherItem[1]) - 1] is not None) and (anotherItem[1][len(anotherItem[1]) - 1] == item[0]):
+        if len([item[1]]) - 1 > 0:
+            if item[1][len(item[1])-1] in etatsFinaux:
                 return True
+            if terminal == item[1][0] and item[1][len(item[1])-1] in etatsFinaux: # TODO : check another condition when a terminal lets us go to a final state. Like : S is in etatsFinaux and S->eS (e leads us to S)
+                return True
+        for anotherItem in arrayGrammar: #Pour chaque item de arrayGrammar, on itere encore une fois pour voir s'il y a un cas du type S-> , S->eS
+            if len(anotherItem[1]) >= 2:
+                if (item[1] is "") and (anotherItem[1][len(anotherItem[1]) - 1] == item[0]):
+                    if anotherItem[1][len(anotherItem[1]) - 2] == terminal:
+                        return True
+                    elif len(item[1]) >= 2:
+                        if item[1][len(item[1]) - 2] == terminal:
+                            return True
+                        else:
+                            return False
     return False
 
 #Cette fonction verifie qu'un mot de passe peut etre generer a partie de la gramaire passée en parametre
@@ -133,9 +139,15 @@ def validMotDePasse(arrayGrammar):
     global validPasswords
     global validDoors
     for code in passwordArray:
-        if (code[len(code)-1] in terminauxPorte) or (findTerminal(code[len(code)-1],arrayGrammar)):
-            validPasswords.append(code)
-            validDoors.append(porteArray[passwordArray.index(code)])
+        if len(code) > 0:
+            if (findTerminal(code[len(code)-1],arrayGrammar)):
+                validPasswords.append(code)
+                validDoors.append(porteArray[passwordArray.index(code)])
+        else:
+            for current in arrayGrammar:
+                if current[0] == "S":
+                    validPasswords.append(code)
+                    validDoors.append(porteArray[passwordArray.index(code)])
 
 # Cette fonction ajoute les portes a une liste qui nous permettra d'acceder aux details du parcours (soit la liste parcours)
 def fillChemins():
@@ -156,6 +168,7 @@ def tryPorte(numero): #TODO: Find a way to append multiple doors
     if checkPassword(tempPorte):
         afficher(tempPorte, True)
         ouvrirPorte(tempPorte+".txt")
+        fillChemins()
     else:
         afficher(tempPorte, False)
         
