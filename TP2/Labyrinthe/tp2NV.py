@@ -14,7 +14,6 @@ gouffreArray = [] #TODO: Si une porte se trouve a etre un gouffre, on lajoute.
 passwordArray = [] # contenant les mots de passe dans chaque porte. 
 validPasswords = [] # contenant les mots de passe valides.
 validDoors = [] #contenant les portes valides reliees aux mots de passe valides.
-# je pense qu'il faut changé le nom ????????????? est ce que lesPossibiliter ce'est bon ???????
 grammar = [] # grammaire 
 
 etatsFinaux = set()
@@ -118,11 +117,15 @@ def findTerminal(terminal,arrayGrammar):
         if terminal in nonTerminauxPorte:
             return True
         if len(item[1]) == 0 : 
-                return 
+            return True
         if item[1][len(item[1])-1] in etatsFinaux:
             return True
         if terminal == item[1][0] and item[1][len(item[1])-1] in etatsFinaux: # TODO : check another condition when a terminal lets us go to a final state. Like : S is in etatsFinaux and S->eS (e leads us to S)
             return True
+        for anotherItem in arrayGrammar: #Pour chaque item de arrayGrammar, on itere encore une fois pour voir s'il y a un cas du type S-> , S->eS
+            if (item[1] is "") and (anotherItem[1][len(anotherItem[1]) - 1] is not None) and (anotherItem[1][len(anotherItem[1]) - 1] == item[0]):
+                return True
+
     return False
 
 def validMotDePasse(arrayGrammar):
@@ -181,7 +184,7 @@ def genererCodeBosse(arrayGrammar):
 #alphabet = list(string.ascii_uppercase)
 
 
-def genererLanguageBosee():
+'''def genererLanguageBosee():
 
     # for item in arrayCodeBosse:
     #    arrayDebutDeCase.append(item[0])
@@ -197,7 +200,7 @@ def genererLanguageBosee():
                     arrayCodeBosse[i][-1]+alphabet[i]+(j-1))
             else:
                 print(alphabet[i]+j+"->"+arrayCodeBosse[i]
-                    [j]+alphabet[i]+(j+1))
+                    [j]+alphabet[i]+(j+1))'''
 
 
 def affronterLeBoss():
@@ -253,7 +256,8 @@ def lireInputMenu():
     return valeur.lower()
 
 def main():
-    labyritheEntrer = False
+    global currentPorte
+    labyrintheEntrer = False
     bossTuer = False
     current = "m" # m -> "menu"
     while True:
@@ -268,10 +272,10 @@ def main():
             ouvrirPorte("Porte1.txt")
             fillChemins()
             print(chemins)
-            labyritheEntrer = True
+            labyrintheEntrer = True
             current = "m"
         elif current == "b":
-            if labyritheEntrer:
+            if labyrintheEntrer:
                 numero = input("Numero de la porte ?")
                 nomPorte = "Porte" + numero
                 if nomPorte in porteArray:
