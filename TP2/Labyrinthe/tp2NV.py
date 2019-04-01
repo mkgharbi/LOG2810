@@ -1,4 +1,5 @@
 import random
+import string
 from collections import defaultdict
 
 terminaux = ["","a", "b", "c", "d", "e"]
@@ -187,8 +188,60 @@ def genererCodeBosse(arrayGrammar):
             #est ce que il parcours tous le tableau des chemins
             arrayCodeBosse.append(chemins[0])
 
-#arrayDebutDeCase=[]
-#alphabet = list(string.ascii_uppercase)
+
+#def genererCodeBosse(arrayGrammar):
+  #selon le chemin suivi 
+  
+  #  for i in range(0,len(chemins)):
+   #     for j in chemins[i]:# changer avec for j in range(0,len(chemins[i]):
+   #         for k in chemins[i][j][1]:
+   #             if chemins[i+1] == k:
+   #                 arrayCheminSuiviBosse.append(chemins[i][0])
+
+
+
+ # selon le fichier bosse
+    codeBosse= arrayGrammar.size()
+    arrayPorteBosse = codeBosse.split(" ")
+    for i in range(0,len(arrayPorteBosse)-2):
+      for porte in arrayPorteBosse:
+        if "Boss" in porte: 
+          for item in chemins[arrayPorteBosse[i]] : 
+              if (arrayPorteBosse[i+1] in chemins[arrayPorteBosse[i]][item][1]): 
+                  arrayCodeBosse.append(chemins[arrayPorteBosse[i]][item][0])
+        
+        #for j in range(0,len(chemins[arrayPorteBosse[i]]-1)) :
+            #if (arrayPorteBosse[i+1] in chemins[arrayPorteBosse[i]][j][1]): #and (chemins[arrayPorteBosse[i]][j][2] == "Valide"):
+
+   # codeBosse = arrayGrammar.size()
+   # arrayPorteBosse = codeBosse.split(" ")
+   # for i in range(0,len(arrayPorteBosse)):
+        #ce que je veux faire 
+        # c'est de chercher le nom de la porte ({efedda, Porte6, valide})
+        # et prendre la premiere case de  {efedda, Porte6, valide} et la mettre dans 
+        #le arrayCodeBosse
+    #    if arrayPorteBosse[i] in chemins [1]: #????est ce que ça fonctionne
+    #        #est ce que il parcours tous le tableau des chemins 
+     #       arrayCodeBosse.append(chemins[0])
+
+
+alphabet =list(string.ascii_uppercase)
+
+def genererLanguageBosee():
+
+   # for item in arrayCodeBosse:
+    #    arrayDebutDeCase.append(item[0])
+   # for i in range(0,len(arrayDebutDeCase)): 
+       # print("S-> "+arrayDebutDeCase[i]+alphabet[i]+arrayDebutDeCase.index(arrayDebutDeCase[i]))# objectif :c'est quelle affiche S-> eA1 si c'est dans la premiere case premiere lettre 
+    for i in range(0,len(arrayCodeBosse)):
+        for j in range(0,len(arrayCodeBosse[i])):
+            if arrayCodeBosse[i][j] == arrayCodeBosse[i][0]:
+                print("S-> "+arrayCodeBosse[i][0]+alphabet[i]+j)
+            if arrayCodeBosse[i][j].size():#derniere case du tableau
+                print(alphabet[i]+len(arrayCodeBosse[i])+"-> ")
+                print(alphabet[i]+len(arrayCodeBosse[i])+"-> "+arrayCodeBosse[i][-1]+alphabet[i]+(j-1))
+            else:
+                print( alphabet[i]+j+"->"+arrayCodeBosse[i][j]+alphabet[i]+(j+1))
 
 '''def genererLanguageBosee():
 
