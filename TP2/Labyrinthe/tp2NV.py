@@ -90,8 +90,9 @@ def genererAutomate(array, porte):
         grammar = item.split("->")
         tempArray.append(grammar)  
     grammar = tempArray
-    fillTables(grammar)
-    validMotDePasse(grammar)    
+    fillTables(grammar) #Remplir les etats.
+    validMotDePasse(grammar) # Remplir les mots de passes valides et les portes valides. 
+    estGouffre() #remplir tableau des gouffres 
     return
 
 # Cette fonction remplie la table des etats finaux voulus et des terminaux trouvés dans la grammaire
@@ -173,8 +174,6 @@ def tryPorte(numero): #TODO: Find a way to append multiple doors
         print(chemins[parcours.index(tempPorte)])
     else:
         afficher(tempPorte, False)
-        parcours.append("Porte1")
-        
     return
 
 def genererCodeBosse(arrayGrammar):
@@ -294,6 +293,7 @@ def afficherLeCheminParcouru():
         print("b.   ", chemins[parcours.index(i)])
         if parcours[len(parcours)-1] in gouffreArray:
             print("c.   Cette porte est un gouffre, retour a Porte1")
+            parcours.append("Porte1")
         else:
             print("c.   Cette porte n'est pas un gouffre")
 
@@ -347,8 +347,10 @@ def main():
                 nomPorte = "Porte" + numero
                 if nomPorte in porteArray:
                     tryPorte(numero)
+                    fillChemins()
                 else :
-                    currentPorte = "Porte1"
+                    ouvrirPorte("Porte1")
+                    fillChemins()
             else:
                 print("Veuillez entrer dans le labyrithe")
             current = "m"
