@@ -183,37 +183,43 @@ def tryPorte(numero): #TODO: Find a way to append multiple doors
 
 
 def genererCodeBoss():
-    boss = open("Boss.txt", "r")
-    lesPortes = boss.readline()
+    ligne = open("Boss.txt", "r")
+    lesPortes = ligne.readline()
     arrayPorteBoss = lesPortes.split(" ")
 
-#    selon le fichier boss
-        #codeBoss= arrayGrammar.size()
-        #arrayPorteBoss = codeBoss.split(" ")
+# selon le fichier boss
+    #codeBoss= arrayGrammar.size()
+    # arrayPorteBoss = codeBoss.split(" ")
     for i in range(0, len(arrayPorteBoss)-3):
-        for j in range(0, len(chemins[i])-1):
+        for j in range(0, len(chemins[i])):
             if arrayPorteBoss[i+1] in chemins[i][j][1]:
                 arrayCodeBoss.append(chemins[i][j][0])
+
+    #  for porte in arrayPorteBoss:
+    #     for item in chemins[i] : #arrayPorteBoss
+    #         if (arrayPorteBoss[i+1] in chemins[i][item][1]): # chemins[arrayPorteBoss[i]][item][1
+                #arrayCodeBoss.append(chemins[arrayPorteBoss[i]][item][0])
+
+
 
 
 def genererLanguageBoss():
 
-    global arrayCodeBoss
     for i in range(0, len(arrayCodeBoss)):
         for j in range(0, len(arrayCodeBoss[i])):
             if arrayCodeBoss[i][j] == arrayCodeBoss[i][0]:
-                print("S-> "+arrayCodeBoss[i][0]+alphabet[i]+j)
-            if arrayCodeBoss[i][j].size():  # derniere case du tableau
-                print(alphabet[i]+len(arrayCodeBoss[i])+"-> ")
-                print(alphabet[i]+len(arrayCodeBoss[i])+"-> " +
-                    arrayCodeBoss[i][-1]+alphabet[i]+(j-1))
+                print("S-> "+arrayCodeBoss[i][0]+alphabet[i]+str(j))
+            if len(arrayCodeBoss[i][j]):  # derniere case du tableau
+                print(str(alphabet[i])+str(len(arrayCodeBoss[i]))+"-> ")
+                print(alphabet[i]+str(len(arrayCodeBoss[i])) +"-> "+arrayCodeBoss[i][-1]+alphabet[i]+(j-1))
             else:
-                print(alphabet[i]+j+"->"+arrayCodeBoss[i][j]+alphabet[i]+(j+1))
+                print(alphabet[i]+str(j)+"->"+str(arrayCodeBoss[i][j])+alphabet[i]+str((j+1)))
 
 
-def affronterBoss():
+def affronterLeBoss():
     genererCodeBoss()
     genererLanguageBoss()
+
 
 #Cette fonction affiche l'historique du chemin parcouru
 def afficherLeCheminParcouru():
@@ -255,7 +261,7 @@ def lireInputMenu():
 def main():
     global currentPorte
     labyrintheEntrer = False
-    bossTuer = False
+    #bossTuer = False
     current = "m" # m -> "menu"
     while True:
 
@@ -277,21 +283,20 @@ def main():
         elif current == "b":
             if labyrintheEntrer:
                 numero = input("Numero de la porte ?")
-                if numero in [0 : 20 ] :
-                    nomPorte = "Porte" + numero
-                    if nomPorte in porteArray:
-                        tryPorte(numero)
-                        fillChemins()
-                    else :
-                        ouvrirPorte("Porte1.txt")
-                        fillChemins()
-                elif numero =="Boss":
-                    if numero in porteArray:
-                        genererCodeBoss()
-                        
-                    else:
-                        ouvrirPorte("Porte1.txt")
-                        fillChemins()
+                if numero.isdigit():
+                    if int(numero) >= 0 and int(numero) <=20 : 
+                        nomPorte = "Porte" + numero
+                        if nomPorte in porteArray:
+                            tryPorte(numero)
+                            fillChemins()
+                        else :
+                            ouvrirPorte("Porte1.txt")
+                            fillChemins()
+                elif numero in "Boss":
+                    affronterLeBoss()
+                else:
+                    ouvrirPorte("Porte1.txt")
+                    fillChemins()
             else:
                 print("Veuillez entrer dans le labyrithe")
             current = "m"
