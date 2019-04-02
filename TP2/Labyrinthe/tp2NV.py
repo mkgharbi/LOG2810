@@ -200,6 +200,21 @@ def genererCodeBoss():
     #         if (arrayPorteBoss[i+1] in chemins[i][item][1]): # chemins[arrayPorteBoss[i]][item][1
                 #arrayCodeBoss.append(chemins[arrayPorteBoss[i]][item][0])
 
+def genererCodeBoss() : 
+    fichier = open("Boss.txt","r")
+    boss = fichier.readline()
+    global arrayCodeBoss 
+    arrayCodeBossTemp = boss.split(" ")
+
+    for item in arrayCodeBossTemp:
+        if item !=" " : 
+            arrayCodeBoss.append(item)
+    
+    for i in range(len(parcours)-len(arrayCodeBoss), len(parcours)-1):
+        for j in range(0, len(chemins[i])):
+            if arrayCodeBoss[i+1] in chemins[i][j][1] : 
+                arrayCodeBoss.append(chemins[i][j][0])
+
 
 
 
@@ -216,7 +231,7 @@ def genererLanguageBoss():
                 print(alphabet[i]+str(j)+"->"+str(arrayCodeBoss[i][j])+alphabet[i]+str((j+1)))
 
 
-def affronterLeBoss():
+def affronterBoss():
     genererCodeBoss()
     genererLanguageBoss()
 
@@ -292,13 +307,18 @@ def main():
                         else :
                             ouvrirPorte("Porte1.txt")
                             fillChemins()
-                elif numero in "Boss":
-                    affronterLeBoss()
+                elif numero == "Boss" or numero == "boss":
+                    if numero in porteArray: 
+                        parcours.append(numero)
+                        affronterBoss()
+                    else :
+                        ouvrirPorte("Porte1.txt")
+                        fillChemins()
                 else:
                     ouvrirPorte("Porte1.txt")
                     fillChemins()
             else:
-                print("Veuillez entrer dans le labyrithe")
+                print("Veuillez entrer dans le labyrithe en appuyant sur a.")
             current = "m"
 
         elif current == "c":
