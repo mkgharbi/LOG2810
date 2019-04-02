@@ -1,6 +1,4 @@
-import random
 import string
-from collections import defaultdict
 
 terminaux = ["","a", "b", "c", "d", "e"]
 nonTerminaux = ["A","B", "C", "D",  "S"]
@@ -20,8 +18,10 @@ validDoors = [] #contenant les portes valides reliees aux mots de passe valides.
 etatsFinaux = set()
 terminauxPorte = set()
 
-arrayCodeBosse = []
-arrayPorteBosse = []
+
+alphabet = list(string.ascii_uppercase)
+arrayCodeBoss = []
+arrayPorteBoss = []
 
 # Cette fonction verifie que le mot de passe la porte passée en parametre est bel et bien accessible
 def checkPassword(porte):
@@ -181,113 +181,39 @@ def tryPorte(numero): #TODO: Find a way to append multiple doors
         afficherEtMettreAjour(tempPorte, False)
     return
 
-def genererCodeBosse(arrayGrammar):
-    codeBosse = arrayGrammar.size()
-    arrayPorteBosse = codeBosse.split(" ")
-    for i in arrayPorteBosse:
-        #ce que je veux faire
-        # c'est de chercher le nom de la porte ({efedda, Porte6, valide})
-        # et prendre la premiere case de  {efedda, Porte6, valide} et la mettre dans
-        #le arrayCodeBosse
-        if arrayPorteBosse[i] in chemins[1]:  # ????est ce que ça fonctionne
-            #est ce que il parcours tous le tableau des chemins
-            arrayCodeBosse.append(chemins[0])
+
+def genererCodeBoss():
+    boss = open("Boss.txt", "r")
+    lesPortes = boss.readline()
+    arrayPorteBoss = lesPortes.split(" ")
+
+#    selon le fichier boss
+        #codeBoss= arrayGrammar.size()
+        #arrayPorteBoss = codeBoss.split(" ")
+    for i in range(0, len(arrayPorteBoss)-3):
+        for j in range(0, len(chemins[i])-1):
+            if arrayPorteBoss[i+1] in chemins[i][j][1]:
+                arrayCodeBoss.append(chemins[i][j][0])
 
 
-#def genererCodeBosse(arrayGrammar):
-    #selon le chemin suivi 
-    
-    #  for i in range(0,len(chemins)):
-    #     for j in chemins[i]:# changer avec for j in range(0,len(chemins[i]):
-    #         for k in chemins[i][j][1]:
-    #             if chemins[i+1] == k:
-    #                 arrayCheminSuiviBosse.append(chemins[i][0])
+def genererLanguageBoss():
 
-
-
-# selon le fichier bosse
-    codeBosse= arrayGrammar.size()
-    arrayPorteBosse = codeBosse.split(" ")
-    for i in range(0,len(arrayPorteBosse)-2):
-        for porte in arrayPorteBosse:
-            if "Boss" in porte: 
-                for item in chemins[arrayPorteBosse[i]] : 
-                    if (arrayPorteBosse[i+1] in chemins[arrayPorteBosse[i]][item][1]): 
-                        arrayCodeBosse.append(chemins[arrayPorteBosse[i]][item][0])
-        
-        #for j in range(0,len(chemins[arrayPorteBosse[i]]-1)) :
-            #if (arrayPorteBosse[i+1] in chemins[arrayPorteBosse[i]][j][1]): #and (chemins[arrayPorteBosse[i]][j][2] == "Valide"):
-
-    # codeBosse = arrayGrammar.size()
-    # arrayPorteBosse = codeBosse.split(" ")
-    # for i in range(0,len(arrayPorteBosse)):
-        #ce que je veux faire 
-        # c'est de chercher le nom de la porte ({efedda, Porte6, valide})
-        # et prendre la premiere case de  {efedda, Porte6, valide} et la mettre dans 
-        #le arrayCodeBosse
-    #    if arrayPorteBosse[i] in chemins [1]: #????est ce que ça fonctionne
-    #        #est ce que il parcours tous le tableau des chemins 
-    #       arrayCodeBosse.append(chemins[0])
-
-
-alphabet =list(string.ascii_uppercase)
-
-def genererLanguageBosee():
-
-    # for item in arrayCodeBosse:
-    #    arrayDebutDeCase.append(item[0])
-    # for i in range(0,len(arrayDebutDeCase)): 
-    # print("S-> "+arrayDebutDeCase[i]+alphabet[i]+arrayDebutDeCase.index(arrayDebutDeCase[i]))# objectif :c'est quelle affiche S-> eA1 si c'est dans la premiere case premiere lettre 
-    for i in range(0,len(arrayCodeBosse)):
-        for j in range(0,len(arrayCodeBosse[i])):
-            if arrayCodeBosse[i][j] == arrayCodeBosse[i][0]:
-                print("S-> "+arrayCodeBosse[i][0]+alphabet[i]+j)
-            if arrayCodeBosse[i][j].size():#derniere case du tableau
-                print(alphabet[i]+len(arrayCodeBosse[i])+"-> ")
-                print(alphabet[i]+len(arrayCodeBosse[i])+"-> "+arrayCodeBosse[i][-1]+alphabet[i]+(j-1))
+    global arrayCodeBoss
+    for i in range(0, len(arrayCodeBoss)):
+        for j in range(0, len(arrayCodeBoss[i])):
+            if arrayCodeBoss[i][j] == arrayCodeBoss[i][0]:
+                print("S-> "+arrayCodeBoss[i][0]+alphabet[i]+j)
+            if arrayCodeBoss[i][j].size():  # derniere case du tableau
+                print(alphabet[i]+len(arrayCodeBoss[i])+"-> ")
+                print(alphabet[i]+len(arrayCodeBoss[i])+"-> " +
+                    arrayCodeBoss[i][-1]+alphabet[i]+(j-1))
             else:
-                print( alphabet[i]+j+"->"+arrayCodeBosse[i][j]+alphabet[i]+(j+1))
-
-'''def genererLanguageBosee():
-
-    # for item in arrayCodeBosse:
-    #    arrayDebutDeCase.append(item[0])
-    # # for i in range(0,len(arrayDebutDeCase)):
-    # print("S-> "+arrayDebutDeCase[i]+alphabet[i]+arrayDebutDeCase.index(arrayDebutDeCase[i]))# objectif :c'est quelle affiche S-> eA1 si c'est dans la premiere case premiere lettre
-    for i in range(0, len(arrayCodeBosse)):
-        for j in range(0, len(arrayCodeBosse[i])):
-            if arrayCodeBosse[i][j] == arrayCodeBosse[i][0]:
-                print("S-> "+arrayCodeBosse[i][0]+alphabet[i]+j)
-            if arrayCodeBosse[i][j].size():  # derniere case du tableau
-                print(alphabet[i]+len(arrayCodeBosse[i])+"-> ")
-                print(alphabet[i]+len(arrayCodeBosse[i])+"-> " +
-                    arrayCodeBosse[i][-1]+alphabet[i]+(j-1))
-            else:
-                print(alphabet[i]+j+"->"+arrayCodeBosse[i]
-                    [j]+alphabet[i]+(j+1))'''
+                print(alphabet[i]+j+"->"+arrayCodeBoss[i][j]+alphabet[i]+(j+1))
 
 
-def affronterLeBoss():
-    t = True
-
-    # lit la premiere ligne du fichier
-
-    #on met chaque mot de passe de chaque porte dans une case d'un tableau (arrayPorteBosse)
-    # on prend le  premier caractere de chaque case on met S-> premiercaratere A ,j'usqu'au dernier caractere (premiere case A , deuxieme case B .....)
-    #on cherche la taille de chaque case
-    # si la taille est de 1   S->premier caractere A1,  A1 ->
-    #si la taille >1 on met pour le premier caractere S-> prermier caractere A1 , puis deuxieme caractere A1->deuxieme cacatere A2 j'usqu'au derniere caractere
-    #on verifier si c'est le dernier par rapport a la taille de la case grace a la taille de mot de passe pour la premiere porte et on fait An-1 -> derniercar An
-    # An->
-    # aller a la derniere case dernier caractere et faire Zn-> , Zn-1 -> denrier caractere Zn jusqu'a on termine la derniere case puis aller a avant derniere case
-    # Yn-> derniere caractere de Y (avant derniere case ) Z1
-    # et on arrivant a la premiere case on fait S-> premier caractere de la case E
-    # C'EST POUR GENERER LE LANGUAGE
-
-    #lis le fichier Boss.txt
-    #generer l'automate associé au chemin decrit dans le fichier
-    #valider la concatenation des mot de passe des le debut
-    #trouver le language
+def affronterBoss():
+    genererCodeBoss()
+    genererLanguageBoss()
 
 #Cette fonction affiche l'historique du chemin parcouru
 def afficherLeCheminParcouru():
@@ -351,13 +277,21 @@ def main():
         elif current == "b":
             if labyrintheEntrer:
                 numero = input("Numero de la porte ?")
-                nomPorte = "Porte" + numero
-                if nomPorte in porteArray:
-                    tryPorte(numero)
-                    fillChemins()
-                else :
-                    ouvrirPorte("Porte1.txt")
-                    fillChemins()
+                if numero in [0 : 20 ] :
+                    nomPorte = "Porte" + numero
+                    if nomPorte in porteArray:
+                        tryPorte(numero)
+                        fillChemins()
+                    else :
+                        ouvrirPorte("Porte1.txt")
+                        fillChemins()
+                elif numero =="Boss":
+                    if numero in porteArray:
+                        genererCodeBoss()
+                        
+                    else:
+                        ouvrirPorte("Porte1.txt")
+                        fillChemins()
             else:
                 print("Veuillez entrer dans le labyrithe")
             current = "m"
