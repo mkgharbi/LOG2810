@@ -194,6 +194,7 @@ def genererCodeBoss():
         for j in range(0,len(chemins[i])) :
             if arrayPorteBoss[i+1] in chemins[i][j][1]:
                   arrayCodeBoss.append(chemins[i][j][0])
+                  
                 
       #  for porte in arrayPorteBoss:
        #     for item in chemins[i] : #arrayPorteBoss
@@ -212,10 +213,11 @@ def genererLanguageBoss():
                 print("S-> "+arrayCodeBoss[i][0]+alphabet[i]+str(j))
             if len(arrayCodeBoss[i][j]):#derniere case du tableau
                 print(str(alphabet[i])+str(len(arrayCodeBoss[i]))+"-> ")
-                
-                print(alphabet[i]+str(len(arrayCodeBoss[i]))+"-> "+arrayCodeBoss[i][-1]+alphabet[i]+str((j-1)))
+                k=j-1
+                print(alphabet[i]+str(len(arrayCodeBoss[i]))+"-> "+arrayCodeBoss[i][-1]+alphabet[i]+str((k)))
             else:
-                print( alphabet[i]+j+"->"+arrayCodeBoss[i][j]+alphabet[i]+(j+1))
+                z=j+1
+                print( alphabet[i]+j+"->"+arrayCodeBoss[i][j]+alphabet[i]+(z))
 
 
 
