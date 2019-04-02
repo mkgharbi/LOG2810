@@ -192,8 +192,13 @@ def genererCodeBoss():
     # arrayPorteBoss = codeBoss.split(" ")
     for i in range(0, len(arrayPorteBoss)-3):
         for j in range(0, len(chemins[i])):
+        # for j in range(len(chemins[i])-len(arrayPorteBoss), len(chemins[i])):# a modifier 
             if arrayPorteBoss[i+1] in chemins[i][j][1]:
                 arrayCodeBoss.append(chemins[i][j][0])
+
+        
+    for item in arrayCodeBoss:
+        print(str(item))
 
     #  for porte in arrayPorteBoss:
     #     for item in chemins[i] : #arrayPorteBoss
@@ -204,19 +209,22 @@ def genererCodeBoss():
 
 
 def genererLanguageBoss():
+    #faire l,affichiage sans montrer le tableau 
+    #tester avec un code dans la porte 1 avec aae
 
     for i in range(0, len(arrayCodeBoss)):
         for j in range(0, len(arrayCodeBoss[i])):
             if arrayCodeBoss[i][j] == arrayCodeBoss[i][0]:
                 print("S-> "+arrayCodeBoss[i][0]+alphabet[i]+str(j))
-            if len(arrayCodeBoss[i][j]):  # derniere case du tableau
-                print(str(alphabet[i])+str(len(arrayCodeBoss[i])-1)+"-> ")
+            if len(arrayCodeBoss[i][j]):  # derniere case du tableau !! a corriger 
+                #print(str(alphabet[i])+str(len(arrayCodeBoss[i])-1)+"-> ")
+                print(str(alphabet[i])+str(len(arrayCodeBoss[i])-1)+"-> "+arrayCodeBoss[i][j]+str(len(arrayCodeBoss[i])-1))
                 #print(alphabet[i]+str(len(arrayCodeBoss[i])) +"-> "+arrayCodeBoss[i][-1]+alphabet[i]+str((j-1)))
                 print(alphabet[i]+str(len(arrayCodeBoss[i])-1) +"-> S")
             else:
                 k=j-1
                 print(alphabet[i]+str(k)+"->"+str(arrayCodeBoss[i][j])+alphabet[i]+str((j)))
-
+    print ("S-> ")
 
 def affronterLeBoss():
     genererCodeBoss()
