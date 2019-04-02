@@ -190,11 +190,11 @@ def genererCodeBoss():
 # selon le fichier boss
     #codeBoss= arrayGrammar.size()
    # arrayPorteBoss = codeBoss.split(" ")
-    for i in range(0,len(arrayPorteBoss)):
+    for i in range(0,len(arrayPorteBoss)-3):
         for j in range(0,len(chemins[i])) :
             if arrayPorteBoss[i+1] in chemins[i][j][1]:
                   arrayCodeBoss.append(chemins[i][j][0])
-
+                
       #  for porte in arrayPorteBoss:
        #     for item in chemins[i] : #arrayPorteBoss
        #         if (arrayPorteBoss[i+1] in chemins[i][item][1]): # chemins[arrayPorteBoss[i]][item][1
@@ -209,10 +209,11 @@ def genererLanguageBoss():
     for i in range(0,len(arrayCodeBoss)):
         for j in range(0,len(arrayCodeBoss[i])):
             if arrayCodeBoss[i][j] == arrayCodeBoss[i][0]:
-                print("S-> "+arrayCodeBoss[i][0]+alphabet[i]+j)
-            if arrayCodeBoss[i][j].size():#derniere case du tableau
-                print(alphabet[i]+len(arrayCodeBoss[i])+"-> ")
-                print(alphabet[i]+len(arrayCodeBoss[i])+"-> "+arrayCodeBoss[i][-1]+alphabet[i]+(j-1))
+                print("S-> "+arrayCodeBoss[i][0]+alphabet[i]+str(j))
+            if len(arrayCodeBoss[i][j]):#derniere case du tableau
+                print(str(alphabet[i])+str(len(arrayCodeBoss[i]))+"-> ")
+                
+                print(alphabet[i]+str(len(arrayCodeBoss[i]))+"-> "+arrayCodeBoss[i][-1]+alphabet[i]+str((j-1)))
             else:
                 print( alphabet[i]+j+"->"+arrayCodeBoss[i][j]+alphabet[i]+(j+1))
 
@@ -284,9 +285,10 @@ def main():
                 nomPorte = "Porte" + numero
                 if nomPorte in porteArray:
                     tryPorte(numero)
-                    
-                   
-                    
+                elif numero in ["boss","Boss","BOSS"]:
+                    affronterLeBoss()
+                #else:
+                #    print("Invalide")
                 else :
                     currentPorte = "Porte1"
             else:
