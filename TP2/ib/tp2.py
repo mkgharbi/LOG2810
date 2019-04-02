@@ -190,12 +190,15 @@ def genererCodeBoss():
 # selon le fichier boss
     #codeBoss= arrayGrammar.size()
    # arrayPorteBoss = codeBoss.split(" ")
-    for i in range(0,len(arrayPorteBoss)-2):
-        for porte in arrayPorteBoss:
-            if porte in "Boss": 
-                for item in chemins[arrayPorteBoss[i]] : 
-                    if (arrayPorteBoss[i+1] in chemins[arrayPorteBoss[i]][item][1]): 
-                        arrayCodeBoss.append(chemins[arrayPorteBoss[i]][item][0])
+    for i in range(0,len(arrayPorteBoss)):
+        for j in range(0,len(chemins[i])) :
+            if arrayPorteBoss[i+1] in chemins[i][j][1]:
+                  arrayCodeBoss.append(chemins[i][j][0])
+
+      #  for porte in arrayPorteBoss:
+       #     for item in chemins[i] : #arrayPorteBoss
+       #         if (arrayPorteBoss[i+1] in chemins[i][item][1]): # chemins[arrayPorteBoss[i]][item][1
+                      #arrayCodeBoss.append(chemins[arrayPorteBoss[i]][item][0])
         
 
 
@@ -282,7 +285,7 @@ def main():
                 if nomPorte in porteArray:
                     tryPorte(numero)
                     
-                    affronterLeBoss()
+                   
                     
                 else :
                     currentPorte = "Porte1"
