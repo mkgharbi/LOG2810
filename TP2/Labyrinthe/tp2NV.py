@@ -90,8 +90,9 @@ def genererAutomate(array, porte):
         grammar = item.split("->")
         tempArray.append(grammar)  
     grammar = tempArray
-    fillTables(grammar)
-    validMotDePasse(grammar)    
+    fillTables(grammar) #Remplir les etats.
+    validMotDePasse(grammar) # Remplir les mots de passes valides et les portes valides. 
+    estGouffre() #remplir tableau des gouffres 
     return
 
 # Cette fonction remplie la table des etats finaux voulus et des terminaux trouvés dans la grammaire
@@ -153,12 +154,13 @@ def validMotDePasse(arrayGrammar):
 # Cette fonction ajoute les portes a une liste qui nous permettra d'acceder aux details du parcours (soit la liste parcours)
 def fillChemins():
     global chemins
-    for porte in porteArray:
-            position = porteArray.index(porte)
-            if checkPassword(porte) :
-                chemins[parcours.index(currentPorte)].append([passwordArray[position], porteArray[position], "Valide"])
-            else : 
-                chemins[parcours.index(currentPorte)].append([passwordArray[position], porteArray[position], "Non-valide"])
+    if len(chemins[parcours.index(currentPorte)]) < 1 : 
+        for porte in porteArray:
+                position = porteArray.index(porte)
+                if checkPassword(porte) :
+                    chemins[parcours.index(currentPorte)].append([passwordArray[position], porteArray[position], "Valide"])
+                else : 
+                    chemins[parcours.index(currentPorte)].append([passwordArray[position], porteArray[position], "Non-valide"])
 
 # Cette fonction essaye d'ouvrir la porte que l'utilisateur a spécifié
 def tryPorte(numero): #TODO: Find a way to append multiple doors
@@ -167,14 +169,16 @@ def tryPorte(numero): #TODO: Find a way to append multiple doors
     tempPorte = porteArray[position]
     global chemins
     if checkPassword(tempPorte):
-        afficher(tempPorte, True)
+        afficherEtMettreAjour(tempPorte, True)
         ouvrirPorte(tempPorte+".txt")
         fillChemins()
+        if tempPorte in gouffreArray:
+            print("Cette porte est un gouffre. Retour à la porte1!")
+            return
         print(chemins[parcours.index(tempPorte)])
-    else:
-        afficher(tempPorte, False)
-        parcours.append("Porte1")
         
+    else:
+        afficherEtMettreAjour(tempPorte, False)
     return
 
 def genererCodeBosse(arrayGrammar):
@@ -292,13 +296,14 @@ def afficherLeCheminParcouru():
         print()
         print("a.   ", i)
         print("b.   ", chemins[parcours.index(i)])
-        if parcours[len(parcours)-1] in gouffreArray:
-            print("c.   Cette porte est un gouffre, retour a Porte1")
+        if parcours[parcours.index(i)] in gouffreArray:
+            print("c.   Cette porte est un gouffre, retour a Porte1.")
+            ouvrirPorte("Porte1.txt")
         else:
             print("c.   Cette porte n'est pas un gouffre")
 
 # Cette fonction affiche de l'information en fonction de la situation
-def afficher(porte, success):
+def afficherEtMettreAjour(porte, success):
     global currentPorte
     if currentPorte == "None":
         print("Vous etes maintenant a la porte 1 du Labyrinthe")
@@ -307,8 +312,10 @@ def afficher(porte, success):
 
     elif not success:
         print("Tentative d'ouvrir "+porte+" a echoué.")
-        currentPorte = "Porte1"
         print("Vous etes retourne a la Porte 1")
+        ouvrirPorte("Porte1.txt")
+        fillChemins()
+
 
 # Cette fonction verifie les entrés de l'utilisateur lors de la navigation du menu
 def lireInputMenu():
@@ -334,7 +341,7 @@ def main():
             current = lireInputMenu()
 
         elif current == "a":
-            afficher("Porte1", True)
+            afficherEtMettreAjour("Porte1", True)
             ouvrirPorte("Porte1.txt")
             fillChemins()
             print(chemins)
@@ -347,8 +354,10 @@ def main():
                 nomPorte = "Porte" + numero
                 if nomPorte in porteArray:
                     tryPorte(numero)
+                    fillChemins()
                 else :
-                    currentPorte = "Porte1"
+                    ouvrirPorte("Porte1.txt")
+                    fillChemins()
             else:
                 print("Veuillez entrer dans le labyrithe")
             current = "m"
