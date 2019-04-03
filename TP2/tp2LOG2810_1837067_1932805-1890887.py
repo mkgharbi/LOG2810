@@ -6,6 +6,7 @@ nonTerminaux = ["A","B", "C", "D",  "S"]
 currentPorte = "None" #porte Courante. 
 parcours = [] #Historique des portes visitees
 chemins = [] #Chemins possibles d'une porte (Index de parcours -> Index de chemins)
+currentPath = []
 
 porteArray = []  # Portes accessibles a partir de la porte courrente
 passwordArray = [] # Mots de passes de la porte courante
@@ -15,13 +16,13 @@ gouffreArray = [] # Si une porte se trouve a etre un gouffre, on lajoute.
 validPasswords = [] # contenant les mots de passe valides.
 validDoors = [] #contenant les portes valides reliees aux mots de passe valides.
 
-etatsFinaux = set()
-terminauxPorte = set()
+etatsFinaux = set() #etats finaux
+terminauxPorte = set() #terminaux de la porte courrante
 
-
-alphabet = list(string.ascii_uppercase)
-arrayCodeBoss = []
-arrayPorteBoss = []
+alphabet = list(string.ascii_uppercase) #toute l'alphabet 
+arrayCodeBoss = [] #Les codes pour le boss
+arrayPorteBoss = [] #Les portes pour arriver au boss
+arrayPorteBossMem = [] #Pour garder les portes du boss en memoire
 
 # Cette fonction verifie que le mot de passe la porte passée en parametre est bel et bien accessible
 def checkPassword(porte):
@@ -37,10 +38,15 @@ def ouvrirPorte(fichier):
     global passwordArray
     global validPasswords
     global validDoors
+    global parcours
+    global currentPath
     porte = fichier[0:fichier.index(".")] #substring 
-    
+    if porte == "Porte1":
+        currentPath.clear() 
     currentPorte = porte
     parcours.append(currentPorte)
+    currentPath.append(currentPorte)
+
     chemins.append([])
 
     porteFile = open(fichier, "r")
@@ -78,7 +84,7 @@ def ouvrirPorte(fichier):
     genererAutomate(arrayGrammar, porte) #generate the automate depending on the grammar : separate the valid passwords & put them in the table validPasswords. 
     return validDoors
 
-# C2) Cette fonction génère l'automate qui verifie qu'un mot de passe est bel et bien valide
+# C3) Cette fonction génère l'automate qui verifie qu'un mot de passe est bel et bien valide
 def genererAutomate(array, porte):
     global passwordArray
     global porteArray
@@ -122,7 +128,7 @@ def findTerminal(terminal,arrayGrammar):
         if len([item[1]]) - 1 > 0:
             if item[1][len(item[1])-1] in etatsFinaux:
                 return True
-            if terminal == item[1][0] and item[1][len(item[1])-1] in etatsFinaux: # TODO : check another condition when a terminal lets us go to a final state. Like : S is in etatsFinaux and S->eS (e leads us to S)
+            if terminal == item[1][0] and item[1][len(item[1])-1] in etatsFinaux: 
                 return True
         for anotherItem in arrayGrammar: #Pour chaque item de arrayGrammar, on itere encore une fois pour voir s'il y a un cas du type S-> , S->eS
             if len(anotherItem[1]) >= 2:
@@ -163,7 +169,7 @@ def fillChemins():
                     chemins[parcours.index(currentPorte)].append([passwordArray[position], porteArray[position], "Non-valide"])
 
 # Cette fonction essaye d'ouvrir la porte que l'utilisateur a spécifié
-def tryPorte(numero): #TODO: Find a way to append multiple doors
+def tryPorte(numero): 
     porte = "Porte" + numero
     position = porteArray.index(porte)
     tempPorte = porteArray[position]
@@ -181,77 +187,88 @@ def tryPorte(numero): #TODO: Find a way to append multiple doors
         afficherEtMettreAjour(tempPorte, False)
     return
 
-
+# Cette fonction concatene les mots de passe precedents
 def genererCodeBoss():
+    global arrayPorteBossMem
     ligne = open("Boss.txt", "r")
     lesPortes = ligne.readline()
     arrayPorteBoss = lesPortes.split(" ")
+    arrayPorteBossMem = arrayPorteBoss
+    arrayPorteBoss.pop()
 
-# selon le fichier boss
-    #codeBoss= arrayGrammar.size()
-    # arrayPorteBoss = codeBoss.split(" ")
-    for i in range(0, len(arrayPorteBoss)-3):
-        for j in range(0, len(chemins[i])):
-            if arrayPorteBoss[i+1] in chemins[i][j][1]:
-                arrayCodeBoss.append(chemins[i][j][0])
+    for i in currentPath:
+        tempPorte = chemins[parcours.index(i)]
+        for j in tempPorte:
+            if currentPath.index(i) < len(arrayPorteBoss) - 1:
+                if arrayPorteBoss[currentPath.index(i)+1] == j[1]:
+                    arrayCodeBoss.append(j[0])
 
-    #  for porte in arrayPorteBoss:
-    #     for item in chemins[i] : #arrayPorteBoss
-    #         if (arrayPorteBoss[i+1] in chemins[i][item][1]): # chemins[arrayPorteBoss[i]][item][1
-                #arrayCodeBoss.append(chemins[arrayPorteBoss[i]][item][0])
+    for item in arrayCodeBoss:
+        print(str(item))
 
-def genererCodeBoss() : 
-    fichier = open("Boss.txt","r")
-    boss = fichier.readline()
-    global arrayCodeBoss 
-    arrayCodeBossTemp = boss.split(" ")
-
-    for item in arrayCodeBossTemp:
-        if item !=" " : 
-            arrayCodeBoss.append(item)
-    
-    for i in range(len(parcours)-len(arrayCodeBoss), len(parcours)-1):
-        for j in range(0, len(chemins[i])):
-            if arrayCodeBoss[i+1] in chemins[i][j][1] : 
-                arrayCodeBoss.append(chemins[i][j][0])
-
-
-
-
+# Cette fonction genere le langage que le Boss comprend a partir de la concatenation des mots de passe
 def genererLanguageBoss():
-
+    print()
     for i in range(0, len(arrayCodeBoss)):
         for j in range(0, len(arrayCodeBoss[i])):
             if arrayCodeBoss[i][j] == arrayCodeBoss[i][0]:
-                print("S-> "+arrayCodeBoss[i][0]+alphabet[i]+str(j))
-            if len(arrayCodeBoss[i][j]):  # derniere case du tableau
-                print(str(alphabet[i])+str(len(arrayCodeBoss[i]))+"-> ")
-                print(alphabet[i]+str(len(arrayCodeBoss[i])) +"-> "+arrayCodeBoss[i][-1]+alphabet[i]+(j-1))
-            else:
-                print(alphabet[i]+str(j)+"->"+str(arrayCodeBoss[i][j])+alphabet[i]+str((j+1)))
+                print("S->"+arrayCodeBoss[i][0]+alphabet[i]+str(j),end=" ")
+                if arrayCodeBoss[i][j] ==arrayCodeBoss[i][len(arrayCodeBoss[i])-1]:
+                    print(alphabet[i]+str(len(arrayCodeBoss[i])-1) +"->S",end=" ")
+            if arrayCodeBoss[i][j] ==arrayCodeBoss[i][len(arrayCodeBoss[i])-1] and arrayCodeBoss[i][j] != arrayCodeBoss[i][0]:  # derniere case du tableau !! a corriger 
+                print(str(alphabet[i])+str(len(arrayCodeBoss[i])-2)+"->"+arrayCodeBoss[i][j]+alphabet[i]+str(len(arrayCodeBoss[i])-1),end=" ")
+                print(alphabet[i]+str(len(arrayCodeBoss[i])-1) +"->S",end=" ")
+            if arrayCodeBoss[i][j] != arrayCodeBoss[i][0] and  arrayCodeBoss[i][j] !=arrayCodeBoss[i][len(arrayCodeBoss[i])-1]:
+                k=j-1
+                print(alphabet[i]+str(k)+"->"+str(arrayCodeBoss[i][j])+alphabet[i]+str((j)),end=" ")
+    print ("S->")
 
-
-def affronterBoss():
+#C2) Cette fonction nous permet d'affronter le bpss
+def affronterLeBoss():
     genererCodeBoss()
     genererLanguageBoss()
 
 
-#Cette fonction affiche l'historique du chemin parcouru
+#C4) Cette fonction affiche l'historique du chemin parcouru
 def afficherLeCheminParcouru():
+    print()
     for i in parcours:
-        print("Evenement Porte")
+        if i != "Boss":
+            print("Evenement Porte")
+        else:
+            print("Evenementt Boss")
         print()
-        print("a.   ", i)
-        print("b.   ", chemins[parcours.index(i)])
-        if parcours[parcours.index(i)] in gouffreArray:
+        if i != "Boss":
+            print("a.   ", i)
+        else:
+            print("a.   ", end="")
+            for j in arrayPorteBossMem:
+                print(j, end=" ")
+            print(end="\n")
+
+        if i != "Boss":
+            print("b.   ", chemins[parcours.index(i)])
+        else:
+            print("b.   ", arrayCodeBoss)
+
+        if i in gouffreArray and i != "Boss":
             print("c.   Cette porte est un gouffre, retour a Porte1.")
+            print()
             ouvrirPorte("Porte1.txt")
         else:
-            print("c.   Cette porte n'est pas un gouffre")
+            if i != "Boss":
+                print("c.   Cette porte n'est pas un gouffre")
+                print()
+
+        if i == "Boss":
+            print("c.   Vous avez vaincu le Boss!!!")
+            print()
+    
 
 # Cette fonction affiche de l'information en fonction de la situation
 def afficherEtMettreAjour(porte, success):
     global currentPorte
+    global currentPath
     if currentPorte == "None":
         print("Vous etes maintenant a la porte 1 du Labyrinthe")
     elif success:
@@ -260,9 +277,28 @@ def afficherEtMettreAjour(porte, success):
     elif not success:
         print("Tentative d'ouvrir "+porte+" a echoué.")
         print("Vous etes retourne a la Porte 1")
+        currentPath.clear()
         ouvrirPorte("Porte1.txt")
         fillChemins()
 
+#Clear tout les tableaux
+def clearLab():
+    global currentPorte
+    currentPorte = "None"
+    parcours.clear() 
+    chemins.clear() 
+    currentPath.clear()
+    porteArray.clear()  
+    passwordArray.clear()
+    grammar.clear()
+    gouffreArray.clear() 
+    validPasswords.clear() 
+    validDoors.clear() 
+    etatsFinaux.clear()
+    terminauxPorte.clear()
+    arrayCodeBoss.clear()
+    arrayPorteBoss.clear()
+    arrayPorteBossMem.clear()
 
 # Cette fonction verifie les entrés de l'utilisateur lors de la navigation du menu
 def lireInputMenu():
@@ -276,11 +312,12 @@ def lireInputMenu():
 def main():
     global currentPorte
     labyrintheEntrer = False
-    #bossTuer = False
+    bossTuer = False
     current = "m" # m -> "menu"
     while True:
 
         if current == "m":
+            #C5) L'interface console :
             print("(a) Entrer dans le labyrinthe.")
             print("(b) Ouvrir une porte.")
             print("(c) Afficher le chemin parcouru.")
@@ -288,15 +325,17 @@ def main():
             current = lireInputMenu()
 
         elif current == "a":
+            clearLab()
             afficherEtMettreAjour("Porte1", True)
             ouvrirPorte("Porte1.txt")
             fillChemins()
             print(chemins)
             labyrintheEntrer = True
+            bossTuer = False
             current = "m"
 
         elif current == "b":
-            if labyrintheEntrer:
+            if labyrintheEntrer and not bossTuer:
                 numero = input("Numero de la porte ?")
                 if numero.isdigit():
                     if int(numero) >= 0 and int(numero) <=20 : 
@@ -307,18 +346,17 @@ def main():
                         else :
                             ouvrirPorte("Porte1.txt")
                             fillChemins()
-                elif numero == "Boss" or numero == "boss":
-                    if numero in porteArray: 
-                        parcours.append(numero)
-                        affronterBoss()
-                    else :
-                        ouvrirPorte("Porte1.txt")
-                        fillChemins()
+                elif numero in ["boss","Boss","BOSS"]:
+                    parcours.append("Boss")
+                    chemins.append(["Ceci est le Boss"])
+                    affronterLeBoss()
+                    print("Vous avez vaincu le Boss")
+                    bossTuer = True
                 else:
                     ouvrirPorte("Porte1.txt")
                     fillChemins()
             else:
-                print("Veuillez entrer dans le labyrithe en appuyant sur a.")
+                print("Veuillez entrer dans le labyrithe")
             current = "m"
 
         elif current == "c":
@@ -328,6 +366,7 @@ def main():
         elif current == "d":
             break
 
-
 if __name__ == "__main__":
     main()
+
+
