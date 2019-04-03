@@ -3,7 +3,7 @@ S->aA, S->bA, S->c, A->aS, A->bS, S->d, S->e
 }
 aaab Porte8
 abab Porte10
-cea Porte2
+abbc Porte2
 d Porte15
 bbbbb Porte18
 e Porte9
